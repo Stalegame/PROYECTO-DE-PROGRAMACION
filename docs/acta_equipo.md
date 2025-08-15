@@ -1,7 +1,8 @@
 # Acta de Equipo – Proyecto De Programación 
 
-**Nombre del equipo:** Los comprimidos
-**Canal oficial de comunicación:**   
+**Nombre del equipo:** Los comprimidos.
+
+**Canal oficial de comunicación:**  Discord. 
 
 ## Integrantes y roles iniciales (Ciclo 1 – Semanas 1 a 6)
 
