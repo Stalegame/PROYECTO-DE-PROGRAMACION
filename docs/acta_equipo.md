@@ -17,4 +17,4 @@
 - **Ciclo 2 (Semanas 7 a 12)**  
 
 - **Ciclo 3 (Semanas 13 a 18)**  
-  
+
