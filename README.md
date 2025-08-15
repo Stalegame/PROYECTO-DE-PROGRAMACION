@@ -5,7 +5,7 @@ Proyecto Fruna - Gestion de Productos y Contactos
 Proyecto web para un supermercado "Fruna" que permitirá gestionar información sobre productos, registrar los clientes frecuentes por pedidos al "Por Mayor". El sistema esta diseñado bajo una arquitectura por capas, que estara conectada a una base de datos para almacenar y procesar la informacion de manera segura y eficientez y se desarrollará progresivamente.
 
 ## Caracteristicas principales
-- Interfez de usario intuitiva para comprar productos.
+- Interfaz de usuario intuitiva para comprar productos.
 - Gestión de carritos de compra.
 - Registro e historial de compras.
 - Integración con base de datos para almacenar productos, usarios y transacciones.
@@ -19,7 +19,15 @@ Proyecto web para un supermercado "Fruna" que permitirá gestionar información 
 ## Objetivo
 Crear una solución web completa para simular un sistema de compras en linea para el supermercado Fruna.
 Gestionar un catálogo de productos (lectura, inserción y actualización de datos). 
-Integrar datos de una API externa relacionada (informacion nutricional o clima para logistica)
+Integrar datos de una API externa relacionada (informacion nutricional)
 Asegurar un flujo completo desde el frontend hasta el backend.
 
-
+## 👥 Integrantes y Roles
+- **🧑‍💻 Thomas Aranguiz** **[@Stalegame](https://github.com/Stalegame)** – Líder Técnico 
+- **🎨 Patricio Muñoz** **[@patriciomunozzz](https://github.com/patriciomunozzz)**– Frontend  
+- **⚙️ Angela Muñoz** **[@MeruAngel](https://github.com/MeruAngel)** – Backend  
+- **📝 Amira Casanova** **[@amiracasanova](https://github.com/amiracasanova)** – QA & Documentación
+  
+## 📌 Enlaces
+- **Repositorio:** [🔗 GitHub Proyecto Fruna](https://github.com/Stalegame/PROYECTO-DE-PROGRAMACION)
+- **Tablero Kanban:** [🔗 Proyecto Fruna – Kanban](https://trello.com/invite/b/689ccd69233da4f45016f66b/ATTI3a846a1aa484032cb15c2812a627865b229B87B7/proyecto-fruna)
