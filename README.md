@@ -22,3 +22,4 @@ Gestionar un catálogo de productos (lectura, inserción y actualización de dat
 Integrar datos de una API externa relacionada (informacion nutricional o clima para logistica)
 Asegurar un flujo completo desde el frontend hasta el backend.
 
+
