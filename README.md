@@ -19,7 +19,12 @@ Proyecto web para un supermercado "Fruna" que permitirá gestionar información 
 ## Objetivo
 Crear una solución web completa para simular un sistema de compras en linea para el supermercado Fruna.
 Gestionar un catálogo de productos (lectura, inserción y actualización de datos). 
-Integrar datos de una API externa relacionada (informacion nutricional o clima para logistica)
+Integrar datos de una API externa relacionada (informacion nutricional)
 Asegurar un flujo completo desde el frontend hasta el backend.
 
+## 👥 Integrantes y Roles
+- **🧑‍💻 Thomas Aranguiz** **[@Stalegame](https://github.com/Stalegame)** – Líder Técnico 
+- **🎨 Patricio Muñoz** **[@patriciomunozzz](https://github.com/patriciomunozzz)**– Frontend  
+- **⚙️ Angela Muñoz** **[@MeruAngel](https://github.com/MeruAngel)** – Backend  
+- **📝 Amira Casanova** **[@amiracasanova](https://github.com/amiracasanova)** – QA & Documentación 
 
