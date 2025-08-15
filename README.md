@@ -10,7 +10,7 @@ Proyecto web para un supermercado "Fruna" que permitirá gestionar información 
 - Registro e historial de compras.
 - Integración con base de datos para almacenar productos, usarios y transacciones.
 - Backend con API para comunicacioón entre frontend y base de datos.
-- 
+  
 ## Tecnologias previstas
 - **Frontend:** HTML, CSS, JavaSript
 - **Base de datos:** SQLite / MongoDB
@@ -21,3 +21,4 @@ Crear una solución web completa para simular un sistema de compras en linea par
 Gestionar un catálogo de productos (lectura, inserción y actualización de datos). 
 Integrar datos de una API externa relacionada (informacion nutricional o clima para logistica)
 Asegurar un flujo completo desde el frontend hasta el backend.
+
