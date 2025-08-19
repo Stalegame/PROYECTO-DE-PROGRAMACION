@@ -59,3 +59,175 @@
     </div>
 </body>
 </html>
+
+/*GITHUB GUARDAME LOS CAMBIOS PORFAVOR,GRACIAS
+//Codigo a arreglar
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo FRUNA | La dulcería de Chile</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            background-color: #FFF9FA;
+        }
+        header {
+            background-color: #E91E63;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .logo {
+            font-size: 2em;
+            margin: 0;
+        }
+        
+        /* Contenedor principal */
+        .contenedor {
+            display: flex;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+        
+        /* Filtros */
+        .filtros {
+            width: 250px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .filtros h3 {
+            color: #E91E63;
+            border-bottom: 2px solid #FFC107;
+            padding-bottom: 5px;
+        }
+        .filtros ul {
+            list-style: none;
+            padding: 0;
+        }
+        .filtros li {
+            margin: 15px 0;
+        }
+        .filtros a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        /* Productos */
+        .productos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 0 20px;
+            flex: 1;
+        }
+        .producto {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .producto:hover {
+            transform: translateY(-5px);
+        }
+        .producto img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 2px solid #FFC107;
+        }
+        .producto-info {
+            padding: 15px;
+            text-align: center;
+        }
+        .producto h3 {
+            margin: 10px 0;
+            color: #E91E63;
+        }
+        .precio {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
+        }
+        .iva {
+            font-size: 0.8em;
+            color: #777;
+        }
+        .btn-comprar {
+            background: #E91E63;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        .btn-comprar:hover {
+            background: #C2185B;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">FRUNA <span>La dulcería de Chile</span></div>
+    </header>
+    
+    <div class="contenedor">
+        <!-- Filtros de categorías -->
+        <aside class="filtros">
+            <h3>Categorías</h3>
+            <ul>
+                <li><a href="#">Alfajores ($1.290 - $2.990)</a></li>
+                <li><a href="#">Chocolates ($1.990 - $3.490)</a></li>
+                <li><a href="#">Snacks ($1.000 - $2.500)</a></li>
+                <li><a href="#">Ofertas</a></li>
+                <li><a href="#">Novedades</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Lista de productos -->
+        <main class="productos">
+            <!-- Producto 1: Alfajor Clásico -->
+            <div class="producto">
+                <img src="alfajor-clasico.jpg" alt="Alfajor FRUNA Clásico">
+                <div class="producto-info">
+                    <h3>Alfajor Clásico</h3>
+                    <p class="precio">$1.290 <span class="iva">IVA incluido</span></p>
+                    <button class="btn-comprar">Añadir al carrito</button>
+                </div>
+            </div>
+            
+            <!-- Producto 2: Chocolate Maní -->
+            <div class="producto">
+                <img src="chocolate-mani.jpg" alt="Chocolate FRUNA Maní">
+                <div class="producto-info">
+                    <h3>Chocolate Maní</h3>
+                    <p class="precio">$2.490 <span class="iva">IVA incluido</span></p>
+                    <button class="btn-comprar">Añadir al carrito</button>
+                </div>
+            </div>
+            
+            <!-- Producto 3: Snack Mix -->
+            <div class="producto">
+                <img src="snack-mix.jpg" alt="Snack Mix FRUNA">
+                <div class="producto-info">
+                    <h3>Snack Mix</h3>
+                    <p class="precio">$1.590 <span class="iva">IVA incluido</span></p>
+                    <button class="btn-comprar">Añadir al carrito</button>
+                </div>
+            </div>
+            
+            <!-- Más productos... -->
+        </main>
+    </div>
+</body>
+</html>
