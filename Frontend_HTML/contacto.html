@@ -66,3 +66,138 @@
     </div>
 </body>
 </html>
+
+*********************************************************************************
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - FRUNA Chile</title>
+    <style>
+        /* ESTILOS GENERALES */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            background-color: #FFF9FA;
+        }
+        
+        /* HEADER */
+        header {
+            background-color: #E91E63;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .logo-container {
+            max-width: 250px;
+            margin: 0 auto;
+        }
+        .logo-container img {
+            width: 100%;
+            height: auto;
+        }
+        
+        /* CONTENIDO PRINCIPAL */
+        .contenido {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        /* FORMULARIO */
+        .formulario {
+            flex: 1;
+            min-width: 300px;
+        }
+        .formulario h2 {
+            color: #E91E63;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #E91E63;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        /* INFO CONTACTO */
+        .info-contacto {
+            flex: 1;
+            min-width: 300px;
+        }
+        .info-contacto h2 {
+            color: #E91E63;
+        }
+        .mapa {
+            margin-top: 20px;
+            width: 100%;
+            height: 300px;
+            background-color: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        /* FOOTER */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    
+    <header>
+        <div class="logo-container">
+            
+            <img src="images/logo.png" alt="FRUNA Chile">
+            
+        </div>
+    </header>
+    
+    <div class="contenido">
+       
+        <section class="formulario">
+            <h2>Envíanos un mensaje</h2>
+            <form>
+                <input type="text" placeholder="Nombre" required>
+                <input type="email" placeholder="Email" required>
+                <input type="tel" placeholder="Teléfono">
+                <textarea placeholder="Tu mensaje" rows="5" required></textarea>
+                <button type="submit">Enviar</button>
+            </form>
+        </section>
+        
+        
+        <section class="info-contacto">
+            <h2>Contacto</h2>
+            <p>📞 Teléfono: +56 9 1234 5678</p>
+            <p>✉️ Email: contacto@fruna.cl</p>
+            <p>📍 Dirección: Av. Providencia 1234, Santiago</p>
+            
+            <div class="mapa">
+               REEMPLAZAR 
+                <img src="images/ubicacion.jpg" alt="Ubicación FRUNA" style="width:100%;height:100%;object-fit:cover;">
+              
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <p>© 2024 FRUNA Chile - Todos los derechos reservados</p>
+    </footer>
+</body>
+</html>
