@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administración - FRUNA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #E91E63;
+            color: white;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            text-align: center;
+            padding: 20px;
+            background-color: #C2185B;
+            margin-bottom: 20px;
+        }
+        
+        .logo h2 {
+            font-size: 22px;
+        }
+        
+        .menu-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-item:hover {
+            background-color: #C2185B;
+        }
+        
+        .menu-item.active {
+            background-color: #C2185B;
+            border-left: 4px solid #FFC107;
+        }
+        
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card h3 {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card .number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #E91E63;
+        }
+        
+        .stat-card .trend {
+            font-size: 14px;
+            color: #4CAF50;
+            margin-top: 5px;
+        }
+        
+        .trend.negative {
+            color: #F44336;
+        }
+        
+        .table-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        table th {
+            background-color: #f9f9f9;
+            font-weight: 600;
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: inline-block;
+        }
+        
+        .status.active {
+            background-color: #E8F5E9;
+            color: #4CAF50;
+        }
+        
+        .status.pending {
+            background-color: #FFF8E1;
+            color: #FFC107;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background-color: #E91E63;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #FFC107;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <h2>FRUNA Admin</h2>
+            </div>
+            
+            <div class="menu-item active" onclick="showSection('dashboard')">
+                <i>📊</i> Dashboard
+            </div>
+            
+            <div class="menu-item" onclick="showSection('products')">
+                <i>🛒</i> Productos
+            </div>
+            
+            <div class="menu-item" onclick="showSection('orders')">
+                <i>📦</i> Pedidos
+            </div>
+            
+            <div class="menu-item" onclick="showSection('customers')">
+                <i>👥</i> Clientes
+            </div>
+            
+            <div class="menu-item" onclick="showSection('reports')">
+                <i>📈</i> Reportes
+            </div>
+            
+            <div class="menu-item" onclick="showSection('settings')">
+                <i>⚙️</i> Configuración
+            </div>
+            
+            <div class="menu-item" style="margin-top: 30px;" onclick="logout()">
+                <i>🚪</i> Cerrar Sesión
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="header">
+                <h1>Panel de Administración</h1>
+                <div>
+                    <span>Hola, Admin</span> | 
+                    <span id="current-date"></span>
+                </div>
+            </div>
+            
+            <div id="dashboard" class="content-section active">
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <h3>VENTAS HOY</h3>
+                        <div class="number">$1.250.890</div>
+                        <div class="trend">+12% vs ayer</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>PEDIDOS ACTIVOS</h3>
+                        <div class="number">47</div>
+                        <div class="trend">5 nuevos</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>PRODUCTOS BAJO STOCK</h3>
+                        <div class="number">8</div>
+                        <div class="trend negative">Necesitan atención</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>CLIENTES NUEVOS</h3>
+                        <div class="number">12</div>
+                        <div class="trend">+20% este mes</div>
+                    </div>
+                </div>
+                
+                <div class="table-section">
+                    <div class="table-header">
+                        <h2>Pedidos Recientes</h2>
+                        <button class="btn btn-primary">Ver Todos</button>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th># Pedido</th>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#12345</td>
+                                <td>María González</td>
+                                <td>20/03/2024</td>
+                                <td>$45.990</td>
+                                <td><span class="status active">Entregado</span></td>
+                            </tr>
+                            <tr>
+                                <td>#12346</td>
+                                <td>Juan Pérez</td>
+                                <td>20/03/2024</td>
+                                <td>$32.500</td>
+                                <td><span class="status active">En camino</span></td>
+                            </tr>
+                            <tr>
+                                <td>#12347</td>
+                                <td>Carlos López</td>
+                                <td>19/03/2024</td>
+                                <td>$28.750</td>
+                                <td><span class="status pending">Pendiente</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="table-section">
+                    <div class="table-header">
+                        <h2>Productos Populares</h2>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Categoría</th>
+                                <th>Ventas</th>
+                                <th>Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Alfajor Clásico</td>
+                                <td>Alfajores</td>
+                                <td>150 unidades</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>Chocolate Maní</td>
+                                <td>Chocolates</td>
+                                <td>120 unidades</td>
+                                <td>32</td>
+                            </tr>
+                            <tr>
+                                <td>Galleta Chispas</td>
+                                <td>Galletas</td>
+                                <td>98 unidades</td>
+                                <td>12</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="products" class="content-section">
+                <div class="table-section">
+                    <div class="table-header">
+                        <h2>Gestión de Productos</h2>
+                        <button class="btn btn-primary">+ Nuevo Producto</button>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>PR001</td>
+                                <td>Alfajor Clásico</td>
+                                <td>Alfajores</td>
+                                <td>$1.290</td>
+                                <td>45</td>
+                                <td>
+                                    <button class="btn btn-secondary">Editar</button>
+                                    <button class="btn" style="background:#f44336;color:white">Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>PR002</td>
+                                <td>Chocolate Maní</td>
+                                <td>Chocolates</td>
+                                <td>$2.490</td>
+                                <td>32</td>
+                                <td>
+                                    <button class="btn btn-secondary">Editar</button>
+                                    <button class="btn" style="background:#f44336;color:white">Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>PR003</td>
+                                <td>Galleta Chispas</td>
+                                <td>Galletas</td>
+                                <td>$1.990</td>
+                                <td>12</td>
+                                <td>
+                                    <button class="btn btn-secondary">Editar</button>
+                                    <button class="btn" style="background:#f44336;color:white">Eliminar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="orders" class="content-section">
+                <div class="table-section">
+                    <div class="table-header">
+                        <h2>Gestión de Pedidos</h2>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th># Pedido</th>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#12345</td>
+                                <td>María González</td>
+                                <td>20/03/2024</td>
+                                <td>$45.990</td>
+                                <td><span class="status active">Entregado</span></td>
+                                <td><button class="btn btn-secondary">Ver Detalle</button></td>
+                            </tr>
+                            <tr>
+                                <td>#12346</td>
+                                <td>Juan Pérez</td>
+                                <td>20/03/2024</td>
+                                <td>$32.500</td>
+                                <td><span class="status active">En camino</span></td>
+                                <td><button class="btn btn-secondary">Ver Detalle</button></td>
+                            </tr>
+                            <tr>
+                                <td>#12347</td>
+                                <td>Carlos López</td>
+                                <td>19/03/2024</td>
+                                <td>$28.750</td>
+                                <td><span class="status pending">Pendiente</span></td>
+                                <td><button class="btn btn-secondary">Ver Detalle</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="customers" class="content-section">
+                <h2>Gestión de Clientes</h2>
+                <p>Contenido de gestión de clientes...</p>
+            </div>
+            
+            <div id="reports" class="content-section">
+                <h2>Reportes y Estadísticas</h2>
+                <p>Contenido de reportes...</p>
+            </div>
+            
+            <div id="settings" class="content-section">
+                <h2>Configuración del Sistema</h2>
+                <p>Contenido de configuración...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            document.getElementById(sectionId).classList.add('active');
+
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            event.currentTarget.classList.add('active');
+        }
+        
+
+        function logout() {
+            if(confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                alert('Sesión cerrada. Redirigiendo al login...');
+ 
+            }
+        }
+        
+
+        function updateDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES', options);
+        }
+        
+        updateDate();
+    </script>
+</body>
+</html>

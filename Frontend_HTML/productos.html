@@ -13,13 +13,65 @@
         }
         header {
             background-color: #E91E63;
-            color: white;
             padding: 15px;
             text-align: center;
+            position: relative;
+        }
+        .logo-container {
+            max-width: 150px;
+            margin: 0 auto;
+        }
+        .logo-container img {
+            width: 100%;
+            height: auto;
         }
         .logo {
             font-size: 2em;
             margin: 0;
+        }
+        .btn-login{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: absolute;
+            right: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: auto;
+            background: #FFC107;
+            color: #333;
+            font-size: 25px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-login .icono-btn {
+            width: 30px;
+            height: 30px;
+        }
+        .btn-shop-bag {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: absolute;
+            left: 80px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: auto;
+            background: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-shop-bag .icono-btn2 {
+            width: 80px;
+            height: 80px;
         }
         
         /* Contenedor principal */
@@ -115,7 +167,20 @@
 
 <body>
     <header>
-        <div class="logo">FRUNA <span>La dulcería de Chile</span></div>
+        <button class="btn-login">
+            <img src="/img/user_login.png" alt="Login" class="icono-btn">
+            Iniciar Sesión
+        </button>
+
+        <button class="btn-shop-bag">
+            <img src="/img/shop_white.png" alt="shop_bag" class="icono-btn2">
+        </button>
+
+        <div class="logo-container">
+            
+            <img src="/img/logo fruna.png" alt="FRUNA Chile">
+            
+        </div>
     </header>
     
     <div class="contenedor">
@@ -135,7 +200,7 @@
         <main class="productos">
             <!-- Producto 1: Alfajor Clásico -->
             <div class="producto">
-                <img src="alfajor-clasico.jpg" alt="Alfajor FRUNA Clásico">
+                <img src="/img/alfajores.png" alt="Alfajor FRUNA Clásico">
                 <div class="producto-info">
                     <h3>Alfajor Clásico</h3>
                     <p class="precio">$1.290 <span class="iva">IVA incluido</span></p>
@@ -145,9 +210,9 @@
             
             <!-- Producto 2: Chocolate Maní -->
             <div class="producto">
-                <img src="chocolate-mani.jpg" alt="Chocolate FRUNA Maní">
+                <img src="/img/tabletones.png" alt="Tableton FRUNA Maní">
                 <div class="producto-info">
-                    <h3>Chocolate Maní</h3>
+                    <h3>Tableton Maní</h3>
                     <p class="precio">$2.490 <span class="iva">IVA incluido</span></p>
                     <button class="btn-comprar">Añadir al carrito</button>
                 </div>
@@ -155,7 +220,7 @@
             
             <!-- Producto 3: Snack Mix -->
             <div class="producto">
-                <img src="snack-mix.jpg" alt="Snack Mix FRUNA">
+                <img src="/img/palo palito.png" alt="Snack Mix FRUNA">
                 <div class="producto-info">
                     <h3>Snack Mix</h3>
                     <p class="precio">$1.590 <span class="iva">IVA incluido</span></p>
