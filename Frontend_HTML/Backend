@@ -1,1 +1,174 @@
 /*Cosas por agregar*/
+---------------------SEPARADORES................................
+productos.json
+{
+  "productos": [
+    {
+      "id": "PRD001",
+      "nombre": "Alfajor Clásico",
+      "descripcion": "Alfajor tradicional con dulce de leche",
+      "precio": 1290,
+      "categoria": "alfajores",
+      "stock": 45,
+      "imagen": "alfajor-clasico.jpg",
+      "nutricion": {
+        "calorias": 150,
+        "azucar": 12,
+        "grasas": 5
+      },
+      "activo": true,
+      "fecha_creacion": "2024-03-20T10:30:00Z"
+    }
+  ],
+  "ultimoId": 1
+}
+---------------------SEPARADORES................................
+categorias.JSON
+{
+  "categorias": [
+    {
+      "id": "cat001",
+      "nombre": "Alfajores",
+      "descripcion": "Alfajores tradicionales y especiales",
+      "imagen": "alfajores-categoria.jpg",
+      "cantidad_productos": 15
+    }
+  ]
+}
+
+---------------------SEPARADORES................................
+{
+  "clientes": [
+    {
+      "id": "CLI001",
+      "nombre": "María Repollo nose",
+      "email": "maria@email.com",
+      "telefono": "+56912345678",
+      "direccion": {
+        "calle": "Av. Principal 123",
+        "ciudad": "Curico",
+        "comuna": "Molina"
+      },
+      "fecha_registro": "2025-03-20T14:25:00Z"
+    }
+  ],
+  "ultimoId": 1
+}
+
+---------------------SEPARADORES................................
+CHATBOT!!!!!!!!
+{
+  "conversaciones": [
+    {
+      "id": 1,
+      "session_id": "session_abc123",
+      "user_message": "¿Tienen alfajores?",
+      "bot_response": "Sí, tenemos varios tipos de alfajores. ¿Te interesa alguno en particular?",
+      "intent_detected": "consulta_productos",
+      "timestamp": "2025-03-20T15:30:00Z",
+      "satisfaction_rating": null
+    }
+  ],
+  "ultimoId": 1
+}
+---------------------SEPARADORES................................
+{
+  "faqs": [
+    {
+      "id": 1,
+      "pregunta": "¿Dónde están ubicados?",
+      "respuesta": "Estamos ubicados en Avda Bernardo O`Higgins 820, Curicó, Maule. ¡Te esperamos!",
+      "categoria": "ubicacion",
+      "veces_preguntada": 12,
+      "ultima_actualizacion": "2025-03-20T16:00:00Z"
+    }
+  ],
+  "ultimoId": 1
+}
+---------------------SEPARADORES................................
+
+// server.js
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const fs = require('fs').promises;
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware (intermediario entre diferentes aplicaciones) 
+//ejemplo: Cliente → Solicitud (request)
+
+//Barista → Middleware
+
+//Café preparado → Respuesta
+
+o tambien:
+// middleware/auth.js
+const authMiddleware = (req, res, next) => {
+  const token = req.header('Authorization');
+  
+  if (!token) {
+    return res.status(401).json({ 
+      error: 'Acceso denegado. Token requerido.' 
+    });
+  }
+  
+  try {
+    const verified = jwt.verify(token.replace('Bearer ', ''), process.env.JWT_SECRET);
+    req.user = verified;
+    next();
+  } catch (error) {
+    res.status(400).json({ error: 'Token inválido' });
+  }
+};
+
+module.exports = authMiddleware;
+---------------------SEPARADORES................................
+app.use(cors());
+app.use(express.json());
+app.use(express.static('public'));
+
+// Crear directorio de datos si no existexd
+async function inicializarDirectorioDatos() {
+  const dataDir = path.join(__dirname, 'data');
+  try {
+    await fs.access(dataDir);
+  } catch (error) {
+    await fs.mkdir(dataDir, { recursive: true });
+    console.log('Directorio de datos creado');
+  }
+}
+
+// Ruta
+app.use('/api/productos', require('./routes/productos'));
+app.use('/api/categorias', require('./routes/categorias'));
+app.use('/api/clientes', require('./routes/clientes'));
+app.use('/api/chatbot', require('./routes/chatbot'));
+app.use('/api/auth', require('./routes/auth'));
+
+// cositas de prueba
+app.get('/api', (req, res) => {
+  res.json({ 
+    message: 'API FRUNA funcionando correctamente',
+    version: '1.0.0',
+    endpoints: {
+      productos: '/api/productos',
+      categorias: '/api/categorias',
+      clientes: '/api/clientes',
+      chatbot: '/api/chatbot'
+    }
+  });
+});
+
+// Inicializar y iniciar servidor
+async function startServer() {
+  await inicializarDirectorioDatos();
+  
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor FRUNA ejecutándose en http://localhost:${PORT}`);
+    console.log(`📊 API disponible en http://localhost:${PORT}/api`);
+  });
+}
+
+startServer().catch(console.error);

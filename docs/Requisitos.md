@@ -6,7 +6,7 @@
 3. **Consulta de productos**: El sistema debe mostrar los productos disponibles con nombre, precio, categoría y stock.  
 4. **Búsqueda y filtrado**: El sistema debe permitir a los clientes buscar productos y filtrarlos por categoría, precio, disponibilidad, etc.  
 5. **Carrito de compras**: El sistema debe permitir añadir productos al carrito, modificarlos (cantidad, eliminar) y visualizar el total de la compra.  
-6. **Procesar compra**: El sistema debe permitir confirmar la compra, registrar la transacción y generar un comprobante (ej: boleta/factura).  
+6. **Procesar compra**: El sistema debe permitir simular la compra, registrar la transacción y generar un comprobante (ej: boleta/factura).  
 7. **Historial de compras**: El sistema debe almacenar y mostrar al cliente el historial de pedidos realizados.  
 8. **Notificaciones**: El sistema debe notificar al cliente sobre el estado de su pedido (ej: confirmado, en proceso, enviado).  
 
@@ -25,7 +25,7 @@
 
 ---
 
-## ⚙️ Requisitos No Funcionales
+# ⚙️ Requisitos No Funcionales
 
 1. **Rendimiento de consultas:** Las consultas al catálogo de productos deben ejecutarse en menos de 2 segundos bajo carga promedio de usuarios.  
 2. **Seguridad de contraseñas:** Las contraseñas deben almacenarse encriptadas utilizando algoritmos seguros (ej: bcrypt o Argon2).  
