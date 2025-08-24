@@ -10,7 +10,7 @@
 7. **Historial de compras**: El sistema debe almacenar y mostrar al cliente el historial de pedidos realizados.  
 8. **Notificaciones**: El sistema debe notificar al cliente sobre el estado de su pedido (ej: confirmado, en proceso, enviado).  
 
----
+
 
 ## 🛠 Administradores
 1. **Autenticación de administradores**: El sistema debe permitir acceso con credenciales seguras a los administradores.  
@@ -25,7 +25,7 @@
 
 ---
 
-## ⚙️ Requisitos No Funcionales
+# ⚙️ Requisitos No Funcionales
 
 1. **Rendimiento de consultas:** Las consultas al catálogo de productos deben ejecutarse en menos de 2 segundos bajo carga promedio de usuarios.  
 2. **Seguridad de contraseñas:** Las contraseñas deben almacenarse encriptadas utilizando algoritmos seguros (ej: bcrypt o Argon2).  
