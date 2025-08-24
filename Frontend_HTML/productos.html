@@ -73,6 +73,42 @@
             width: 80px;
             height: 80px;
         }
+        /* NAV */
+        .main-nav{
+        display:flex;
+        justify-content:center;
+        gap:40px;
+        padding:12px 16px;
+        background:#FFEBEE;
+        border-top:1px solid rgba(0,0,0,0.06);
+        border-bottom:1px solid rgba(0,0,0,0.06);
+        }
+
+        /* Botones tipo “pill” */
+        .nav-pill{
+        display:inline-block;
+        padding:10px 50px;
+        border-radius:9999px;
+        text-decoration:none;
+        font-weight:bold;
+        color:#E91E63;
+        background:#FFEBEE;
+        transition:all .2s ease;
+        }
+
+        /* Hover/Focus: invierte colores para feedback */
+        .nav-pill:hover,
+        .nav-pill:focus{
+        background:#c2185b;
+        color:#fff;
+        outline:none;
+        }
+
+        /* Estado activo (opcional, por página) */
+        .nav-pill.is-active{
+        background:#c2185b;
+        color:#fff;
+        }
         
         /* Contenedor principal */
         .contenedor {
@@ -181,6 +217,13 @@
             
         </div>
     </header>
+
+    <!-- *************** NAV *************** -->
+    <nav class="main-nav" aria-label="Navegación principal">
+        <a href="index.html" class="nav-pill">Inicio</a>
+        <a href="productos.html" class="nav-pill">Productos</a>
+        <a href="contacto.html" class="nav-pill">Contacto</a>
+    </nav>
     
     <div class="contenedor">
         <!-- Filtros de categorías -->
