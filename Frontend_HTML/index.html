@@ -22,7 +22,7 @@
             position: relative;
         }
         .logo-container {
-            max-width: 220px;  /* Revisar esto! */
+            max-width: 250px;  /* Revisar esto! */
             margin: 0 auto;
         }
         .logo-container img {
@@ -84,6 +84,43 @@
             font-size: 1.2em;
         }
         
+        /* NAV */
+        .main-nav{
+        display:flex;
+        justify-content:center;
+        gap:40px;
+        padding:12px 16px;
+        background:#FFEBEE;
+        border-top:1px solid rgba(0,0,0,0.06);
+        border-bottom:1px solid rgba(0,0,0,0.06);
+        }
+
+        /* Botones tipo “pill” */
+        .nav-pill{
+        display:inline-block;
+        padding:10px 50px;
+        border-radius:9999px;
+        text-decoration:none;
+        font-weight:bold;
+        color:#E91E63;
+        background:#FFEBEE;
+        transition:all .2s ease;
+        }
+
+        /* Hover/Focus: invierte colores para feedback */
+        .nav-pill:hover,
+        .nav-pill:focus{
+        background:#c2185b;
+        color:#fff;
+        outline:none;
+        }
+
+        /* Estado activo (opcional, por página) */
+        .nav-pill.is-active{
+        background:#c2185b;
+        color:#fff;
+        }
+        
         /* CATEGORÍAS */
         .categorias {
             text-align: center;
@@ -138,7 +175,7 @@
      <!-- *************** LOGO *************** -->
     <header>
         <div class="logo-container">
-            <button class="btn-login">
+            <button class="btn-login" onclick="location.href='login_users.html'">
                 <img src="/img/user_login.png" alt="Login" class="icono-btn">
                 Iniciar Sesión
             </button>
@@ -152,10 +189,25 @@
         </div>
     </header>
     
+    <!-- *************** NAV *************** 
+    <nav class="main-nav" aria-label="Navegación principal">
+        <a href="index.html" class="nav-pill">Inicio</a>
+        <a href="productos.html" class="nav-pill">Productos</a>
+        <a href="contacto.html" class="nav-pill">Contacto</a>
+    </nav>
+    -->
+
     <!-- *************** BANNER *************** -->
     <div class="banner">
         🎉 OFERTA ESPECIAL: 2x1 en Alfajores - Solo por hoy!
     </div>
+
+    <!-- *************** NAV *************** -->
+    <nav class="main-nav" aria-label="Navegación principal">
+        <a href="index.html" class="nav-pill">Inicio</a>
+        <a href="productos.html" class="nav-pill">Productos</a>
+        <a href="contacto.html" class="nav-pill">Contacto</a>
+    </nav>
     
     <!-- *************** CATEGORÍAS *************** -->
     <section class="categorias">
