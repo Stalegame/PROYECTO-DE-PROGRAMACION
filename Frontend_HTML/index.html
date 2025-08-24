@@ -22,7 +22,7 @@
             position: relative;
         }
         .logo-container {
-            max-width: 220px;  /* Revisar esto! */
+            max-width: 250px;  /* Revisar esto! */
             margin: 0 auto;
         }
         .logo-container img {
@@ -84,6 +84,43 @@
             font-size: 1.2em;
         }
         
+        /* NAV */
+        .main-nav{
+        display:flex;
+        justify-content:center;
+        gap:40px;
+        padding:12px 16px;
+        background:#FFEBEE;
+        border-top:1px solid rgba(0,0,0,0.06);
+        border-bottom:1px solid rgba(0,0,0,0.06);
+        }
+
+        /* Botones tipo “pill” */
+        .nav-pill{
+        display:inline-block;
+        padding:10px 50px;
+        border-radius:9999px;
+        text-decoration:none;
+        font-weight:bold;
+        color:#E91E63;
+        background:#FFEBEE;
+        transition:all .2s ease;
+        }
+
+        /* Hover/Focus: invierte colores para feedback */
+        .nav-pill:hover,
+        .nav-pill:focus{
+        background:#c2185b;
+        color:#fff;
+        outline:none;
+        }
+
+        /* Estado activo (opcional, por página) */
+        .nav-pill.is-active{
+        background:#c2185b;
+        color:#fff;
+        }
+        
         /* CATEGORÍAS */
         .categorias {
             text-align: center;
@@ -117,6 +154,10 @@
             border-radius: 10px;
             padding: 15px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .producto:hover {
+            transform: translateY(-5px);
         }
         .producto img {
             width: 100%;
@@ -139,7 +180,7 @@
      <!-- *************** LOGO *************** -->
     <header>
         <div class="logo-container">
-            <button class="btn-login">
+            <button class="btn-login" onclick="location.href='login_users.html'">
                 <img src="/img/user_login.png" alt="Login" class="icono-btn">
                 Iniciar Sesión
             </button>
@@ -152,28 +193,48 @@
             
         </div>
     </header>
-    
+
     <!-- *************** BANNER *************** -->
     <div class="banner">
         🎉 OFERTA ESPECIAL: 2x1 en Alfajores - Solo por hoy!
     </div>
+
+    <!-- *************** NAV *************** -->
+    <nav class="main-nav" aria-label="Navegación principal">
+        <a href="index.html" class="nav-pill">Inicio</a>
+        <a href="productos.html" class="nav-pill">Productos</a>
+        <a href="contacto.html" class="nav-pill">Contacto</a>
+    </nav>
     
     <!-- *************** CATEGORÍAS *************** -->
     <section class="categorias">
         <h2>Nuestras Categorías</h2>
         
         <div class="categoria">
-           <!-- **** REEMPLAZAR ICONO **** -->
             <img src="/img/alfajores.png" alt="Alfajores">
             <p>Alfajores</p>
         </div>
         
         <div class="categoria">
-           
-            <img src="/img/tabletones.png" alt="Tableton Maní">
-       
-            <p>Tabletones</p>
+            <img src="/img/tabletones.png" alt="Chocolates">
+            <p>Chocolates</p>
         </div>
+
+        <div class="categoria">
+            <img src="/img/Sufle_Chanfle_Mani.jpg" alt="Snacks">
+            <p>Snaks</p>
+        </div>
+
+        <div class="categoria">
+            <img src="/img/palo_palito.png" alt="Helados">
+            <p>Helados</p>
+        </div>
+
+        <div class="categoria">
+            <img src="/img/cola_cola_fruna.jpg" alt="Bebidas">
+            <p>Bebidas</p>
+        </div>
+
     </section>
     
     <!-- *************** PRODUCTOS *************** -->
@@ -197,11 +258,48 @@
             <p>$2.490</p>
             <button>Comprar</button>
         </div>
+
+        <div class="producto">
+            
+            <img src="/img/cola_cola_fruna.jpg" alt="Cola cola">
+           
+            <h3>Cola Cola Clásica</h3>
+            <p>$1.490</p>
+            <button>Comprar</button>
+        </div>
+
+        <div class="producto">
+            
+            <img src="/img/Alfajor_Panchito.jpg" alt="Alfajor Panchito">
+           
+            <h3>Alfajor Panchito</h3>
+            <p>$490</p>
+            <button>Comprar</button>
+        </div>
+
+        <div class="producto">
+            
+            <img src="/img/Sufle_Chanfle_Mani.jpg" alt="Sufle Maní">
+           
+            <h3>Sufle Mani</h3>
+            <p>$990</p>
+            <button>Comprar</button>
+        </div>
+
+        <div class="producto">
+            
+            <img src="/img/palo_palito.png" alt="Palo Palito">
+           
+            <h3>Palo Palito</h3>
+            <p>$290</p>
+            <button>Comprar</button>
+        </div>
+
     </section>
     
     <footer>
         <p>📍 Av. Providencia 1234, Santiago</p>
-        <p>© 2024 FRUNA Chile - Todos los derechos reservados</p>
+        <p>© 2025 Fruna · Creado por Comprimidos Team.</p>
     </footer>
 </body>
 </html>

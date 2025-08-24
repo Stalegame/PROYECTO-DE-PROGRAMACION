@@ -73,6 +73,42 @@
             width: 80px;
             height: 80px;
         }
+        /* NAV */
+        .main-nav{
+        display:flex;
+        justify-content:center;
+        gap:40px;
+        padding:12px 16px;
+        background:#FFEBEE;
+        border-top:1px solid rgba(0,0,0,0.06);
+        border-bottom:1px solid rgba(0,0,0,0.06);
+        }
+
+        /* Botones tipo “pill” */
+        .nav-pill{
+        display:inline-block;
+        padding:10px 50px;
+        border-radius:9999px;
+        text-decoration:none;
+        font-weight:bold;
+        color:#E91E63;
+        background:#FFEBEE;
+        transition:all .2s ease;
+        }
+
+        /* Hover/Focus: invierte colores para feedback */
+        .nav-pill:hover,
+        .nav-pill:focus{
+        background:#c2185b;
+        color:#fff;
+        outline:none;
+        }
+
+        /* Estado activo (opcional, por página) */
+        .nav-pill.is-active{
+        background:#c2185b;
+        color:#fff;
+        }
         
         /* Contenedor principal */
         .contenedor {
@@ -182,6 +218,13 @@
             
         </div>
     </header>
+
+    <!-- *************** NAV *************** -->
+    <nav class="main-nav" aria-label="Navegación principal">
+        <a href="index.html" class="nav-pill">Inicio</a>
+        <a href="productos.html" class="nav-pill">Productos</a>
+        <a href="contacto.html" class="nav-pill">Contacto</a>
+    </nav>
     
     <div class="contenedor">
         <!-- Filtros de categorías -->
@@ -198,7 +241,6 @@
         
         <!-- Lista de productos -->
         <main class="productos">
-            <!-- Producto 1: Alfajor Clásico -->
             <div class="producto">
                 <img src="/img/alfajores.png" alt="Alfajor FRUNA Clásico">
                 <div class="producto-info">
@@ -207,8 +249,7 @@
                     <button class="btn-comprar">Añadir al carrito</button>
                 </div>
             </div>
-            
-            <!-- Producto 2: Chocolate Maní -->
+
             <div class="producto">
                 <img src="/img/tabletones.png" alt="Tableton FRUNA Maní">
                 <div class="producto-info">
@@ -218,17 +259,42 @@
                 </div>
             </div>
             
-            <!-- Producto 3: Snack Mix -->
             <div class="producto">
-                <img src="/img/palo palito.png" alt="Snack Mix FRUNA">
+                <img src="/img/Sufle_Chanfle_Mani.jpg" alt="Sufle Maní">
                 <div class="producto-info">
-                    <h3>Snack Mix</h3>
-                    <p class="precio">$1.590 <span class="iva">IVA incluido</span></p>
+                    <h3>Sufle Maní</h3>
+                    <p class="precio">$990 <span class="iva">IVA incluido</span></p>
+                    <button class="btn-comprar">Añadir al carrito</button>
+                </div>
+            </div>
+
+            <div class="producto">
+                <img src="/img/cola_cola_fruna.jpg" alt="Cola Cola">
+                <div class="producto-info">
+                    <h3>Cola Cola Clásica</h3>
+                    <p class="precio">$1.490 <span class="iva">IVA incluido</span></p>
+                    <button class="btn-comprar">Añadir al carrito</button>
+                </div>
+            </div>
+
+            <div class="producto">
+                <img src="/img/palo_palito.png" alt="Palo Palito">
+                <div class="producto-info">
+                    <h3>Palo Palito</h3>
+                    <p class="precio">$290 <span class="iva">IVA incluido</span></p>
                     <button class="btn-comprar">Añadir al carrito</button>
                 </div>
             </div>
             
-            <!-- Más productos... -->
+            <div class="producto">
+                <img src="/img/Alfajor_Panchito.jpg" alt="Alfajor Panchito">
+                <div class="producto-info">
+                    <h3>Alfajor Panchito</h3>
+                    <p class="precio">$490 <span class="iva">IVA incluido</span></p>
+                    <button class="btn-comprar">Añadir al carrito</button>
+                </div>
+            </div>
+
         </main>
     </div>
 </body>
