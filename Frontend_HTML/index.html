@@ -43,7 +43,7 @@
             font-size: 25px;
             font-weight: bold;
             padding: 10px 20px;
-            border-radius: 20px;
+            border-radius: 30px;
             border: none;
             cursor: pointer;
         }
@@ -139,6 +139,41 @@
             border-radius: 50%;
             border: 3px solid #E91E63;
         }
+
+        /* BARRA LATERAL oculta por defecto */
+        .sidebar {
+            position: fixed;
+            bottom: 0;
+            left: -345px;  /* oculta a la izquierda */
+            width: 300px;
+            height: 60%;
+            background-color: #333;
+            color: #FFF9FA;
+            padding: 20px;
+            transition: left 0.3s ease; /* animación suave */
+            z-index: 1000;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            border-radius: 15px;
+        }
+
+        /* Cuando está activa */
+        .sidebar.active {
+            left: 0;
+        }
+        .btn-buy-bag {
+            bottom: 0;
+            width: 50%;
+            background: #FFC107;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: background 0.3s;
+        }
         
         /* PRODUCTOS DESTACADOS */
         .destacados {
@@ -164,6 +199,20 @@
             border-radius: 8px;
             margin-bottom: 10px;
         }
+        .btn-comprar {
+            background: #E91E63;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        .btn-comprar:hover {
+            background: #C2185B;
+        }
         
         /* FOOTER */
         footer {
@@ -185,7 +234,7 @@
                 Iniciar Sesión
             </button>
 
-            <button class="btn-shop-bag">
+            <button class="btn-shop-bag" onclick="">
                 <img src="/img/shop_white.png" alt="shop_bag" class="icono-btn2">
             </button>
 
@@ -205,6 +254,13 @@
         <a href="productos.html" class="nav-pill">Productos</a>
         <a href="contacto.html" class="nav-pill">Contacto</a>
     </nav>
+
+    <!-- *************** SIDEBAR *************** -->
+    <div class="sidebar">
+        <h2>Carrito</h2>
+        <p>No hay productos todavía</p>
+        <button class="btn-buy-bag" type="submit">Comprar</button>
+    </div>
     
     <!-- *************** CATEGORÍAS *************** -->
     <section class="categorias">
@@ -247,7 +303,7 @@
            
             <h3>Alfajor Clásico</h3>
             <p>$1.290</p>
-            <button>Comprar</button>
+            <button class="btn-comprar" >Comprar</button>
         </div>
         
         <div class="producto">
@@ -256,7 +312,7 @@
            
             <h3>Tableton Maní</h3>
             <p>$2.490</p>
-            <button>Comprar</button>
+            <button class="btn-comprar">Comprar</button>
         </div>
 
         <div class="producto">
@@ -265,7 +321,7 @@
            
             <h3>Cola Cola Clásica</h3>
             <p>$1.490</p>
-            <button>Comprar</button>
+            <button class="btn-comprar">Comprar</button>
         </div>
 
         <div class="producto">
@@ -274,7 +330,7 @@
            
             <h3>Alfajor Panchito</h3>
             <p>$490</p>
-            <button>Comprar</button>
+            <button class="btn-comprar">Comprar</button>
         </div>
 
         <div class="producto">
@@ -283,7 +339,7 @@
            
             <h3>Sufle Mani</h3>
             <p>$990</p>
-            <button>Comprar</button>
+            <button class="btn-comprar">Comprar</button>
         </div>
 
         <div class="producto">
@@ -292,8 +348,19 @@
            
             <h3>Palo Palito</h3>
             <p>$290</p>
-            <button>Comprar</button>
+            <button class="btn-comprar">Comprar</button>
         </div>
+
+        <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const carritoBtn = document.querySelector(".btn-shop-bag");
+            const sidebar = document.querySelector(".sidebar");
+
+            carritoBtn.addEventListener("click", () => {
+                sidebar.classList.toggle("active"); 
+            });
+        });
+        </script>
 
     </section>
     
