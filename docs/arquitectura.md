@@ -6,7 +6,7 @@ El proyecto **Fruna** está diseñado bajo una **arquitectura por capas**, lo qu
 
 ```mermaid
 flowchart TD
-    Cliente["🖥️ Cliente (Frontend)"] --> Rutas["🛣️ Rutas (Endpoints)"]
+    Rutas["🛣️ Rutas (Endpoints)"]
     Rutas --> Controladores["🎮 Controladores"]
     Controladores --> Servicios["⚙️ Servicios (Negocio)"]
     Servicios --> Datos["💾 Datos (Persistencia)"]
@@ -14,8 +14,6 @@ flowchart TD
     Datos --> Servicios
     Servicios --> Controladores
     Controladores --> Rutas
-    Rutas --> Cliente
-
 ```
 
 ---
