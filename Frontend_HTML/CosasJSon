@@ -1,0 +1,424 @@
+JsonProductosDAO.js
+// persistence/json/JsonProductosDAO.js
+const ProductosDAO = require('../interfaces/ProductosDAO');
+const fs = require('fs').promises;
+const path = require('path');
+
+class JsonProductosDAO extends ProductosDAO {
+  constructor() {
+    super();
+    this.filePath = path.join(__dirname, '../../data/productos.json');
+    this.ensureFileExists();
+  }
+
+  async ensureFileExists() {
+    try {
+      await fs.access(this.filePath);
+    } catch {
+      // Crear archivo si no existe
+      await fs.writeFile(this.filePath, JSON.stringify({
+        productos: [],
+        ultimoId: 0
+      }, null, 2));
+    }
+  }
+
+  async readData() {
+    try {
+      const data = await fs.readFile(this.filePath, 'utf8');
+      return JSON.parse(data);
+    } catch (error) {
+      throw new Error(`Error leyendo archivo: ${error.message}`);
+    }
+  }
+
+  async writeData(data) {
+    try {
+      await fs.writeFile(this.filePath, JSON.stringify(data, null, 2));
+    } catch (error) {
+      throw new Error(`Error escribiendo archivo: ${error.message}`);
+    }
+  }
+
+  async getAll() {
+    const data = await this.readData();
+    return data.productos.filter(p => p.activo !== false);
+  }
+
+  async getById(id) {
+    const data = await this.readData();
+    return data.productos.find(p => p.id === id && p.activo !== false);
+  }
+
+  async getByCategory(categoria) {
+    const data = await this.readData();
+    return data.productos.filter(p => 
+      p.categoria === categoria && p.activo !== false
+    );
+  }
+
+  async create(producto) {
+    const data = await this.readData();
+    const nuevoId = data.ultimoId + 1;
+    
+    const nuevoProducto = {
+      id: `PRD${nuevoId.toString().padStart(3, '0')}`,
+      ...producto,
+      activo: true,
+      fecha_creacion: new Date().toISOString(),
+      fecha_actualizacion: new Date().toISOString()
+    };
+
+    data.productos.push(nuevoProducto);
+    data.ultimoId = nuevoId;
+    
+    await this.writeData(data);
+    return nuevoProducto;
+  }
+
+  async update(id, updates) {
+    const data = await this.readData();
+    const index = data.productos.findIndex(p => p.id === id);
+    
+    if (index === -1) {
+      throw new Error('Producto no encontrado');
+    }
+
+    data.productos[index] = {
+      ...data.productos[index],
+      ...updates,
+      fecha_actualizacion: new Date().toISOString()
+    };
+
+    await this.writeData(data);
+    return data.productos[index];
+  }
+
+  async delete(id) {
+    return await this.update(id, { activo: false });
+  }
+
+  async updateStock(id, nuevoStock) {
+    return await this.update(id, { stock: nuevoStock });
+  }
+}
+
+module.exports = JsonProductosDAO;
+
+MODIFICACIONES CON EL DEBIDO CODIGO !!!!
+
+----------------------separardores---------------------------
+JsonClientesDAO.js
+
+// persistence/json/JsonClientesDAO.js
+const ClientesDAO = require('../interfaces/ClientesDAO');
+const fs = require('fs').promises;
+const path = require('path');
+
+class JsonClientesDAO extends ClientesDAO {
+  constructor() {
+    super();
+    this.filePath = path.join(__dirname, '../../data/clientes.json');
+    this.ensureFileExists();
+  }
+
+  async ensureFileExists() {
+    try {
+      await fs.access(this.filePath);
+    } catch {
+      await fs.writeFile(this.filePath, JSON.stringify({
+        clientes: [],
+        ultimoId: 0
+      }, null, 2));
+    }
+  }
+
+  async readData() {
+    try {
+      const data = await fs.readFile(this.filePath, 'utf8');
+      return JSON.parse(data);
+    } catch (error) {
+      throw new Error(`Error leyendo archivo: ${error.message}`);
+    }
+  }
+
+  async writeData(data) {
+    try {
+      await fs.writeFile(this.filePath, JSON.stringify(data, null, 2));
+    } catch (error) {
+      throw new Error(`Error escribiendo archivo: ${error.message}`);
+    }
+  }
+
+  async getAll() {
+    const data = await this.readData();
+    return data.clientes;
+  }
+
+  async getById(id) {
+    const data = await this.readData();
+    return data.clientes.find(c => c.id === id);
+  }
+
+  async getByEmail(email) {
+    const data = await this.readData();
+    return data.clientes.find(c => c.email === email);
+  }
+
+  async create(cliente) {
+    const data = await this.readData();
+    const nuevoId = data.ultimoId + 1;
+    
+    const nuevoCliente = {
+      id: `CLI${nuevoId.toString().padStart(3, '0')}`,
+      ...cliente,
+      fecha_registro: new Date().toISOString()
+    };
+
+    data.clientes.push(nuevoCliente);
+    data.ultimoId = nuevoId;
+    
+    await this.writeData(data);
+    return nuevoCliente;
+  }
+
+  async update(id, updates) {
+    const data = await this.readData();
+    const index = data.clientes.findIndex(c => c.id === id);
+    
+    if (index === -1) {
+      throw new Error('Cliente no encontrado');
+    }
+
+    data.clientes[index] = {
+      ...data.clientes[index],
+      ...updates,
+      fecha_actualizacion: new Date().toISOString()
+    };
+
+    await this.writeData(data);
+    return data.clientes[index];
+  }
+
+  async delete(id) {
+    const data = await this.readData();
+    const index = data.clientes.findIndex(c => c.id === id);
+    
+    if (index === -1) {
+      throw new Error('Cliente no encontrado');
+    }
+
+    const clienteEliminado = data.clientes.splice(index, 1)[0];
+    await this.writeData(data);
+    
+    return clienteEliminado;
+  }
+}
+
+module.exports = JsonClientesDAO;
+
+-------------Separadores-------------------
+JsonChatbotDAO.js
+// persistence/json/JsonChatbotDAO.js
+const ChatbotDAO = require('../interfaces/ChatbotDAO');
+const fs = require('fs').promises;
+const path = require('path');
+
+class JsonChatbotDAO extends ChatbotDAO {
+  constructor() {
+    super();
+    this.conversationsPath = path.join(__dirname, '../../data/conversaciones-chatbot.json');
+    this.faqsPath = path.join(__dirname, '../../data/faqs-chatbot.json');
+    this.ensureFilesExist();
+  }
+
+  async ensureFilesExist() {
+    const files = [
+      { path: this.conversationsPath, default: { conversaciones: [], ultimoId: 0 } },
+      { path: this.faqsPath, default: { faqs: [], ultimoId: 0 } }
+    ];
+
+    for (const file of files) {
+      try {
+        await fs.access(file.path);
+      } catch {
+        await fs.writeFile(file.path, JSON.stringify(file.default, null, 2));
+      }
+    }
+  }
+
+  async readConversations() {
+    try {
+      const data = await fs.readFile(this.conversationsPath, 'utf8');
+      return JSON.parse(data);
+    } catch (error) {
+      throw new Error(`Error leyendo conversaciones: ${error.message}`);
+    }
+  }
+
+  async readFAQs() {
+    try {
+      const data = await fs.readFile(this.faqsPath, 'utf8');
+      return JSON.parse(data);
+    } catch (error) {
+      throw new Error(`Error leyendo FAQs: ${error.message}`);
+    }
+  }
+
+  async writeConversations(data) {
+    try {
+      await fs.writeFile(this.conversationsPath, JSON.stringify(data, null, 2));
+    } catch (error) {
+      throw new Error(`Error escribiendo conversaciones: ${error.message}`);
+    }
+  }
+
+  async writeFAQs(data) {
+    try {
+      await fs.writeFile(this.faqsPath, JSON.stringify(data, null, 2));
+    } catch (error) {
+      throw new Error(`Error escribiendo FAQs: ${error.message}`);
+    }
+  }
+
+  async saveConversation(conversacion) {
+    const data = await this.readConversations();
+    const nuevoId = data.ultimoId + 1;
+    
+    const nuevaConversacion = {
+      id: nuevoId,
+      ...conversacion,
+      timestamp: new Date().toISOString()
+    };
+
+    data.conversaciones.push(nuevaConversacion);
+    data.ultimoId = nuevoId;
+    
+    await this.writeConversations(data);
+    return nuevaConversacion;
+  }
+
+  async getConversations(sessionId) {
+    const data = await this.readConversations();
+    return data.conversaciones.filter(c => c.session_id === sessionId);
+  }
+
+  async getFAQs() {
+    const data = await this.readFAQs();
+    return data.faqs;
+  }
+
+  async addFAQ(faq) {
+    const data = await this.readFAQs();
+    const nuevoId = data.ultimoId + 1;
+    
+    const nuevaFAQ = {
+      id: nuevoId,
+      ...faq,
+      veces_preguntada: 0,
+      ultima_actualizacion: new Date().toISOString()
+    };
+
+    data.faqs.push(nuevaFAQ);
+    data.ultimoId = nuevoId;
+    
+    await this.writeFAQs(data);
+    return nuevaFAQ;
+  }
+
+  async incrementFAQCount(faqId) {
+    const data = await this.readFAQs();
+    const faq = data.faqs.find(f => f.id === faqId);
+    
+    if (faq) {
+      faq.veces_preguntada += 1;
+      faq.ultima_actualizacion = new Date().toISOString();
+      await this.writeFAQs(data);
+    }
+    
+    return faq;
+  }
+}
+
+module.exports = JsonChatbotDAO;
+-----------SEPARADORES-------------------
+Ejemplo: productsRouter.js
+// routes/productsRouter.js
+const express = require('express');
+const router = express.Router();
+const PersistenceFactory = require('../persistence/PersistenceFactory');
+
+// Obtener instancia del DAO
+const productosDAO = PersistenceFactory.getDAO('productos');
+
+// GET /api/productos
+router.get('/', async (req, res) => {
+  try {
+    const { categoria, pagina = 1, limite = 10 } = req.query;
+    
+    let productos;
+    if (categoria) {
+      productos = await productosDAO.getByCategory(categoria);
+    } else {
+      productos = await productosDAO.getAll();
+    }
+
+    // Paginación
+    const inicio = (pagina - 1) * limite;
+    const fin = inicio + parseInt(limite);
+    const productosPaginados = productos.slice(inicio, fin);
+
+    res.json({
+      productos: productosPaginados,
+      paginacion: {
+        pagina: parseInt(pagina),
+        limite: parseInt(limite),
+        total: productos.length,
+        paginas: Math.ceil(productos.length / limite)
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/productos
+router.post('/', async (req, res) => {
+  try {
+    const producto = await productosDAO.create(req.body);
+    res.status(201).json({
+      message: 'Producto creado exitosamente',
+      producto
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+module.exports = router;
+
+-----------------------SEPARADORES-----------------------
+Archivos de Datos de Ejemplo:
+
+// data/productos.json (ejemplo)
+{
+  "productos": [
+    {
+      "id": "PRD001",
+      "nombre": "Alfajor Clásico",
+      "descripcion": "Alfajor tradicional con dulce de leche",
+      "precio": 1290,
+      "categoria": "alfajores",
+      "stock": 45,
+      "imagen": "alfajor-clasico.jpg",
+      "nutricion": {
+        "calorias": 150,
+        "azucar": 12,
+        "grasas": 5
+      },
+      "activo": true,
+      "fecha_creacion": "2024-03-20T10:30:00.000Z",
+      "fecha_actualizacion": "2024-03-20T10:30:00.000Z"
+    }
+  ],
+  "ultimoId": 1
