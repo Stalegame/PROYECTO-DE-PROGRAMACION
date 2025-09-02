@@ -43,7 +43,7 @@
             font-size: 25px;
             font-weight: bold;
             padding: 10px 20px;
-            border-radius: 20px;
+            border-radius: 30px;
             border: none;
             cursor: pointer;
         }
@@ -109,6 +109,41 @@
         background:#c2185b;
         color:#fff;
         }
+
+        /* BARRA LATERAL oculta por defecto */
+        .sidebar {
+            position: fixed;
+            bottom: 0;
+            left: -345px;  /* oculta a la izquierda */
+            width: 300px;
+            height: 60%;
+            background-color: #333;
+            color: #FFF9FA;
+            padding: 20px;
+            transition: left 0.3s ease; /* animación suave */
+            z-index: 1000;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            border-radius: 15px;
+        }
+
+        /* Cuando está activa */
+        .sidebar.active {
+            left: 0;
+        }
+        .btn-buy-bag {
+            bottom: 0;
+            width: 50%;
+            background: #FFC107;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: background 0.3s;
+        }
         
         /* Contenedor principal */
         .contenedor {
@@ -141,6 +176,10 @@
             color: #333;
             text-decoration: none;
             font-weight: bold;
+        }
+        .filtros a:hover{
+        color:#E91E63;
+        outline:none;
         }
         
         /* Productos */
@@ -189,7 +228,7 @@
             color: white;
             border: none;
             padding: 8px 15px;
-            border-radius: 5px;
+            border-radius: 20px;
             cursor: pointer;
             margin-top: 10px;
             width: 100%;
@@ -203,7 +242,7 @@
 
 <body>
     <header>
-        <button class="btn-login">
+        <button class="btn-login" onclick="location.href='login_users.html'">
             <img src="/img/user_login.png" alt="Login" class="icono-btn">
             Iniciar Sesión
         </button>
@@ -213,9 +252,7 @@
         </button>
 
         <div class="logo-container">
-            
             <img src="/img/logo fruna.png" alt="FRUNA Chile">
-            
         </div>
     </header>
 
@@ -225,6 +262,13 @@
         <a href="productos.html" class="nav-pill">Productos</a>
         <a href="contacto.html" class="nav-pill">Contacto</a>
     </nav>
+
+    <!-- *************** SIDEBAR *************** -->
+    <div class="sidebar">
+        <h2>Carrito</h2>
+        <p>No hay productos todavía</p>
+        <button class="btn-buy-bag" type="submit">Comprar</button>
+    </div>
     
     <div class="contenedor">
         <!-- Filtros de categorías -->
@@ -233,7 +277,9 @@
             <ul>
                 <li><a href="#">Alfajores ($1.290 - $2.990)</a></li>
                 <li><a href="#">Chocolates ($1.990 - $3.490)</a></li>
-                <li><a href="#">Snacks ($1.000 - $2.500)</a></li>
+                <li><a href="#">Snacks ($1.000 - $2.490)</a></li>
+                <li><a href="#">Helados ($290 - $1.090)</a></li>
+                <li><a href="#">Bebidas ($1.490 - $2.490)</a></li>
                 <li><a href="#">Ofertas</a></li>
                 <li><a href="#">Novedades</a></li>
             </ul>
@@ -297,6 +343,17 @@
 
         </main>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const carritoBtn = document.querySelector(".btn-shop-bag");
+            const sidebar = document.querySelector(".sidebar");
+
+            carritoBtn.addEventListener("click", () => {
+                sidebar.classList.toggle("active"); 
+            });
+        });
+        </script>
 </body>
 </html>
 
