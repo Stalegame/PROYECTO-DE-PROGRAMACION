@@ -2,13 +2,13 @@
 ----------------------- 
 Proyecto Fruna - Gestion de Productos y Contactos
 
-Proyecto web para un supermercado "Fruna" que permitirá gestionar información sobre productos, registrar los clientes frecuentes por pedidos al "Por Mayor". El sistema esta diseñado bajo una arquitectura por capas, que estara conectada a una base de datos para almacenar y procesar la informacion de manera segura y eficientez y se desarrollará progresivamente.
+El "Proyecto Fruna" es una plataforma web destinada a gestionar productos y clientes frecuentes para un supermercado ficticio. El sistema, basado en una arquitectura por capas, se conectará a una base de datos para asegurar el almacenamiento seguro y eficiente de la información. El proyecto se desarrollará en fases, comenzando con una implementación básica que se irá mejorando con el tiempo.
 
 ## Caracteristicas principales
 - Interfaz de usuario intuitiva para comprar productos.
 - Gestión de carritos de compra.
 - Registro e historial de compras.
-- Integración con base de datos para almacenar productos, usarios y transacciones.
+- Integración con base de datos para almacenar productos, contraseñas y transacciones.
 - Backend con API para comunicacioón entre frontend y base de datos.
   
 ## Tecnologias previstas
@@ -17,10 +17,7 @@ Proyecto web para un supermercado "Fruna" que permitirá gestionar información 
 - **Backend:** Node.js, persistencia inicial en JSON, migración posterior a SQLITE, variables de entorno (.env)
 
 ## Objetivo
-Crear una solución web completa para simular un sistema de compras en linea para el supermercado Fruna.
-Gestionar un catálogo de productos (lectura, inserción y actualización de datos). 
-Integrar datos de una API externa relacionada (informacion nutricional)
-Asegurar un flujo completo desde el frontend hasta el backend.
+Desarrollar una solución web completa para simular un sistema de compras en línea para el supermercado Fruna. El sistema incluirá la gestión de un catálogo de productos, con funcionalidades de lectura, inserción y actualización de datos, y la integración con una API externa que proporcionará información nutricional. Además, esta API contará con un chatbot interactivo, donde los usuarios podrán realizar consultas y recibir respuestas automáticas de manera ágil.
 
 ## 👥 Integrantes y Roles
 - **🧑‍💻 Thomas Aranguiz** **[@Stalegame](https://github.com/Stalegame)** – Líder Técnico 
