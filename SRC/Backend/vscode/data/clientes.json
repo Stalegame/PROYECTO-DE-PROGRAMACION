@@ -1,0 +1,51 @@
+[
+  {
+    "email": "ana@email.com",
+    "nombre": "Ana Garc�a",
+    "password": "123456",
+    "telefono": "555-1234",
+    "id": "1756876821782"
+  },
+  {
+    "email": "ana@email.com",
+    "nombre": "Ana Garc�a",
+    "password": "123456",
+    "telefono": "555-1234",
+    "id": "1756877389835"
+  },
+  {
+    "email": "carlos@email.com",
+    "nombre": "Carlos L�pez",
+    "password": "123456",
+    "telefono": "555-5678",
+    "id": "1756877389897"
+  },
+  {
+    "email": "maria@email.com",
+    "nombre": "Maria Rodriguez",
+    "password": "123456",
+    "telefono": "555-9012",
+    "id": "1756877389959"
+  },
+  {
+    "email": "ana@email.com",
+    "nombre": "Ana Garc�a",
+    "password": "123456",
+    "telefono": "555-1234",
+    "id": "1756923184374"
+  },
+  {
+    "email": "carlos@email.com",
+    "nombre": "Carlos L�pez",
+    "password": "123456",
+    "telefono": "555-5678",
+    "id": "1756923184692"
+  },
+  {
+    "email": "maria@email.com",
+    "nombre": "Maria Rodriguez",
+    "password": "123456",
+    "telefono": "555-9012",
+    "id": "1756923184761"
+  }
+]
