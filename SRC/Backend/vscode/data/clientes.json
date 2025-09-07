@@ -1,0 +1,24 @@
+[
+  {
+    "id": "1",
+    "nombre": "María González",
+    "email": "maria@email.com",
+    "password": "$2b$10$1QW4ifD4QpEgO2KcQFmgPegFdS1BToxNGdsiIgM4.4mffCNE4H60y",
+    "telefono": "+56912345678",
+    "direccion": "Av. Principal 123",
+    "fechaRegistro": "2025-09-07T09:56:09.891Z",
+    "activo": true,
+    "role": "client"
+  },
+  {
+    "id": "2",
+    "nombre": "Admin Fruna",
+    "email": "admin@fruna.com",
+    "password": "$2b$10$3pAZJE4r1zDB98W7IoZI/OHhEtmCKYkvAB.NACOXLYH7sWT1F79cK",
+    "telefono": "+56987654321",
+    "direccion": "Oficina Central",
+    "fechaRegistro": "2025-09-07T09:56:09.891Z",
+    "activo": true,
+    "role": "admin"
+  }
+]

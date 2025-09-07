@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "name": "Alfajor Clásico",
+    "price": 1290,
+    "stock": 45,
+    "category": "Alfajores",
+    "description": "Alfajor tradicional con dulce de leche",
+    "image": "alfajor.jpg",
+    "active": true
+  },
+  {
+    "id": "2",
+    "name": "Chocolate Maní",
+    "price": 2490,
+    "stock": 32,
+    "category": "Chocolates",
+    "description": "Chocolate negro con maní crocante",
+    "image": "chocolate.jpg",
+    "active": true
+  }
+]
