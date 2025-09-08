@@ -1,10 +1,27 @@
-﻿const express = require('express');
+﻿// routes/productsRouter.js
+const path = require('path');
+const express = require('express');
 const { body, param, validationResult } = require('express-validator');
+
+const PersistenceFactoryPath = path.join(__dirname, '..', 'PersistenceFactory');
+console.log('[productsRouter] require ->', PersistenceFactoryPath);
+console.log('[productsRouter] resolve ->', require.resolve(PersistenceFactoryPath));
+
+const PersistenceFactory = require(PersistenceFactoryPath);
+
 const router = express.Router();
-const PersistenceFactory = require('../PersistenceFactory');
 
-const productosDAO = PersistenceFactory.getDAO('productos');
-
+// === Fallback robusto: si la Factory falla, uso el DAO directo ===
+let productosDAO;
+try {
+  const tipo = 'productos';
+  console.log('[productsRouter] tipo =>', JSON.stringify(tipo), 'len=', (tipo||'').length);
+  productosDAO = PersistenceFactory.getDAO(tipo);
+} catch (e) {
+  console.error('[productsRouter] Factory falló, usando fallback JsonProductosDAO. Motivo:', e.message);
+  const JsonProductosDAO = require(path.join(__dirname, '..', 'json', 'JsonProductosDAO'));
+  productosDAO = new JsonProductosDAO();
+}
 // ==================== MIDDLEWARES DE VALIDACIÓN ====================
 
 // Validaciones para crear producto

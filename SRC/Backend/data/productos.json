@@ -14,5 +14,14 @@
     "stock": 32,
     "category": "Chocolates",
     "description": "Chocolate negro con maní crocante"
+  },
+  {
+    "name": "Manzana Royal",
+    "price": 1290,
+    "stock": 25,
+    "category": "Frutas",
+    "description": "Roja y dulce",
+    "id": "1757281102446",
+    "timestamp": "2025-09-07T21:38:22.446Z"
   }
 ]

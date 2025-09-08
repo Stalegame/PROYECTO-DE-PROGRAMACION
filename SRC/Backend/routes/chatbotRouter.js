@@ -1,7 +1,7 @@
 ﻿const express = require('express');
 const { body, validationResult } = require('express-validator');
 const router = express.Router();
-const PersistenceFactory = require('../persistence/PersistenceFactory');
+const PersistenceFactory = require('../PersistenceFactory');
 
 const chatbotDAO = PersistenceFactory.getDAO('chatbot');
 

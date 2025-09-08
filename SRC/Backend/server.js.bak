@@ -196,10 +196,8 @@ app.use((err, req, res, next) => {
 
 // 404
 
-
-
 app.get("/login", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "Frontend", "login_users.html"));
+  res.sendFile(require("path").join(__dirname, "..", "Frontend", "login_users.html"));
 });
 app.use("*", (req, res) => {
   res.status(404).json({
@@ -249,7 +247,6 @@ app.get("/", (req, res) => {
   if (fs.existsSync(p2)) return res.sendFile(p2);
   res.status(404).json({ error: "index.html no encontrado", tried: [p1, p2] });
 });
-
 
 
 

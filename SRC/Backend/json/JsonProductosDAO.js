@@ -3,8 +3,8 @@ const path = require('path');
 
 class JsonProductosDAO {
   constructor() {
-    // RUTA CORREGIDA: apunta a vscode/data/productos.json
-    this.filePath = path.join(__dirname, '..', 'data', 'productos.json');
+    // IMPORTANTE: data/ está al lado de json/ → un solo ".."
+    this.filePath = require('path').join(__dirname, '..', 'data', 'productos.json');
     this.init();
   }
 
@@ -57,18 +57,18 @@ class JsonProductosDAO {
     try {
       const productos = await this.getAll();
       const index = productos.findIndex(p => p.id === id);
-      
+
       if (index === -1) {
         console.log('❌ Producto no encontrado para actualizar:', id);
         return null;
       }
-      
-      productos[index] = { 
-        ...productos[index], 
+
+      productos[index] = {
+        ...productos[index],
         ...updatedProducto,
         ultimaActualizacion: new Date().toISOString()
       };
-      
+
       await fs.writeFile(this.filePath, JSON.stringify(productos, null, 2));
       console.log('✅ Producto actualizado:', id);
       return productos[index];
@@ -81,14 +81,14 @@ class JsonProductosDAO {
   async delete(id) {
     try {
       const productos = await this.getAll();
-      const filteredProductos = productos.filter(p => p.id !== id);
-      
-      if (productos.length === filteredProductos.length) {
+      const filtered = productos.filter(p => p.id !== id);
+
+      if (productos.length === filtered.length) {
         console.log('❌ Producto no encontrado para eliminar:', id);
         return false;
       }
-      
-      await fs.writeFile(this.filePath, JSON.stringify(filteredProductos, null, 2));
+
+      await fs.writeFile(this.filePath, JSON.stringify(filtered, null, 2));
       console.log('✅ Producto eliminado:', id);
       return true;
     } catch (error) {
