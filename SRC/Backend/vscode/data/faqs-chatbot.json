@@ -1,0 +1,30 @@
+[
+  {
+    "id": "1",
+    "pregunta": "¿Cómo realizo un pedido?",
+    "respuesta": "Puedes hacer tu pedido a través de nuestra web, por teléfono o visitando nuestra tienda física.",
+    "categoria": "pedidos",
+    "fechaCreacion": "2025-09-08T19:05:39.361Z"
+  },
+  {
+    "id": "2",
+    "pregunta": "¿Cuánto tarda la entrega?",
+    "respuesta": "El tiempo de entrega depende de tu ubicación, generalmente entre 1-3 días hábiles.",
+    "categoria": "entregas",
+    "fechaCreacion": "2025-09-08T19:05:39.361Z"
+  },
+  {
+    "id": "3",
+    "pregunta": "¿Puedo cambiar o devolver un producto?",
+    "respuesta": "Sí, aceptamos cambios y devoluciones dentro de los 7 días posteriores a la compra.",
+    "categoria": "devoluciones",
+    "fechaCreacion": "2025-09-08T19:05:39.361Z"
+  },
+  {
+    "id": "4",
+    "pregunta": "¿Ofrecen descuentos por cantidad?",
+    "respuesta": "Sí, tenemos descuentos especiales para compras al por mayor.",
+    "categoria": "descuentos",
+    "fechaCreacion": "2025-09-08T19:05:39.361Z"
+  }
+]

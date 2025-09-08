@@ -1,20 +1,14 @@
-<<<<<<< HEAD
 class ChatbotDAO {
-  async saveConversation(conversacion) { throw new Error('Método no implementado'); }
-  async getConversations(sessionId) { throw new Error('Método no implementado'); }
-  async getFAQs() { throw new Error('Método no implementado'); }
-  async addFAQ(faq) { throw new Error('Método no implementado'); }
-  async incrementFAQCount(faqId) { throw new Error('Método no implementado'); }
-}
+  // Conversaciones
+  async getAllMessages()             { throw new Error('Método no implementado'); }
+  async saveMessage(msg)             { throw new Error('Método no implementado'); }
+  async getMessagesByUser(userId)    { throw new Error('Método no implementado'); }
+  async getConversation(userId, lim) { throw new Error('Método no implementado'); }
+  async clearUserMessages(userId)    { throw new Error('Método no implementado'); }
+  async clearAllMessages()           { throw new Error('Método no implementado'); }
 
-=======
-class ChatbotDAO {
-  async saveConversation(conversacion) { throw new Error('Método no implementado'); }
-  async getConversations(sessionId) { throw new Error('Método no implementado'); }
-  async getFAQs() { throw new Error('Método no implementado'); }
-  async addFAQ(faq) { throw new Error('Método no implementado'); }
-  async incrementFAQCount(faqId) { throw new Error('Método no implementado'); }
+  // FAQs
+  async getFAQs()                    { throw new Error('Método no implementado'); }
+  async saveFAQs(faqs)               { throw new Error('Método no implementado'); }
 }
-
->>>>>>> origin
 module.exports = ChatbotDAO;

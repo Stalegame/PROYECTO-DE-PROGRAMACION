@@ -1,9 +1,37 @@
 [
   {
     "id": "1",
-    "pregunta": "¿Qué horario tienen?",
-    "respuesta": "Lunes a Domingo 8:00-22:00hrs",
+    "pregunta": "¿Qué horario de atención tienen?",
+    "respuesta": "Atendemos de lunes a domingo de 8:00 a 22:00 hrs.",
     "categoria": "horarios",
-    "fechaCreacion": "2025-09-07T09:56:09.891Z"
+    "fechaCreacion": "2025-09-08T19:05:39.361Z"
+  },
+  {
+    "id": "2",
+    "pregunta": "¿Hacen entregas a domicilio?",
+    "respuesta": "Sí, realizamos entregas con un costo adicional según la zona.",
+    "categoria": "entregas",
+    "fechaCreacion": "2025-09-08T19:05:39.361Z"
+  },
+  {
+    "id": "3",
+    "pregunta": "¿Aceptan tarjetas de crédito?",
+    "respuesta": "Sí, aceptamos todas las tarjetas de crédito y débito principales.",
+    "categoria": "pagos",
+    "fechaCreacion": "2025-09-08T19:05:39.361Z"
+  },
+  {
+    "id": "4",
+    "pregunta": "¿Dónde están ubicados?",
+    "respuesta": "Tenemos múltiples locales en Santiago y regiones. Consulta nuestra página de contactos.",
+    "categoria": "ubicacion",
+    "fechaCreacion": "2025-09-08T19:05:39.361Z"
+  },
+  {
+    "id": "5",
+    "pregunta": "¿Tienen productos sin azúcar?",
+    "respuesta": "Sí, contamos con una línea de productos sin azúcar añadida.",
+    "categoria": "productos",
+    "fechaCreacion": "2025-09-08T19:05:39.361Z"
   }
 ]

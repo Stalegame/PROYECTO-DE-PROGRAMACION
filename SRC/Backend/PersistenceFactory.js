@@ -1,10 +1,11 @@
-<<<<<<< HEAD
-﻿// SRC/Backend/PersistenceFactory.js
-const JsonProductosDAO = require('./json/JsonProductosDAO');
-const JsonClientesDAO  = require('./json/JsonClientesDAO');
-const JsonChatbotDAO   = require('./json/JsonChatbotDAO');
+// SRC/Backend/PersistenceFactory.js
+const path = require('path');
 
-console.log('[PersistenceFactory] v2 loaded at', __filename);
+const JsonProductosDAO = require(path.join(__dirname, 'json', 'JsonProductosDAO'));
+const JsonClientesDAO  = require(path.join(__dirname, 'json', 'JsonClientesDAO'));
+const JsonChatbotDAO   = require(path.join(__dirname, 'json', 'JsonChatbotDAO'));
+
+console.log('[PersistenceFactory] loaded at', __filename);
 
 class PersistenceFactory {
   static getDAO(type) {
@@ -15,55 +16,35 @@ class PersistenceFactory {
       case 'productos':
       case 'products':
         return new JsonProductosDAO();
+
       case 'clientes':
       case 'clients':
-=======
-﻿const JsonProductosDAO = require('./json/JsonProductosDAO');
-const JsonClientesDAO = require('./json/JsonClientesDAO');
-const JsonChatbotDAO = require('./json/JsonChatbotDAO');
-
-class PersistenceFactory {
-  static getDAO(type) {
-    switch (type) {
-      case 'productos':
-        return new JsonProductosDAO();
-      case 'clientes':
->>>>>>> origin
         return new JsonClientesDAO();
+
       case 'chatbot':
         return new JsonChatbotDAO();
+
       default:
-<<<<<<< HEAD
         console.error('[PersistenceFactory] unsupported:', JSON.stringify(type), '(normalized:', JSON.stringify(key), ')');
         throw new Error(`Tipo de DAO no soportado: ${type}`);
-=======
-        throw new Error('Tipo de DAO no soportado: ' + type);
->>>>>>> origin
     }
   }
 
   static async initialize() {
-<<<<<<< HEAD
     console.log('🔧 Inicializando capa de persistencia JSON...');
-    this.getDAO('productos');
-    this.getDAO('clientes');
-    this.getDAO('chatbot');
-    console.log('✅ Capa de persistencia inicializada');
-=======
-    console.log('🔄 Inicializando capa de persistencia JSON...');
     try {
       const daos = [
         this.getDAO('productos'),
         this.getDAO('clientes'),
-        this.getDAO('chatbot')
+        this.getDAO('chatbot'),
       ];
-      console.log('✅ Capa de persistencia inicializada correctamente');
+      // Forzar init de cada DAO si lo exponen en constructor
+      console.log('✅ Capa de persistencia inicializada');
       return daos;
     } catch (error) {
       console.error('❌ Error inicializando persistencia:', error.message);
       throw error;
     }
->>>>>>> origin
   }
 }
 

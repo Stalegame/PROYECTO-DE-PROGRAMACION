@@ -1,24 +1,11 @@
-<<<<<<< HEAD
+// json/JsonClientesDAO.js
 const fs = require('fs').promises;
-=======
-﻿const fs = require('fs').promises;
->>>>>>> origin
 const path = require('path');
 
 class JsonClientesDAO {
   constructor() {
-    this.filePath = path.join(__dirname, '..', 'vscode', 'data', 'clientes.json');
-<<<<<<< HEAD
-  }
-
-  async getByEmail(email) {
-    try {
-      const data = await fs.readFile(this.filePath, 'utf8');
-      const clientes = JSON.parse(data);
-      return clientes.find(c => c.email === email);
-    } catch (error) {
-      return null;
-=======
+    // data/ está al lado de json/
+    this.filePath = path.join(__dirname, '..', 'data', 'clientes.json');
     this.init();
   }
 
@@ -29,10 +16,10 @@ class JsonClientesDAO {
         await fs.access(this.filePath);
       } catch {
         await fs.writeFile(this.filePath, JSON.stringify([], null, 2));
+        console.log('📁 Archivo de clientes creado:', this.filePath);
       }
     } catch (error) {
-      console.error('Error inicializando clientes DAO:', error);
->>>>>>> origin
+      console.error('❌ Error inicializando clientes DAO:', error);
     }
   }
 
@@ -41,15 +28,7 @@ class JsonClientesDAO {
       const data = await fs.readFile(this.filePath, 'utf8');
       return JSON.parse(data);
     } catch (error) {
-<<<<<<< HEAD
-      return [];
-    }
-  }
-}
-
-module.exports = JsonClientesDAO;
-=======
-      console.error('Error leyendo clientes:', error);
+      console.error('❌ Error leyendo clientes:', error);
       return [];
     }
   }
@@ -61,18 +40,23 @@ module.exports = JsonClientesDAO;
 
   async getByEmail(email) {
     const clientes = await this.getAll();
-    return clientes.find(c => c.email === email);
+    return clientes.find(c => (c.email || '').toLowerCase() === (email || '').toLowerCase());
   }
 
   async save(cliente) {
     try {
       const clientes = await this.getAll();
-      cliente.id = cliente.id || Date.now().toString();
-      clientes.push(cliente);
+      const toSave = {
+        ...cliente,
+        id: cliente.id || Date.now().toString(),
+        createdAt: new Date().toISOString(),
+      };
+      clientes.push(toSave);
       await fs.writeFile(this.filePath, JSON.stringify(clientes, null, 2));
-      return cliente;
+      console.log('✅ Cliente guardado:', toSave.id);
+      return toSave;
     } catch (error) {
-      console.error('Error guardando cliente:', error);
+      console.error('❌ Error guardando cliente:', error);
       throw error;
     }
   }
@@ -81,14 +65,19 @@ module.exports = JsonClientesDAO;
     try {
       const clientes = await this.getAll();
       const index = clientes.findIndex(c => c.id === id);
-      
       if (index === -1) return null;
-      
-      clientes[index] = { ...clientes[index], ...updatedCliente };
+
+      clientes[index] = {
+        ...clientes[index],
+        ...updatedCliente,
+        updatedAt: new Date().toISOString(),
+      };
+
       await fs.writeFile(this.filePath, JSON.stringify(clientes, null, 2));
+      console.log('✅ Cliente actualizado:', id);
       return clientes[index];
     } catch (error) {
-      console.error('Error actualizando cliente:', error);
+      console.error('❌ Error actualizando cliente:', error);
       throw error;
     }
   }
@@ -96,18 +85,17 @@ module.exports = JsonClientesDAO;
   async delete(id) {
     try {
       const clientes = await this.getAll();
-      const filteredClientes = clientes.filter(c => c.id !== id);
-      
-      if (clientes.length === filteredClientes.length) return false;
-      
-      await fs.writeFile(this.filePath, JSON.stringify(filteredClientes, null, 2));
+      const filtered = clientes.filter(c => c.id !== id);
+      if (clientes.length === filtered.length) return false;
+
+      await fs.writeFile(this.filePath, JSON.stringify(filtered, null, 2));
+      console.log('✅ Cliente eliminado:', id);
       return true;
     } catch (error) {
-      console.error('Error eliminando cliente:', error);
+      console.error('❌ Error eliminando cliente:', error);
       throw error;
     }
   }
 }
 
 module.exports = JsonClientesDAO;
->>>>>>> origin

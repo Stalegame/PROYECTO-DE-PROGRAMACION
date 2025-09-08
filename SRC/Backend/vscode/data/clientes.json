@@ -1,74 +1,50 @@
 [
   {
-<<<<<<< HEAD
     "id": "1",
     "nombre": "María González",
     "email": "maria@email.com",
-    "password": "$2b$10$1QW4ifD4QpEgO2KcQFmgPegFdS1BToxNGdsiIgM4.4mffCNE4H60y",
+    "password": "$2b$10$h9SXyYCzAYBYNaZbiMC5.uGnxgle2wS64h.4qCWG1yHfjHH/xXb8q",
     "telefono": "+56912345678",
-    "direccion": "Av. Principal 123",
-    "fechaRegistro": "2025-09-07T09:56:09.891Z",
+    "direccion": "Av. Principal 123, Santiago",
+    "fechaRegistro": "2025-09-08T19:05:39.360Z",
     "activo": true,
-    "role": "client"
+    "role": "client",
+    "ultimaActualizacion": "2025-09-08T19:05:39.361Z"
   },
   {
     "id": "2",
     "nombre": "Admin Fruna",
     "email": "admin@fruna.com",
-    "password": "$2b$10$3pAZJE4r1zDB98W7IoZI/OHhEtmCKYkvAB.NACOXLYH7sWT1F79cK",
+    "password": "$2b$10$pZBdRqOpgJRmD8iOqOoyweQJS3JuwdU6r99aWFdTPHLBYvyjS3hiC",
     "telefono": "+56987654321",
-    "direccion": "Oficina Central",
-    "fechaRegistro": "2025-09-07T09:56:09.891Z",
+    "direccion": "Calle Admin 456, Oficina Central",
+    "fechaRegistro": "2025-09-08T19:05:39.361Z",
     "activo": true,
-    "role": "admin"
-=======
-    "email": "ana@email.com",
-    "nombre": "Ana Garc�a",
-    "password": "123456",
-    "telefono": "555-1234",
-    "id": "1756876821782"
+    "role": "admin",
+    "ultimaActualizacion": "2025-09-08T19:05:39.361Z"
   },
   {
-    "email": "ana@email.com",
-    "nombre": "Ana Garc�a",
-    "password": "123456",
-    "telefono": "555-1234",
-    "id": "1756877389835"
-  },
-  {
+    "id": "3",
+    "nombre": "Carlos López",
     "email": "carlos@email.com",
-    "nombre": "Carlos L�pez",
-    "password": "123456",
-    "telefono": "555-5678",
-    "id": "1756877389897"
+    "password": "$2b$10$h9SXyYCzAYBYNaZbiMC5.uGnxgle2wS64h.4qCWG1yHfjHH/xXb8q",
+    "telefono": "+56955555555",
+    "direccion": "Av. Libertador 789, Viña del Mar",
+    "fechaRegistro": "2025-09-08T19:05:39.361Z",
+    "activo": true,
+    "role": "client",
+    "ultimaActualizacion": "2025-09-08T19:05:39.361Z"
   },
   {
-    "email": "maria@email.com",
-    "nombre": "Maria Rodriguez",
-    "password": "123456",
-    "telefono": "555-9012",
-    "id": "1756877389959"
-  },
-  {
+    "id": "4",
+    "nombre": "Ana Martínez",
     "email": "ana@email.com",
-    "nombre": "Ana Garc�a",
-    "password": "123456",
-    "telefono": "555-1234",
-    "id": "1756923184374"
-  },
-  {
-    "email": "carlos@email.com",
-    "nombre": "Carlos L�pez",
-    "password": "123456",
-    "telefono": "555-5678",
-    "id": "1756923184692"
-  },
-  {
-    "email": "maria@email.com",
-    "nombre": "Maria Rodriguez",
-    "password": "123456",
-    "telefono": "555-9012",
-    "id": "1756923184761"
->>>>>>> origin
+    "password": "$2b$10$h9SXyYCzAYBYNaZbiMC5.uGnxgle2wS64h.4qCWG1yHfjHH/xXb8q",
+    "telefono": "+56944444444",
+    "direccion": "Calle Flores 321, Concepción",
+    "fechaRegistro": "2025-09-08T19:05:39.361Z",
+    "activo": true,
+    "role": "client",
+    "ultimaActualizacion": "2025-09-08T19:05:39.361Z"
   }
 ]
