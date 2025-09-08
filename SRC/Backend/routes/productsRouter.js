@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿// routes/productsRouter.js
 const path = require('path');
 const express = require('express');
@@ -74,6 +75,13 @@ const handleValidationErrors = (req, res, next) => {
 };
 
 // ==================== RUTAS CON VALIDACIONES ====================
+=======
+﻿const express = require('express');
+const router = express.Router();
+const PersistenceFactory = require('../PersistenceFactory');
+
+const productosDAO = PersistenceFactory.getDAO('productos');
+>>>>>>> origin
 
 // GET /api/products - Todos los productos
 router.get('/', async (req, res) => {
@@ -87,17 +95,28 @@ router.get('/', async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
+<<<<<<< HEAD
       error: 'Error interno del servidor al obtener productos'
+=======
+      error: error.message
+>>>>>>> origin
     });
   }
 });
 
+<<<<<<< HEAD
 // POST /api/products - Crear nuevo producto CON VALIDACIONES
 router.post('/', validateCreateProduct, handleValidationErrors, async (req, res) => {
   try {
     // Los datos ya están validados y sanitizados en este punto
     const nuevoProducto = await productosDAO.save(req.body);
     
+=======
+// POST /api/products - Crear nuevo producto
+router.post('/', async (req, res) => {
+  try {
+    const nuevoProducto = await productosDAO.save(req.body);
+>>>>>>> origin
     res.status(201).json({
       success: true,
       message: 'Producto creado exitosamente',
@@ -106,23 +125,37 @@ router.post('/', validateCreateProduct, handleValidationErrors, async (req, res)
   } catch (error) {
     res.status(500).json({
       success: false,
+<<<<<<< HEAD
       error: 'Error interno del servidor al crear producto'
+=======
+      error: error.message
+>>>>>>> origin
     });
   }
 });
 
+<<<<<<< HEAD
 // GET /api/products/:id - Producto por ID CON VALIDACIONES
 router.get('/:id', validateProductId, handleValidationErrors, async (req, res) => {
   try {
     const producto = await productosDAO.getById(req.params.id);
     
+=======
+// GET /api/products/:id - Producto por ID
+router.get('/:id', async (req, res) => {
+  try {
+    const producto = await productosDAO.getById(req.params.id);
+>>>>>>> origin
     if (!producto) {
       return res.status(404).json({
         success: false,
         error: 'Producto no encontrado'
       });
     }
+<<<<<<< HEAD
     
+=======
+>>>>>>> origin
     res.json({
       success: true,
       data: producto
@@ -130,11 +163,16 @@ router.get('/:id', validateProductId, handleValidationErrors, async (req, res) =
   } catch (error) {
     res.status(500).json({
       success: false,
+<<<<<<< HEAD
       error: 'Error interno del servidor al obtener el producto'
+=======
+      error: error.message
+>>>>>>> origin
     });
   }
 });
 
+<<<<<<< HEAD
 // PUT /api/products/:id - Actualizar producto
 router.put('/:id', 
   validateProductId, 
@@ -190,3 +228,6 @@ router.delete('/:id', validateProductId, handleValidationErrors, async (req, res
 });
 
 module.exports = router;
+=======
+module.exports = router;
+>>>>>>> origin

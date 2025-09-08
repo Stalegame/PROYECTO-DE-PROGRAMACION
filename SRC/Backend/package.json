@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
+<<<<<<< HEAD
     "test": "node test-security.js",
     "seed": "node -e \"\nconst fs = require('fs').promises;\nconst path = require('path');\nconst bcrypt = require('bcryptjs');\n\nasync function createSecureData() {\n  try {\n    const dataDir = path.join(__dirname, 'vscode', 'data');\n    try { await fs.access(dataDir); } catch { await fs.mkdir(dataDir, { recursive: true }); }\n    \n    // Hashear contraseñas\n    const hashedPassword = await bcrypt.hash('password123', 10);\n    const hashedAdminPassword = await bcrypt.hash('admin123', 10);\n    \n    const products = [\n      {id:'1',name:'Alfajor Clásico',price:1290,stock:45,category:'Alfajores',description:'Alfajor tradicional con dulce de leche',image:'alfajor-clasico.jpg',active:true},\n      {id:'2',name:'Chocolate Maní',price:2490,stock:32,category:'Chocolates',description:'Chocolate negro con maní crocante',image:'chocolate-mani.jpg',active:true},\n      {id:'3',name:'Galletas de Vainilla',price:890,stock:67,category:'Galletas',description:'Galletas crujientes de vainilla',image:'galletas-vainilla.jpg',active:true}\n    ];\n    \n    const clients = [\n      {id:'1',nombre:'María González',email:'maria@email.com',password:hashedPassword,telefono:'+56912345678',direccion:'Av. Principal 123, Santiago',fechaRegistro:new Date().toISOString(),activo:true,role:'client'},\n      {id:'2',nombre:'Admin Fruna',email:'admin@fruna.com',password:hashedAdminPassword,telefono:'+56987654321',direccion:'Calle Admin 456, Oficina Central',fechaRegistro:new Date().toISOString(),activo:true,role:'admin'},\n      {id:'3',nombre:'Carlos López',email:'carlos@email.com',password:hashedPassword,telefono:'+56955555555',direccion:'Av. Libertador 789, Viña del Mar',fechaRegistro:new Date().toISOString(),activo:true,role:'client'}\n    ];\n    \n    const chatbot = [\n      {id:'1',pregunta:'¿Qué horario de atención tienen?',respuesta:'Atendemos de lunes a domingo de 8:00 a 22:00 hrs.',categoria:'horarios'},\n      {id:'2',pregunta:'¿Hacen entregas a domicilio?',respuesta:'Sí, realizamos entregas con costo adicional según la zona.',categoria:'entregas'},\n      {id:'3',pregunta:'¿Aceptan tarjetas de crédito?',respuesta:'Sí, aceptamos todas las tarjetas de crédito y débito principales.',categoria:'pagos'}\n    ];\n    \n    await fs.writeFile(path.join(dataDir, 'productos.json'), JSON.stringify(products, null, 2));\n    await fs.writeFile(path.join(dataDir, 'clientes.json'), JSON.stringify(clients, null, 2));\n    await fs.writeFile(path.join(dataDir, 'conversaciones-chatbot.json'), JSON.stringify(chatbot, null, 2));\n    \n    console.log('✅ Datos de prueba creados exitosamente en vscode/data/ (contraseñas hasheadas)');\n    console.log('📦 Productos: ' + products.length);\n    console.log('👥 Clientes: ' + clients.length);\n    console.log('🤖 Chatbot: ' + chatbot.length);\n    console.log('\\\\n🔐 Credenciales:');\n    console.log('   Usuario: maria@email.com / password123');\n    console.log('   Admin: admin@fruna.com / admin123');\n    \n  } catch (error) {\n    console.error('❌ Error creando datos:', error);\n  }\n}\n\ncreateSecureData();\n\"",
     "setup": "npm install && npm run seed",
@@ -16,13 +17,25 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
+=======
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+>>>>>>> origin
     "express": "^4.18.2",
     "express-rate-limit": "^8.1.0",
     "express-validator": "^7.2.1",
     "helmet": "^8.1.0",
+<<<<<<< HEAD
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3",
     "morgan": "^1.10.1"
+=======
+    "mongoose": "^8.0.3"
+>>>>>>> origin
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
@@ -31,8 +44,12 @@
     "fruna",
     "supermercado",
     "backend",
+<<<<<<< HEAD
     "api",
     "security"
+=======
+    "api"
+>>>>>>> origin
   ],
   "author": "Grupo Los Comprimidos",
   "license": "MIT"

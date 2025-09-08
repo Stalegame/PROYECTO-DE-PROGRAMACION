@@ -1,4 +1,5 @@
 ﻿const express = require('express');
+<<<<<<< HEAD
 const { body, validationResult } = require('express-validator');
 const router = express.Router();
 const PersistenceFactory = require('../PersistenceFactory');
@@ -204,3 +205,20 @@ router.delete('/conversation/:userId', async (req, res) => {
 });
 
 module.exports = router;
+=======
+const router = express.Router();
+
+// Ruta simple de prueba
+router.get('/test', (req, res) => {
+  res.json({ 
+    message: '✅ Ruta de chatbot funcionando',
+    timestamp: new Date().toISOString()
+  });
+});
+
+router.get('/', (req, res) => {
+  res.json({ message: 'Ruta de chatbot' });
+});
+
+module.exports = router;
+>>>>>>> origin

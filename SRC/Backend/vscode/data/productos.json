@@ -1,5 +1,6 @@
 [
   {
+<<<<<<< HEAD
     "id": "1",
     "name": "Alfajor Clásico",
     "price": 1290,
@@ -18,5 +19,124 @@
     "description": "Chocolate negro con maní crocante",
     "image": "chocolate.jpg",
     "active": true
+=======
+    "categoria": "Frutas",
+    "stock": 50,
+    "nombre": "Manzana Roja",
+    "precio": 2.99,
+    "id": "1756876621953"
+  },
+  {
+    "categoria": "Galletas",
+    "stock": 100,
+    "nombre": "Galletas FRUNA Chocolate",
+    "precio": 1.2,
+    "descripcion": "Galletas con chispas de chocolate",
+    "id": "1756877237914"
+  },
+  {
+    "categoria": "Galletas",
+    "stock": 90,
+    "nombre": "Galletas FRUNA Vainilla",
+    "precio": 1.1,
+    "descripcion": "Galletas sabor vainilla",
+    "id": "1756877238151"
+  },
+  {
+    "categoria": "Galletas",
+    "stock": 80,
+    "nombre": "Galletas FRUNA Avena",
+    "precio": 1.3,
+    "descripcion": "Galletas de avena y miel",
+    "id": "1756877238383"
+  },
+  {
+    "categoria": "Galletas",
+    "stock": 85,
+    "nombre": "Galletas FRUNA Lim�n",
+    "precio": 1.15,
+    "descripcion": "Galletas sabor lim�n",
+    "id": "1756877238618"
+  },
+  {
+    "categoria": "Snacks",
+    "stock": 60,
+    "nombre": "Mix de Frutos Secos FRUNA",
+    "precio": 2.5,
+    "descripcion": "Mezcla de man�, almendras y pasas",
+    "id": "1756877238853"
+  },
+  {
+    "categoria": "Snacks",
+    "stock": 70,
+    "nombre": "Man� FRUNA Salado",
+    "precio": 1.8,
+    "descripcion": "Man� tostado y salado",
+    "id": "1756877239088"
+  },
+  {
+    "categoria": "Snacks",
+    "stock": 40,
+    "nombre": "Pistachos FRUNA",
+    "precio": 3.2,
+    "descripcion": "Pistachos tostados",
+    "id": "1756877239322"
+  },
+  {
+    "categoria": "Snacks",
+    "stock": 50,
+    "nombre": "Almendras FRUNA",
+    "precio": 2.9,
+    "descripcion": "Almendras tostadas",
+    "id": "1756877239557"
+  },
+  {
+    "categoria": "Chocolates",
+    "stock": 75,
+    "nombre": "Chocolate FRUNA con Leche",
+    "precio": 1.5,
+    "descripcion": "Chocolate suave con leche",
+    "id": "1756877239787"
+  },
+  {
+    "categoria": "Chocolates",
+    "stock": 65,
+    "nombre": "Chocolate FRUNA Amargo",
+    "precio": 1.6,
+    "descripcion": "Chocolate 70% cacao",
+    "id": "1756877240020"
+  },
+  {
+    "categoria": "Chocolates",
+    "stock": 55,
+    "nombre": "Chocolate FRUNA con Almendras",
+    "precio": 1.8,
+    "descripcion": "Chocolate con almendras enteras",
+    "id": "1756877240253"
+  },
+  {
+    "categoria": "Snacks",
+    "stock": 45,
+    "nombre": "Barra de Granola FRUNA",
+    "precio": 1.4,
+    "descripcion": "Barra de avena y miel",
+    "id": "1756877240485"
+  },
+  {
+    "categoria": "Dulces",
+    "stock": 85,
+    "nombre": "Gomitas FRUNA Frutales",
+    "precio": 1.25,
+    "descripcion": "Gomitas sabor frutilla, naranja y lim�n",
+    "id": "1756877240721"
+  },
+  {
+    "categoria": "Dulces",
+    "stock": 120,
+    "nombre": "Chicles FRUNA Menta",
+    "precio": 0.9,
+    "descripcion": "Chicles sabor menta fresca",
+    "id": "1756877240954"
+>>>>>>> origin
   }
 ]
