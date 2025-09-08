@@ -1,0 +1,23 @@
+[
+  {
+    "id": "1",
+    "name": "María González",
+    "email": "maria@email.com",
+    "password": "password123",
+    "phone": "+56912345678",
+    "address": "Av. Principal 123",
+    "purchases": 5,
+    "fechaRegistro": "2025-09-07T09:51:53.637Z"
+  },
+  {
+    "id": "2",
+    "name": "Admin User",
+    "email": "admin@fruna.com",
+    "password": "admin123",
+    "phone": "+56987654321",
+    "address": "Calle Admin 456",
+    "role": "admin",
+    "purchases": 15,
+    "fechaRegistro": "2025-09-07T09:51:53.639Z"
+  }
+]
