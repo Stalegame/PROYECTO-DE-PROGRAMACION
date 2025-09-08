@@ -1,2 +1,5 @@
 *.env
 node_modules/
+*package.json
+*package.json.bak
+*package-lock.json

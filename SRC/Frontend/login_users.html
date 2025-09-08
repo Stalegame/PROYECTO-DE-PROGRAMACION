@@ -1,190 +1,184 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login FRUNA | La dulcería de Chile</title>
-    <style>
-    /* Estilos generales */
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            background-color: #FFF9FA;
-        }
-        header {
-            background-color: #E91E63;
-            padding: 15px;
-            position: relative;
-            text-align: center;
-        }
-        .logo-container {
-            max-width: 200px;
-            margin: 0 auto;
-        }
-        .logo-container img {
-            width: 100%;
-            height: auto;
-        }
-        .logo {
-            font-size: 2em;
-            margin: 0;
-        }
-        .btn-volver{
-            display: flex;
-            align-items: center;
-            position: absolute;
-            gap: 10px;
-            left: 60px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: auto;
-            background: #FFC107;
-            color: #333;
-            font-size: 16px;
-            font-weight: bold;
-            padding: 10px 20px;
-            border-radius: 30px;
-            border: none;
-            cursor: pointer;
-        }
+    <!DOCTYPE html>
+    < lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login FRUNA | La dulcería de Chile</title>
+        <style>
+        /* Estilos generales */
+            body {
+                font-family: 'Arial', sans-serif;
+                margin: 0;
+                background-color: #FFF9FA;
+            }
+            header {
+                background-color: #E91E63;
+                padding: 15px;
+                position: relative;
+                text-align: center;
+            }
+            .logo-container {
+                max-width: 200px;
+                margin: 0 auto;
+            }
+            .logo-container img {
+                width: 100%;
+                height: auto;
+            }
+            .logo {
+                font-size: 2em;
+                margin: 0;
+            }
+            .btn-volver{
+                display: flex;
+                align-items: center;
+                position: absolute;
+                gap: 10px;
+                left: 60px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: auto;
+                background: #FFC107;
+                color: #333;
+                font-size: 16px;
+                font-weight: bold;
+                padding: 10px 20px;
+                border-radius: 30px;
+                border: none;
+                cursor: pointer;
+            }
 
-        /* Contenedor principal */
-        .contenedor {
-            display: flex;
-            max-width: 1200px;
-            max-height: 800px;
-            margin: 20px auto;
-        }
-        .center-box {
-            text-align: center;
-            gap: 20px;
-            padding: 0 20px;
-            flex: 1;
-        }
-        .user-login {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            max-width: 600px;
-            max-height: 600px;
-            margin: 0 auto;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-        .user-login h3 {
-            margin-bottom: 20px;
-            color: #E91E63;
-        }
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-        }
-        .btn-ingresar {
-            width: 80%;
-            background: #E91E63;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            padding: 10px;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .btn-ingresar:hover {
-            background: #c2185b;
-        }
-        .form-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            padding: 10px 10px;
-        }
+            /* Contenedor principal */
+            .contenedor {
+                display: flex;
+                max-width: 1200px;
+                max-height: 800px;
+                margin: 20px auto;
+            }
+            .center-box {
+                text-align: center;
+                gap: 20px;
+                padding: 0 20px;
+                flex: 1;
+            }
+            .user-login {
+                background: white;
+                border-radius: 10px;
+                padding: 20px;
+                max-width: 600px;
+                max-height: 600px;
+                margin: 0 auto;
+                box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+                transition: transform 0.3s;
+            }
+            .user-login h3 {
+                margin-bottom: 20px;
+                color: #E91E63;
+            }
+            .form-group {
+                margin-bottom: 15px;
+                text-align: left;
+            }
+            .form-group input {
+                width: 100%;
+                padding: 10px;
+                border-radius: 8px;
+                border: 1px solid #ccc;
+                font-size: 14px;
+            }
+            .btn-ingresar {
+                width: 80%;
+                background: #E91E63;
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                padding: 10px;
+                border-radius: 20px;
+                border: none;
+                cursor: pointer;
+                transition: background 0.3s;
+            }
+            .btn-ingresar:hover {
+                background: #c2185b;
+            }
+            .form-group {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+                background: #f9f9f9;
+                border-radius: 8px;
+                border: 1px solid #ccc;
+                padding: 10px 10px;
+            }
 
-        .form-group .input-icon {
-            width: 30px;
-            height: 30px;
-            margin-right: 10px;
-        }
+            .form-group .input-icon {
+                width: 30px;
+                height: 30px;
+                margin-right: 10px;
+            }
 
-        .form-group input {
-            border: none;
-            outline: none;
-            flex: 1;
-            padding: 10px;
-            font-size: 14px;
-            background: transparent;
-        }
-        .checkbox-cont {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 15px;
-            font-size: 15px;
-            color: #333;
-        }
-    </style>
-</head>
-
-<body>
-    <header>
-        <button class="btn-volver" onclick="location.href='index.html'">
-            <img src="./img/arrow-back.png" alt="arrow-back">
-            Volver al Menu
-        </button>
-        <div class="logo-container">
-            <img src="./img/logo fruna.png" alt="FRUNA Chile">
-        </div>
-    </header>
-
-    <div class="contenedor">
-        <main class="center-box">
-            <div class="user-login">
-                <h3>Bienvenido a Fruna</h3>
-                <form action="#" method="post">
-                    <div class="form-group">
-                        <img src="./img/user_login.png" alt="icono email" class="input-icon">
-                        <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
-                    </div>
-                    <div class="form-group">
-                        <img src="./img/padlock_users.png" alt="icono contraseña" class="input-icon">
-                        <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
-                    </div>
-
-                    <!-- Checkbox para mostrar contraseña -->
-                    <div class="checkbox-cont" style="display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" id="showPassword">
-                        <label for="showPassword">Mostrar Contraseña</label>
-                    </div>
-
-                    <script>
-                        const checkbox = document.getElementById('showPassword');
-                        const passwordInput = document.getElementById('password');
-
-                        checkbox.addEventListener('change', () => {
-                            passwordInput.type = checkbox.checked ? 'text' : 'password';
-                        });
-                    </script>
-                    
-                    <button type="submit" class="btn-ingresar">Ingresar</button>
-                </form>
+            .form-group input {
+                border: none;
+                outline: none;
+                flex: 1;
+                padding: 10px;
+                font-size: 14px;
+                background: transparent;
+            }
+            .checkbox-cont {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 15px;
+                font-size: 15px;
+                color: #333;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <button class="btn-volver" onclick="location.href='index.html'">
+                <img src="./img/arrow-back.png" alt="arrow-back">
+                Volver al Menu
+            </button>
+            <div class="logo-container">
+                <img src="./img/logo fruna.png" alt="FRUNA Chile">
             </div>
-        </main>
-    </div>
+        </header>
 
+        <div class="contenedor">
+            <main class="center-box">
+                <div class="user-login">
+                    <h3>Bienvenido a Fruna</h3>
+                    <form action="/api/clients/login" method="POST">
+                        <div class="form-group">
+                            <img src="./img/user_login.png" alt="icono email" class="input-icon">
+                            <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+                        </div>
+                        <div class="form-group">
+                            <img src="./img/padlock_users.png" alt="icono contraseña" class="input-icon">
+                            <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+                        </div>
 
+                        <!-- Checkbox para mostrar contraseña -->
+                        <div class="checkbox-cont" style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" id="showPassword">
+                            <label for="showPassword">Mostrar Contraseña</label>
+                        </div>
 
+                        <script>
+                            const checkbox = document.getElementById('showPassword');
+                            const passwordInput = document.getElementById('password');
 
-</body>
-
-</html>
+                            checkbox.addEventListener('change', () => {
+                                passwordInput.type = checkbox.checked ? 'text' : 'password';
+                            });
+                        </script>
+                        
+                        <button type="submit" class="btn-ingresar">Ingresar</button>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </body>
+</html> 
