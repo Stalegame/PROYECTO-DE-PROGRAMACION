@@ -1,5 +1,19 @@
+# Archivos sensibles
 *.env
+
+# Dependencias de Node.js
 node_modules/
-*package.json
-*package.json.bak
-*package-lock.json
+
+# Archivos generados por npm (Consultar al profe)
+#package-lock.json
+#npm-debug.log
+
+# Archivos específicos de VSCode
+.vscode/
+
+# Archivos específicos de Windows
+Thumbs.db
+Desktop.ini
+
+# Archivos de logs
+*.log
