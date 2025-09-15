@@ -17,7 +17,14 @@ const PORT = process.env.PORT || 3000;
 const IS_PROD = process.env.NODE_ENV === 'production';
 
 // ============= Middlewares base y de seguridad =============
-app.set('trust proxy', true);
+// Configuración de trust proxy según entorno
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);   // en hosting real, con proxy delante.
+  console.log('[server] trust proxy = 1 (production)');
+} else {
+  app.set('trust proxy', false); // en tu compu, sin proxy.
+  console.log('[server] trust proxy = false (development)');
+}
 
 app.use(helmet({
   contentSecurityPolicy: {
@@ -39,18 +46,18 @@ app.use(cors({
 
 // Rate limit general para /api/*
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
+  windowMs: 15 * 60 * 1000, // 15 min
+  max: 100,                  // máximo 100 requests por IP
+  standardHeaders: true,     // devuelve info en headers estándar
+  legacyHeaders: false,      // desactiva headers obsoletos
   message: { error: 'Demasiadas peticiones, inténtalo más tarde.' }
 });
 app.use('/api/', apiLimiter);
 
 // Rate limit estricto para endpoints sensibles
 const strictLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 5,
+  windowMs: 15 * 60 * 1000, // 15 min
+  max: 5,                   // máximo 5 intentos
   message: { error: 'Demasiados intentos, espera 15 minutos.' }
 });
 
@@ -61,6 +68,9 @@ app.use(express.json({
     try { JSON.parse(buf.toString()); } catch { throw new Error('JSON malformado'); }
   }
 }));
+
+// Agregar para soportar <form method="POST">
+app.use(express.urlencoded({ extended: true }));
 
 // Log mínimo de requests
 app.use((req, _res, next) => {
@@ -106,6 +116,16 @@ if (FRONTEND_DIR) {
   app.get('/admin',     (_req, res) => sendPage(res, 'admin_controller.html', 'admin.html', 'index.html'));
   app.get('/contacto',  (_req, res) => sendPage(res, 'contacto.html', 'index.html'));
   app.get('/productos', (_req, res) => sendPage(res, 'productos.html', 'index.html'));
+
+  // ============= Página 404 para el frontend =============
+  app.use((req, res, next) => {
+    // Si es una ruta de la API, seguimos al manejador API
+    if (req.path.startsWith('/api')) return next();
+
+    // Si es cualquier otra ruta no definida, devolvemos la página 404 del frontend
+    const full = path.join(FRONTEND_DIR, 'page_404.html');
+    res.status(404).sendFile(full);
+  });
 }
 
 // ============= Healthchecks =============
@@ -142,7 +162,7 @@ try {
   console.log('⚠️  Algunas rutas API no están disponibles:', error.message);
 }
 
-// 404 API
+//============= 404 API para el Backend ============
 app.use('/api', (req, res) => {
   res.status(404).json({ error: 'API route not found', path: req.originalUrl });
 });
