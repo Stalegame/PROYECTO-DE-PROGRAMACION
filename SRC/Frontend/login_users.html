@@ -1,185 +1,456 @@
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Login FRUNA | La dulcería de Chile</title>
-        <style>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login FRUNA | La dulcería de Chile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
         /* Estilos generales */
-            body {
-                font-family: 'Arial', sans-serif;
-                margin: 0;
-                background-color: #FFF9FA;
-            }
-            header {
-                background-color: #E91E63;
-                padding: 15px;
-                position: relative;
-                text-align: center;
-            }
-            .logo-container {
-                max-width: 200px;
-                margin: 0 auto;
-            }
-            .logo-container img {
-                width: 100%;
-                height: auto;
-            }
-            .logo {
-                font-size: 2em;
-                margin: 0;
-            }
-            .btn-volver{
-                display: inline-flex;
-                align-items: center;
-                gap: 10px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ffebee 0%, #fce4ec 50%, #f8bbd0 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* Botón volver fijo en esquina superior izquierda */
+        .btn-volver {
+            display: flex;
+            align-items: center;
+            position: fixed;
+            gap: 10px;
+            left: 60px;
+            top: 60px;
+            background: #FFC107;
+            color: #333;
+            font-size: 25px;
+            font-weight: bold;
+            padding: 10px 28px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
+            appearance: none;
+        }
+
+        .btn-volver:hover {
+            background: #FFD54F;
+            transform: scale(1.05);
+            text-decoration: none;
+        }
+        
+        /* Contenedor principal centrado */
+        .contenedor-principal {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            width: 100%;
+            max-width: 500px;
+            margin: 40px auto 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #e91e63 0%, #ad1457 100%);
+            width: 100%;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: -10px;
+            z-index: 10;
+        }
+        
+        .logo-container {
+            max-width: 220px;
+            margin: 0 auto;
+            filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.2));
+        }
+        
+        .logo-container img {
+            width: 100%;
+            height: auto;
+        }
+        
+        /* Formulario de login */
+        .user-login {
+            background: white;
+            border-radius: 0 0 15px 15px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .user-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #E91E63, #FFC107, #E91E63);
+        }
+        
+        .user-login h3 {
+            margin-bottom: 25px;
+            color: #E91E63;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .welcome-text {
+            text-align: center;
+            color: #777;
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+        
+        /* Formulario */
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            border: 2px solid #f1f1f1;
+            padding: 5px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group:focus-within {
+            border-color: #E91E63;
+            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .form-group i {
+            font-size: 18px;
+            color: #E91E63;
+            margin-right: 10px;
+        }
+        
+        .form-group input {
+            border: none;
+            outline: none;
+            flex: 1;
+            padding: 15px 10px;
+            font-size: 16px;
+            background: transparent;
+            color: #333;
+        }
+        
+        .form-group input::placeholder {
+            color: #999;
+        }
+        
+        .checkbox-cont {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            font-size: 15px;
+            color: #555;
+        }
+        
+        .checkbox-cont input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #E91E63;
+        }
+        
+        .btn-ingresar {
+            width: 100%;
+            background: linear-gradient(135deg, #E91E63 0%, #C2185B 100%);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3);
+            margin-top: 10px;
+        }
+        
+        .btn-ingresar:hover {
+            background: linear-gradient(135deg, #C2185B 0%, #E91E63 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.4);
+        }
+        
+        .btn-ingresar:active {
+            transform: translateY(0);
+        }
+        
+        /* Enlaces adicionales */
+        .login-links {
+            display: flex;
+            justify-content:center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .login-links a {
+            color: #E91E63;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .login-links a:hover {
+            color: #C2185B;
+            text-decoration: underline;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #777;
+            font-size: 13px;
+            width: 100%;
+        }
+        
+        /* Efectos de carga */
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .loading-dots {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 20px;
+        }
+        
+        .loading-dots div {
+            position: absolute;
+            top: 0;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: #E91E63;
+            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+        }
+        
+        .loading-dots div:nth-child(1) {
+            left: 8px;
+            animation: loading-dots1 0.6s infinite;
+        }
+        
+        .loading-dots div:nth-child(2) {
+            left: 8px;
+            animation: loading-dots2 0.6s infinite;
+        }
+        
+        .loading-dots div:nth-child(3) {
+            left: 32px;
+            animation: loading-dots2 0.6s infinite;
+        }
+        
+        .loading-dots div:nth-child(4) {
+            left: 56px;
+            animation: loading-dots3 0.6s infinite;
+        }
+        
+        @keyframes loading-dots1 {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes loading-dots3 {
+            0% { transform: scale(1); }
+            100% { transform: scale(0); }
+        }
+        
+        @keyframes loading-dots2 {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(24px, 0); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .btn-volver {
                 position: absolute;
-                left: 60px;
-                top: 50%;
-                transform: translateY(-50%);
-                background: #FFC107;
-                color: #333;
-                font-size: 24px;
-                font-weight: bold;
-                padding: 10px 20px;
-                border-radius: 30px;
-                text-decoration: none;
-                cursor: pointer;
-                z-index: 10;
+                left: 15px;
+                top: 15px;
+                font-size: 13px;
+                padding: 8px 12px;
             }
-
-            /* Contenedor principal */
-            .contenedor {
-                display: flex;
-                max-width: 1200px;
-                max-height: 800px;
-                margin: 20px auto;
+            
+            .contenedor-principal {
+                margin-top: 60px;
             }
-            .center-box {
-                text-align: center;
-                gap: 20px;
-                padding: 0 20px;
-                flex: 1;
+            
+            header {
+                padding: 15px;
             }
+            
             .user-login {
-                background: white;
-                border-radius: 10px;
-                padding: 20px;
-                max-width: 600px;
-                max-height: 600px;
-                margin: 0 auto;
-                box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-                transition: transform 0.3s;
+                padding: 30px 20px;
             }
-            .user-login h3 {
-                margin-bottom: 20px;
-                color: #E91E63;
-            }
-            .form-group {
-                margin-bottom: 15px;
-                text-align: left;
-            }
-            .form-group input {
-                width: 100%;
-                padding: 10px;
-                border-radius: 8px;
-                border: 1px solid #ccc;
-                font-size: 14px;
-            }
-            .btn-ingresar {
-                width: 80%;
-                background: #E91E63;
-                color: white;
-                font-size: 16px;
-                font-weight: bold;
-                padding: 10px;
-                border-radius: 20px;
-                border: none;
-                cursor: pointer;
-                transition: background 0.3s;
-            }
-            .btn-ingresar:hover {
-                background: #c2185b;
-            }
-            .form-group {
-                display: flex;
+            
+            .login-links {
+                flex-direction: column;
+                gap: 10px;
                 align-items: center;
-                margin-bottom: 20px;
-                background: #f9f9f9;
-                border-radius: 8px;
-                border: 1px solid #ccc;
-                padding: 10px 10px;
             }
+        }
+    </style>
+</head>
 
-            .form-group .input-icon {
-                width: 30px;
-                height: 30px;
-                margin-right: 10px;
-            }
+<body>
+    <!-- Botón Volver fijo en esquina superior izquierda -->
+    <a href="index.html" class="btn-volver">
+        <i class="fas fa-arrow-left"></i>
+        Volver al Menú
+    </a>
 
-            .form-group input {
-                border: none;
-                outline: none;
-                flex: 1;
-                padding: 10px;
-                font-size: 14px;
-                background: transparent;
-            }
-            .checkbox-cont {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                margin-bottom: 15px;
-                font-size: 15px;
-                color: #333;
-            }
-        </style>
-    </head>
-    <body>
+    <div class="contenedor-principal">
         <header>
-            <a href="index.html" class="btn-volver">
-                <img src="./img/arrow-back.png" alt="arrow-back">
-                Volver al Menu
-            </a>
-
             <div class="logo-container">
-                <img src="./img/logo fruna.png" alt="FRUNA Chile">
+                <div style="color: white; font-size: 28px; font-weight: bold;">FRUNA</div>
             </div>
         </header>
 
-        <div class="contenedor">
-            <main class="center-box">
-                <div class="user-login">
-                    <h3>Bienvenido a Fruna</h3>
-                    <form action="/api/clients/login" method="POST">
-                        <div class="form-group">
-                            <img src="./img/user_login.png" alt="icono email" class="input-icon">
-                            <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
-                        </div>
-                        <div class="form-group">
-                            <img src="./img/padlock_users.png" alt="icono contraseña" class="input-icon">
-                            <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
-                        </div>
-
-                        <!-- Checkbox para mostrar contraseña -->
-                        <div class="checkbox-cont" style="display: flex; align-items: center; gap: 8px;">
-                            <input type="checkbox" id="showPassword">
-                            <label for="showPassword">Mostrar Contraseña</label>
-                        </div>
-
-                        <script>
-                            const checkbox = document.getElementById('showPassword');
-                            const passwordInput = document.getElementById('password');
-
-                            checkbox.addEventListener('change', () => {
-                                passwordInput.type = checkbox.checked ? 'text' : 'password';
-                            });
-                        </script>
-                        
-                        <button type="submit" class="btn-ingresar">Ingresar</button>
-                    </form>
+        <div class="user-login">
+            <h3>¡Bienvenido a FRUNA!</h3>
+            <p class="welcome-text">Ingresa tus credenciales para acceder al sistema</p>
+            
+            <form id="form-login">
+                <div class="form-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" required>
                 </div>
-            </main>
+                
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+                </div>
+
+                <div class="checkbox-cont">
+                    <input type="checkbox" id="showPassword">
+                    <label for="showPassword">Mostrar Contraseña</label>
+                </div>
+                
+                <button type="submit" class="btn-ingresar">
+                    <i class="fas fa-sign-in-alt"></i> Ingresar
+                </button>
+                
+                <div class="loading" id="loading">
+                    <div class="loading-dots">
+                        <div></div><div></div><div></div><div></div>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="login-links">
+                <span>¿No tienes cuenta?&nbsp;</span>
+                <a href="crear_user.html">Crear cuenta</a>
+            </div>
         </div>
-    </body>
-</html> 
+        
+        <div class="footer">
+            <p>© 2025 FRUNA Chile - Todos los derechos reservados</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('form-login');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const showPasswordCheckbox = document.getElementById('showPassword');
+            const loadingElement = document.getElementById('loading');
+            
+            // Alternar visibilidad de contraseña
+            showPasswordCheckbox.addEventListener('change', () => {
+                passwordInput.type = showPasswordCheckbox.checked ? 'text' : 'password';
+            });
+            
+            // Manejar envío del formulario
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+                
+                // Validación básica
+                if (!email || !password) {
+                    alert('Por favor, completa todos los campos');
+                    return;
+                }
+                
+                // Mostrar carga
+                loadingElement.style.display = 'block';
+                
+                try {
+                    //  API REEMPLAZAAAR
+                    const response = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email, password })
+                    });
+                    
+                    // Ocultar carga
+                    loadingElement.style.display = 'none';
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        // Guardar token en localStorage
+                        localStorage.setItem('fruna_token', data.token);
+                        
+                        // Redirigir al dashboard
+                        window.location.href = '/admin';
+                    } else {
+                        alert('Credenciales incorrectas. Intenta nuevamente.');
+                    }
+                } catch (error) {
+                    // Ocultar carga
+                    loadingElement.style.display = 'none';
+                    
+                    console.error('Error:', error);
+                    alert('Error de conexión. Intenta nuevamente.');
+                }
+            });
+            
+            // Efecto de enfoque en los inputs
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.parentElement.style.transform = 'translateY(-2px)';
+                    input.parentElement.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+                });
+                
+                input.addEventListener('blur', () => {
+                    input.parentElement.style.transform = 'translateY(0)';
+                    input.parentElement.style.boxShadow = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
