@@ -30,22 +30,22 @@
             height: auto;
         }
         .btn-login{
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 10px;
             position: absolute;
             right: 60px;
             top: 50%;
             transform: translateY(-50%);
-            width: auto;
             background: #FFC107;
             color: #333;
             font-size: 25px;
             font-weight: bold;
             padding: 10px 20px;
             border-radius: 30px;
-            border: none;
+            text-decoration: none;
             cursor: pointer;
+            z-index: 10;
         }
         .btn-login .icono-btn {
             width: 30px;
@@ -229,10 +229,10 @@
      <!-- *************** LOGO *************** -->
     <header>
         <div class="logo-container">
-            <button class="btn-login" onclick="location.href='login_users.html'">
+            <a href="login_users.html" class="btn-login">
                 <img src="./img/user_login.png" alt="Login" class="icono-btn">
                 Iniciar Sesión
-            </button>
+            </a>
 
             <button class="btn-shop-bag" onclick="">
                 <img src="./img/shop_white.png" alt="shop_bag" class="icono-btn2">
@@ -278,7 +278,7 @@
 
         <div class="categoria">
             <img src="./img/Sufle_Chanfle_Mani.jpg" alt="Snacks">
-            <p>Snaks</p>
+            <p>Snacks</p>
         </div>
 
         <div class="categoria">

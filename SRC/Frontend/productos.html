@@ -30,22 +30,22 @@
             margin: 0;
         }
         .btn-login{
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 10px;
             position: absolute;
             right: 60px;
             top: 50%;
             transform: translateY(-50%);
-            width: auto;
             background: #FFC107;
             color: #333;
             font-size: 25px;
             font-weight: bold;
             padding: 10px 20px;
             border-radius: 30px;
-            border: none;
+            text-decoration: none;
             cursor: pointer;
+            z-index: 10;
         }
         .btn-login .icono-btn {
             width: 30px;
@@ -178,8 +178,8 @@
             font-weight: bold;
         }
         .filtros a:hover{
-        color:#E91E63;
-        outline:none;
+            color:#E91E63;
+            outline:none;
         }
         
         /* Productos */
@@ -242,17 +242,18 @@
 
 <body>
     <header>
-        <button class="btn-login" onclick="location.href='login_users.html'">
-            <img src="./img/user_login.png" alt="Login" class="icono-btn">
-            Iniciar Sesión
-        </button>
-
-        <button class="btn-shop-bag">
-            <img src="./img/shop_white.png" alt="shop_bag" class="icono-btn2">
-        </button>
-
         <div class="logo-container">
+            <a href="login_users.html" class="btn-login">
+                <img src="./img/user_login.png" alt="Login" class="icono-btn">
+                Iniciar Sesión
+            </a>
+
+            <button class="btn-shop-bag" onclick="">
+                <img src="./img/shop_white.png" alt="shop_bag" class="icono-btn2">
+            </button>
+
             <img src="./img/logo fruna.png" alt="FRUNA Chile">
+            
         </div>
     </header>
 
