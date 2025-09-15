@@ -69,7 +69,7 @@ const handleValidationErrors = (req, res, next) => {
     return res.status(400).json({
       success: false,
       error: 'Datos de entrada inválidos',
-      details: errors.array(),
+      details: errors.mapped(), // Solo un error por campo
     });
   }
   next();
