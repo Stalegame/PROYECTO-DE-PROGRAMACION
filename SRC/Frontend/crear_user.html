@@ -200,64 +200,64 @@
   </div>
 
   <script>
-    // Mejora UX: mostrar loading y manejar respuesta del backend (validaciones)
-    document.getElementById('form-registro').addEventListener('submit', async (e)=>{
-      // Si prefieres envío nativo, quita todo este handler y deja el form tal cual
+  (function () {
+    const form = document.getElementById('form-registro');
+    const loading = document.getElementById('loading');
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const loading = document.getElementById('loading');
+      const btn = form.querySelector('.btn-registrar');
+      btn.disabled = true;
       loading.style.display = 'block';
 
-      const fd = new FormData(e.target);
-      // Enviamos como x-www-form-urlencoded, igual que tu login
+      const fd = new FormData(form);
       const body = new URLSearchParams(fd);
 
-      try{
-        const res = await fetch('/api/clients/register',{
-          method:'POST',
-          headers:{ 'Content-Type':'application/x-www-form-urlencoded' },
+      try {
+        const res = await fetch('/api/clients/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body
         });
 
-        loading.style.display = 'none';
+        let data = {};
+        try { data = await res.json(); } catch (_) {}
 
-        const data = await res.json().catch(()=> ({}));
-
-        if(!res.ok || data.success === false){
-          // Mostrar feedback de validación simple
+        if (!res.ok || data.success === false) {
           let msg = (data && data.error) || 'No se pudo registrar. Revisa tus datos.';
-          if(data && data.details){
-            // details puede ser array o mapeado; intentamos friendly:
-            const details = Array.isArray(data.details) ? data.details
+          if (data && data.details) {
+            const details = Array.isArray(data.details)
+              ? data.details
               : Object.values(data.details).map(d => d.msg || d);
-            if(details && details.length){
-              msg += '\n- ' + details.join('\n- ');
-            }
+            if (details && details.length) msg += '\n- ' + details.join('\n- ');
           }
           alert(msg);
           return;
         }
 
         alert('¡Registro exitoso! Ya puedes iniciar sesión.');
-        // Redirige a login (o inicia sesión automática si quieres)
         window.location.href = 'login_users.html';
-      }catch(err){
-        loading.style.display = 'none';
-        console.error(err);
+      } catch (err) {
         alert('Error de conexión. Intenta nuevamente.');
+      } finally {
+        btn.disabled = false;
+        loading.style.display = 'none';
       }
     });
 
-    // Efecto de enfoque como en tu login
-    document.querySelectorAll('input, textarea').forEach(el=>{
-      el.addEventListener('focus', ()=>{
+    // Efectos de enfoque
+    document.querySelectorAll('input, textarea').forEach(el => {
+      el.addEventListener('focus', () => {
         el.parentElement.style.transform='translateY(-2px)';
         el.parentElement.style.boxShadow='0 5px 15px rgba(0,0,0,0.1)';
       });
-      el.addEventListener('blur', ()=>{
+      el.addEventListener('blur', () => {
         el.parentElement.style.transform='translateY(0)';
         el.parentElement.style.boxShadow='none';
       });
     });
-  </script>
+  })();
+</script>
+
 </body>
 </html>

@@ -1,50 +1,60 @@
 [
   {
-    "id": "1",
-    "name": "María González",
-    "email": "maria@email.com",
-    "password": "password123",
-    "phone": "+56912345678",
-    "address": "Av. Principal 123",
-    "purchases": 5,
-    "fechaRegistro": "2025-09-07T09:51:53.637Z"
-  },
-  {
-    "id": "2",
-    "name": "Admin User",
-    "email": "admin@fruna.com",
-    "password": "admin123",
-    "phone": "+56987654321",
-    "address": "Calle Admin 456",
+    "email": "admin@fruna.cl",
+    "nombre": "Admin Fruna",
     "role": "admin",
-    "purchases": 15,
-    "fechaRegistro": "2025-09-07T09:51:53.639Z"
+    "id": "1758128875560",
+    "createdAt": "2025-09-17T17:07:55.560Z",
+    "passwordHash": "$2a$10$4aSHdUOlzBsQZOkDg.PgIuu8i9l/8BCgcrF34PeFRenyat7bSZg.e"
   },
   {
-    "nombre": "angela muñoz martinez",
-    "email": "comprimidos2@gmail.com",
-    "password": "12345",
-    "telefono": "+56976730618",
-    "direccion": "Micasa #123",
-    "id": "1757994752844",
-    "createdAt": "2025-09-16T03:52:32.844Z"
+    "nombre": "Pepe Acosta",
+    "email": "pepeacosta@example.com",
+    "telefono": "+56912345678",
+    "direccion": "Calle de Pepe Acosta",
+    "id": "1758129268033",
+    "createdAt": "2025-09-17T17:14:28.033Z",
+    "passwordHash": "$2a$10$oIF1EbvZs03v9SkbxzJP/e7Tq4Me8q5XnG.eEA6v73emAvqgzhS6i",
+    "role": "user"
   },
   {
-    "nombre": "angela muñoz martinez",
-    "email": "comprimidos2@gmail.com",
-    "password": "12312",
-    "telefono": "+56976730618",
-    "direccion": "MiCasa #123",
-    "id": "1758007390835",
-    "createdAt": "2025-09-16T07:23:10.836Z"
+    "nombre": "Laura Fernández",
+    "email": "laura.fernandez@example.com",
+    "telefono": "+5698765432",
+    "direccion": "Av. Los Olivos 123",
+    "id": "1758131713782",
+    "createdAt": "2025-09-17T17:55:13.782Z",
+    "passwordHash": "$2a$10$UTXtcfGS4i4Q3uN3FrTrgutWqw1XOuEQx0cozV36QtQR561I26rcq",
+    "role": "user"
   },
   {
-    "nombre": "MABEL BEATRIZ MARTINEZ MANCILLA",
-    "email": "angelavalentinamunoz797@gmail.com",
-    "password": "12345",
-    "telefono": "+56976730618",
-    "direccion": "asdasda 232",
-    "id": "1758007471200",
-    "createdAt": "2025-09-16T07:24:31.200Z"
+    "nombre": "Martín Rojas",
+    "email": "martin.rojas@example.com",
+    "telefono": "+5692318745",
+    "direccion": "Calle Central 45",
+    "id": "1758131811794",
+    "createdAt": "2025-09-17T17:56:51.794Z",
+    "passwordHash": "$2a$10$SBkoEWohAewpoTxJNig0AOKXcUE4rhFeCXeZPJDAHJsmBb11H9v.6",
+    "role": "user"
+  },
+  {
+    "nombre": "Camila Soto",
+    "email": "camila.soto@example.com",
+    "telefono": "+5691234567",
+    "direccion": "Pje. El Bosque 89",
+    "id": "1758131903313",
+    "createdAt": "2025-09-17T17:58:23.313Z",
+    "passwordHash": "$2a$10$aUi3G2/TR7bJeP98Et1y4OpVD3iSvo/mxvjVVj4QaoScq5lhNAUuS",
+    "role": "user"
+  },
+  {
+    "nombre": "Antonia Morales",
+    "email": "antonia.morales@example.com",
+    "telefono": "+56 97654321",
+    "direccion": "Calle Nueva 77",
+    "id": "1758131987333",
+    "createdAt": "2025-09-17T17:59:47.333Z",
+    "passwordHash": "$2a$10$xjj3p7Pb1ZscDcVmvfnqwuxAM1HfikP3SQjCe/Wok7Mw.Era4.e6i",
+    "role": "user"
   }
 ]

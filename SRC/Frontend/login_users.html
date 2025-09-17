@@ -337,7 +337,7 @@
             <h3>¡Bienvenido a FRUNA!</h3>
             <p class="welcome-text">Ingresa tus credenciales para acceder al sistema</p>
             
-            <form id="form-login">
+            <form id="form-login" action="/api/clients/login" method="POST">
                 <div class="form-group">
                     <i class="fas fa-envelope"></i>
                     <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" required>
@@ -377,79 +377,83 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('form-login');
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password');
-            const showPasswordCheckbox = document.getElementById('showPassword');
-            const loadingElement = document.getElementById('loading');
-            
-            // Alternar visibilidad de contraseña
+        const form = document.getElementById('form-login');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const showPasswordCheckbox = document.getElementById('showPassword');
+        const loadingElement = document.getElementById('loading');
+        const submitBtn = form.querySelector('button[type="submit"]');
+
+        // Alternar visibilidad de contraseña
+        if (showPasswordCheckbox) {
             showPasswordCheckbox.addEventListener('change', () => {
-                passwordInput.type = showPasswordCheckbox.checked ? 'text' : 'password';
+            passwordInput.type = showPasswordCheckbox.checked ? 'text' : 'password';
             });
-            
-            // Manejar envío del formulario
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const email = emailInput.value.trim();
-                const password = passwordInput.value;
-                
-                // Validación básica
-                if (!email || !password) {
-                    alert('Por favor, completa todos los campos');
-                    return;
-                }
-                
-                // Mostrar carga
-                loadingElement.style.display = 'block';
-                
-                try {
-                    //  API REEMPLAZAAAR
-                    const response = await fetch('/api/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ email, password })
-                    });
-                    
-                    // Ocultar carga
-                    loadingElement.style.display = 'none';
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        
-                        // Guardar token en localStorage
-                        localStorage.setItem('fruna_token', data.token);
-                        
-                        // Redirigir al dashboard
-                        window.location.href = '/admin';
-                    } else {
-                        alert('Credenciales incorrectas. Intenta nuevamente.');
-                    }
-                } catch (error) {
-                    // Ocultar carga
-                    loadingElement.style.display = 'none';
-                    
-                    console.error('Error:', error);
-                    alert('Error de conexión. Intenta nuevamente.');
-                }
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = String(emailInput.value || '').trim();
+            const password = String(passwordInput.value || '');
+
+            if (!email || !password) {
+            alert('Por favor, completa todos los campos');
+            return;
+            }
+
+            // UI: enviando…
+            loadingElement.style.display = 'block';
+            submitBtn.disabled = true;
+
+            try {
+            const res = await fetch('/api/clients/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ email, password })
             });
-            
-            // Efecto de enfoque en los inputs
-            const inputs = document.querySelectorAll('input');
-            inputs.forEach(input => {
-                input.addEventListener('focus', () => {
-                    input.parentElement.style.transform = 'translateY(-2px)';
-                    input.parentElement.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
-                });
-                
-                input.addEventListener('blur', () => {
-                    input.parentElement.style.transform = 'translateY(0)';
-                    input.parentElement.style.boxShadow = 'none';
-                });
+
+            let data = {};
+            try { data = await res.json(); } catch (_) {}
+
+            // UI: fin de carga
+            loadingElement.style.display = 'none';
+            submitBtn.disabled = false;
+
+            if (!res.ok || data.success === false) {
+                const msg = (data && data.error) || 'Credenciales incorrectas. Intenta nuevamente.';
+                alert(msg);
+                return;
+            }
+
+            // Guardar sesión
+            if (data.token) localStorage.setItem('fruna_token', data.token);
+            if (data.user)  localStorage.setItem('fruna_user', JSON.stringify(data.user));
+
+            // Redirección según backend o rol
+            const redirect =
+                data.redirect ||
+                (data.user && data.user.role === 'admin' ? '/admin_controller.html' : '/productos.html');
+
+            window.location.href = redirect;
+            } catch (err) {
+            loadingElement.style.display = 'none';
+            submitBtn.disabled = false;
+            alert('Error de conexión. Intenta nuevamente.');
+            }
+        });
+
+        // Efecto de enfoque
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', () => {
+            input.parentElement.style.transform = 'translateY(-2px)';
+            input.parentElement.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
             });
+            input.addEventListener('blur', () => {
+            input.parentElement.style.transform = 'translateY(0)';
+            input.parentElement.style.boxShadow = 'none';
+            });
+        });
         });
     </script>
 </body>
