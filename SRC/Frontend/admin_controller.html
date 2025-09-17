@@ -203,6 +203,34 @@
         .content-section.active {
             display: block;
         }
+
+        /* === Modal genérico === */
+        .modal-backdrop{
+        position:fixed; inset:0; background:rgba(0,0,0,.45);
+        display:none; align-items:center; justify-content:center; z-index:1000;
+        }
+        .modal-backdrop.show{ display:flex; }
+
+        .modal{
+        width:min(600px, 92vw); background:#fff; border-radius:10px;
+        box-shadow:0 10px 30px rgba(0,0,0,.2); overflow:hidden;
+        animation:pop .12s ease-out;
+        }
+        @keyframes pop{ from{ transform:scale(.98); opacity:.7 } to{ transform:scale(1); opacity:1 } }
+
+        .modal-header{
+        display:flex; justify-content:space-between; align-items:center;
+        padding:14px 16px; background:#E91E63; color:#fff;
+        }
+        .modal-title{ font-weight:600; }
+        .modal-close{
+        background:transparent; border:none; color:#fff; font-size:22px; cursor:pointer;
+        }
+
+        .modal-body{ padding:16px; }
+        .modal-actions{
+        display:flex; gap:10px; justify-content:flex-end; padding:12px 16px; border-top:1px solid #eee;
+        }
     </style>
 </head>
 <body>
@@ -212,33 +240,28 @@
                 <h2>FRUNA Admin</h2>
             </div>
             
-            <div class="menu-item active" onclick="showSection(this,'dashboard')">
+            <div class="menu-item active" data-target="dashboard">
                 <i>📊</i> Dashboard
             </div>
-            
-            <div class="menu-item" onclick="showSection(this,'products')">
+            <div class="menu-item" data-target="products">
                 <i>🛒</i> Productos
             </div>
-            
-            <div class="menu-item" onclick="showSection(this,'orders')">
+            <div class="menu-item" data-target="orders">
                 <i>📦</i> Pedidos
             </div>
-            
-            <div class="menu-item" onclick="showSection(this,'customers')">
+            <div class="menu-item" data-target="customers">
                 <i>👥</i> Clientes
             </div>
-            
-            <div class="menu-item" onclick="showSection(this,'reports')">
+            <div class="menu-item" data-target="reports">
                 <i>📈</i> Reportes
             </div>
-            
-            <div class="menu-item" onclick="showSection(this,'settings')">
+            <div class="menu-item" data-target="settings">
                 <i>⚙️</i> Configuración
             </div>
-            
-            <div class="menu-item" style="margin-top: 30px;" onclick="logout()">
+            <div class="menu-item" style="margin-top: 30px;" id="logoutBtn">
                 <i>🚪</i> Cerrar Sesión
             </div>
+
         </div>
         
         <div class="main-content">
@@ -361,7 +384,7 @@
                 <div class="table-section">
                     <div class="table-header">
                         <h2>Gestión de Productos</h2>
-                        <button class="btn btn-primary">+ Nuevo Producto</button>
+                        <button class="btn btn-primary" id="btnNewProduct">+ Nuevo Producto</button>
                     </div>
                     
                     <table>
@@ -375,43 +398,49 @@
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>PR001</td>
-                                <td>Alfajor Clásico</td>
-                                <td>Alfajores</td>
-                                <td>$1.290</td>
-                                <td>45</td>
-                                <td>
-                                    <button class="btn btn-secondary">Editar</button>
-                                    <button class="btn" style="background:#f44336;color:white">Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>PR002</td>
-                                <td>Chocolate Maní</td>
-                                <td>Chocolates</td>
-                                <td>$2.490</td>
-                                <td>32</td>
-                                <td>
-                                    <button class="btn btn-secondary">Editar</button>
-                                    <button class="btn" style="background:#f44336;color:white">Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>PR003</td>
-                                <td>Galleta Chispas</td>
-                                <td>Galletas</td>
-                                <td>$1.990</td>
-                                <td>12</td>
-                                <td>
-                                    <button class="btn btn-secondary">Editar</button>
-                                    <button class="btn" style="background:#f44336;color:white">Eliminar</button>
-                                </td>
-                            </tr>
+                        <tbody id="products-tbody">
+                            <!-- aquí se inyectan filas -->
                         </tbody>
                     </table>
                 </div>
+            </div>
+            <!-- Modal: Nuevo Producto -->
+            <div class="modal-backdrop" id="modalNewProduct">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="np-title">
+                <div class="modal-header">
+                <div class="modal-title" id="np-title">Nuevo Producto</div>
+                <button class="modal-close" type="button" aria-label="Cerrar" id="np-close">x</button>
+                </div>
+
+                <div class="modal-body">
+                <div class="form-group">
+                    <label for="np-name">Nombre</label>
+                    <input type="text" id="np-name" placeholder="Alfajor Clásico">
+                </div>
+                <div class="form-group">
+                    <label for="np-price">Precio</label>
+                    <input type="number" id="np-price" min="0" step="1" placeholder="1290">
+                </div>
+                <div class="form-group">
+                    <label for="np-stock">Stock</label>
+                    <input type="number" id="np-stock" min="0" step="1" placeholder="100">
+                </div>
+                <div class="form-group">
+                    <label for="np-category">Categoría</label>
+                    <input type="text" id="np-category" placeholder="Alfajores">
+                </div>
+                <div class="form-group">
+                    <label for="np-description">Descripción</label>
+                    <textarea id="np-description" placeholder="Alfajor tradicional con dulce de leche y coco"></textarea>
+                </div>
+                <div id="np-error" style="color:#F44336; font-size:14px; display:none;"></div>
+                </div>
+
+                <div class="modal-actions">
+                <button class="btn" id="np-cancel" style="background:#ccc;">Cancelar</button>
+                <button class="btn btn-primary" id="np-save">Guardar</button>
+                </div>
+            </div>
             </div>
             
             <div id="orders" class="content-section">
@@ -462,8 +491,27 @@
             </div>
             
             <div id="customers" class="content-section">
-                <h2>Gestión de Clientes</h2>
-                <p>Contenido de gestión de clientes...</p>
+                <div class="table-section">
+                    <div class="table-header">
+                    <h2>Gestión de Clientes</h2>
+                    </div>
+
+                    <table>
+                    <thead>
+                        <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Rol</th>
+                        <th>Activo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clients-tbody">
+                        <!-- aquí se inyectan filas -->
+                    </tbody>
+                    </table>
+                </div>
             </div>
             
             <div id="reports" class="content-section">
@@ -477,74 +525,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        (function () {
-        // --- Guardia de sesión/rol ---
-        const token = localStorage.getItem('fruna_token');
-        const userStr = localStorage.getItem('fruna_user');
-
-        function deny(path) {
-            // Limpia sesión inconsistente y redirige
-            localStorage.removeItem('fruna_token');
-            localStorage.removeItem('fruna_user');
-            window.location.replace(path || '/login_users.html');
-        }
-
-        if (!token || !userStr) {
-            return deny('/login_users.html'); // no logueado
-        }
-
-        let user = null;
-        try {
-            user = JSON.parse(userStr);
-        }catch{
-            return deny('/login_users.html');
-        }
-
-        // Exige rol admin
-        if ((user.role || '').toLowerCase() !== 'admin') {
-            return deny('/productos.html');
-        }
-
-        // (Opcional) Solo un admin específico:
-        const ONLY = 'admin@fruna.cl';
-        if ((user.email || '').toLowerCase() !== ONLY) return deny('/productos.html');
-
-        // --- Helper: inyecta Authorization en todos los fetch de esta página ---
-        const _fetch = window.fetch;
-        window.fetch = (input, init = {}) => {
-            init.headers = Object.assign({}, init.headers, { Authorization: `Bearer ${token}` });
-            return _fetch(input, init);
-        };
-
-        // --- Pinta fecha header ---
-        function updateDate() {
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const el = document.getElementById('current-date');
-            if (el) el.textContent = now.toLocaleDateString('es-ES', options);
-        }
-        updateDate();
-
-        // --- Navegación de secciones ---
-        window.showSection = function (el, sectionId) {
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            const target = document.getElementById(sectionId);
-            if (target) target.classList.add('active');
-
-            document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-            if (el && el.classList) el.classList.add('active');
-        };
-
-        // --- Logout ---
-        window.logout = function () {
-            if (!confirm('¿Estás seguro de que quieres cerrar sesión?')) return;
-            localStorage.removeItem('fruna_token');
-            localStorage.removeItem('fruna_user');
-            window.location.replace('/login_users.html');
-        };
-    })();
-</script>
 </body>
+<script src="/js/admin_controller.js"></script>
 </html>

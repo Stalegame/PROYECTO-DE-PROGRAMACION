@@ -3,31 +3,49 @@ const path = require('path');
 const express = require('express');
 const { body, param, validationResult } = require('express-validator');
 
-const PersistenceFactoryPath = path.join(__dirname, '..', 'PersistenceFactory');
-console.log('[productsRouter] require ->', PersistenceFactoryPath);
-console.log('[productsRouter] resolve ->', require.resolve(PersistenceFactoryPath));
-
-const PersistenceFactory = require(PersistenceFactoryPath);
-
+const PersistenceFactory = require(path.join(__dirname, '..', 'PersistenceFactory'));
 const router = express.Router();
+
 const IS_DEV = process.env.NODE_ENV !== 'production';
 
-// === Fallback robusto: si la Factory falla, uso el DAO directo ===
+// ====== DAO con fallback ======
 let productosDAO;
 try {
-  const tipo = 'productos';
-  console.log('[productsRouter] tipo =>', JSON.stringify(tipo), 'len=', (tipo || '').length);
-  productosDAO = PersistenceFactory.getDAO(tipo);
+  productosDAO = PersistenceFactory.getDAO('productos');
 } catch (e) {
-  console.error('[productsRouter] Factory falló, usando fallback JsonProductosDAO. Motivo:', e.message);
   const JsonProductosDAO = require(path.join(__dirname, '..', 'json', 'JsonProductosDAO'));
   productosDAO = new JsonProductosDAO();
 }
 
-// ==================== MIDDLEWARES DE VALIDACIÓN ====================
+// ====== Middlewares de auth para mutaciones ======
+let auth, adminAuth;
+try {
+  ({ auth, adminAuth } = require('../middlewares/auth'));
+} catch (_) {
+  // Si no existe el middleware aún, las rutas mutables quedarán públicas (solo en dev).
+  if (IS_DEV) console.warn('[productsRouter] middlewares/auth no disponible: POST/PUT/DELETE sin protección');
+}
 
-// Validaciones para crear/actualizar producto
-const validateCreateProduct = [
+// ====== Normalización de body (soporta ES/EN) ======
+const normalizeProductInput = (req, _res, next) => {
+  const b = req.body || {};
+  const priceRaw = b.price ?? b.precio;
+  const stockRaw = b.stock;
+
+  // Deja preparado req.body con campos normalizados
+  req.body = {
+    id: b.id,
+    name: (b.name ?? b.nombre ?? '').toString().trim(),
+    price: priceRaw !== undefined && priceRaw !== null ? Number(priceRaw) : undefined,
+    stock: stockRaw !== undefined && stockRaw !== null ? Number(stockRaw) : undefined,
+    category: (b.category ?? b.categoria ?? '').toString().trim(),
+    description: (b.description ?? b.descripcion ?? '').toString().trim(),
+  };
+  next();
+};
+
+// ====== Validaciones ======
+const validateCreateOrUpdate = [
   body('name')
     .notEmpty().withMessage('El nombre del producto es obligatorio')
     .isLength({ min: 2, max: 100 }).withMessage('El nombre debe tener entre 2 y 100 caracteres')
@@ -54,38 +72,32 @@ const validateCreateProduct = [
     .trim().escape(),
 ];
 
-// Validaciones para ID de producto
 const validateProductId = [
   param('id')
     .notEmpty().withMessage('El ID del producto es requerido')
-    .isLength({ min: 1, max: 50 }).withMessage('ID inválido')
+    .isLength({ min: 1, max: 64 }).withMessage('ID inválido')
     .trim().escape(),
 ];
 
-// Middleware para manejar errores de validación
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
       success: false,
       error: 'Datos de entrada inválidos',
-      details: errors.mapped(), // Solo un error por campo
+      details: errors.mapped(),
     });
   }
   next();
 };
 
-// ==================== RUTAS ====================
+// ==================== RUTAS PÚBLICAS ====================
 
-// GET /api/products - Todos los productos
-router.get('/', async (req, res) => {
+// GET /api/products - listado público
+router.get('/', async (_req, res) => {
   try {
     const productos = await productosDAO.getAll();
-    res.json({
-      success: true,
-      count: productos.length,
-      data: productos,
-    });
+    res.json({ success: true, count: productos.length, data: productos });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -95,33 +107,12 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/products - Crear nuevo producto (con validaciones)
-router.post('/', validateCreateProduct, handleValidationErrors, async (req, res) => {
-  try {
-    const nuevoProducto = await productosDAO.save(req.body);
-    res.status(201).json({
-      success: true,
-      message: 'Producto creado exitosamente',
-      data: nuevoProducto,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor al crear producto',
-      ...(IS_DEV && { detail: error.message }),
-    });
-  }
-});
-
-// GET /api/products/:id - Producto por ID
+// GET /api/products/:id - detalle público
 router.get('/:id', validateProductId, handleValidationErrors, async (req, res) => {
   try {
     const producto = await productosDAO.getById(req.params.id);
     if (!producto) {
-      return res.status(404).json({
-        success: false,
-        error: 'Producto no encontrado',
-      });
+      return res.status(404).json({ success: false, error: 'Producto no encontrado' });
     }
     res.json({ success: true, data: producto });
   } catch (error) {
@@ -133,26 +124,45 @@ router.get('/:id', validateProductId, handleValidationErrors, async (req, res) =
   }
 });
 
-// PUT /api/products/:id - Actualizar producto
+// ==================== RUTAS ADMIN (protegidas) ====================
+
+// Aplica protección solo si los middlewares existen
+const protect = (fn) => (auth && adminAuth) ? [auth, adminAuth, fn] : [fn];
+
+// POST /api/products - crear
+router.post(
+  '/',
+  normalizeProductInput,
+  validateCreateOrUpdate,
+  handleValidationErrors,
+  ...protect(async (req, res) => {
+    try {
+      const nuevo = await productosDAO.save(req.body);
+      res.status(201).json({ success: true, message: 'Producto creado exitosamente', data: nuevo });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: 'Error interno del servidor al crear producto',
+        ...(IS_DEV && { detail: error.message }),
+      });
+    }
+  })
+);
+
+// PUT /api/products/:id - actualizar
 router.put(
   '/:id',
   validateProductId,
-  validateCreateProduct,
+  normalizeProductInput,
+  validateCreateOrUpdate,
   handleValidationErrors,
-  async (req, res) => {
+  ...protect(async (req, res) => {
     try {
-      const productoActualizado = await productosDAO.update(req.params.id, req.body);
-      if (!productoActualizado) {
-        return res.status(404).json({
-          success: false,
-          error: 'Producto no encontrado',
-        });
+      const actualizado = await productosDAO.update(req.params.id, req.body);
+      if (!actualizado) {
+        return res.status(404).json({ success: false, error: 'Producto no encontrado' });
       }
-      res.json({
-        success: true,
-        message: 'Producto actualizado exitosamente',
-        data: productoActualizado,
-      });
+      res.json({ success: true, message: 'Producto actualizado exitosamente', data: actualizado });
     } catch (error) {
       res.status(500).json({
         success: false,
@@ -160,30 +170,29 @@ router.put(
         ...(IS_DEV && { detail: error.message }),
       });
     }
-  }
+  })
 );
 
-// DELETE /api/products/:id - Eliminar producto
-router.delete('/:id', validateProductId, handleValidationErrors, async (req, res) => {
-  try {
-    const resultado = await productosDAO.delete(req.params.id);
-    if (!resultado) {
-      return res.status(404).json({
+// DELETE /api/products/:id - eliminar
+router.delete(
+  '/:id',
+  validateProductId,
+  handleValidationErrors,
+  ...protect(async (req, res) => {
+    try {
+      const ok = await productosDAO.delete(req.params.id);
+      if (!ok) {
+        return res.status(404).json({ success: false, error: 'Producto no encontrado' });
+      }
+      res.json({ success: true, message: 'Producto eliminado exitosamente' });
+    } catch (error) {
+      res.status(500).json({
         success: false,
-        error: 'Producto no encontrado',
+        error: 'Error interno del servidor al eliminar producto',
+        ...(IS_DEV && { detail: error.message }),
       });
     }
-    res.json({
-      success: true,
-      message: 'Producto eliminado exitosamente',
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor al eliminar producto',
-      ...(IS_DEV && { detail: error.message }),
-    });
-  }
-});
+  })
+);
 
 module.exports = router;

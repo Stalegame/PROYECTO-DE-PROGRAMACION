@@ -89,13 +89,27 @@ const FRONTEND_DIR = exists(FRONTEND_DIR_MAIN) ? FRONTEND_DIR_MAIN :
 
 console.log('[server] FRONTEND_DIR =', FRONTEND_DIR, 'exists?', !!FRONTEND_DIR && exists(FRONTEND_DIR));
 if (FRONTEND_DIR) {
+  const IS_DEV = process.env.NODE_ENV !== 'production';
+
   app.use(express.static(FRONTEND_DIR, {
     index: false,
     setHeaders: (res, filePath) => {
-      if (/\.(html?)$/i.test(filePath)) {
-        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      if (IS_DEV) {
+        // En desarrollo: nunca cachear HTML, JS ni CSS
+        if (/\.(html?|js|css)$/i.test(filePath)) {
+          res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+        } else {
+          res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+        }
       } else {
-        res.setHeader('Cache-Control', 'public, max-age=3600, immutable');
+        // En producción:
+        if (/\.(html?)$/i.test(filePath)) {
+          // HTML siempre fresco
+          res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+        } else {
+          // JS, CSS, imágenes, etc. cacheados 1 día
+          res.setHeader('Cache-Control', 'public, max-age=86400, immutable');
+        }
       }
     }
   }));

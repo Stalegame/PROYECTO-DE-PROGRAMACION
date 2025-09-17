@@ -1,27 +1,38 @@
 [
   {
-    "id": "1",
+    "id": "1758149195472",
+    "name": "Palo Palito",
+    "price": 390,
+    "stock": 15,
+    "category": "Helados",
+    "description": "Helado de agua sabor cereza y piña.",
+    "timestamp": "2025-09-17T22:46:35.472Z"
+  },
+  {
+    "id": "1758149535138",
     "name": "Alfajor Clásico",
     "price": 1290,
     "stock": 45,
     "category": "Alfajores",
-    "description": "Alfajor tradicional con dulce de leche y coco"
+    "description": "Alfajor tradicional con dulce de leche y coco.",
+    "timestamp": "2025-09-17T22:52:15.138Z"
   },
   {
-    "id": "2",
-    "name": "Chocolate con Maní",
-    "price": 2490,
-    "stock": 32,
-    "category": "Chocolates",
-    "description": "Chocolate negro con maní crocante"
+    "id": "1758149775878",
+    "name": "Coca Cola Clásica 2Lt",
+    "price": 1490,
+    "stock": 10,
+    "category": "Bebidas",
+    "description": "Refresca tus momentos con el sabor clásico y burbujeante de siempre. Ideal para compartir en familia o con amigos.",
+    "timestamp": "2025-09-17T22:56:15.878Z"
   },
   {
-    "name": "Manzanita",
-    "price": 1290,
-    "stock": 25,
-    "category": "Frutas",
-    "description": "Roja y dulce",
-    "id": "1757281102446",
-    "timestamp": "2025-09-07T21:38:22.446Z"
+    "id": "1758149867672",
+    "name": "Sufle Maní",
+    "price": 990,
+    "stock": 20,
+    "category": "Snacks",
+    "description": "Snack crocante de maní con el sabor clásico de siempre. Perfecto para compartir y disfrutar en cualquier ocasión.",
+    "timestamp": "2025-09-17T22:57:47.672Z"
   }
 ]
