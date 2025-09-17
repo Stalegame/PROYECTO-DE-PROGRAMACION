@@ -1,10 +1,12 @@
 ﻿// routes/clientsRouter.js
 const express = require('express');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const router = express.Router();
 const path = require('path');
 
-// --- Cargar DAO de clientes con fallback ---
+// Cargar DAO de clientes con fallback
 let clientesDAO;
 try {
   const PersistenceFactory = require('../PersistenceFactory');
@@ -20,20 +22,20 @@ try {
   }
 }
 
-// --- Middleware de validación genérico ---
+// Middleware de validación
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
       success: false,
       error: 'Datos de entrada inválidos',
-      details: errors.mapped(), // Solo un error por campo
+      details: errors.mapped(),
     });
   }
   next();
 };
 
-// --- Validaciones ---
+// Validaciones
 const validateLogin = [
   body('email').notEmpty().withMessage('Email es requerido')
     .isEmail().withMessage('Email no válido').normalizeEmail(),
@@ -49,9 +51,7 @@ const validateRegister = [
   body('direccion').optional().isString().isLength({ max: 200 }).trim().escape(),
 ];
 
-// ================= RUTAS =================
-
-// RUTA HEALTH CHECK
+// Rutas
 router.get('/health', (req, res) => {
   res.json({
     status: 'OK',
@@ -60,44 +60,36 @@ router.get('/health', (req, res) => {
   });
 });
 
-// RUTA SIMPLE DE LOGIN (simulada)
-router.post('/login', validateLogin, handleValidationErrors, (req, res) => {
-  const { email } = req.body;
+// Ruta de login
+router.post('/login', validateLogin, handleValidationErrors, async (req, res) => {
+  const { email, password } = req.body;
 
-  // Aquí iría tu validación real (DB/servicio). Esto es demo:
+  // Validación del cliente
+  const user = await clientesDAO.getByEmail(email);
+
+  if (!user) {
+    return res.status(400).json({ success: false, error: 'Credenciales incorrectas. Intenta nuevamente.' });
+  }
+
+  // Compara la contraseña utilizando bcrypt
+  const isPasswordValid = bcrypt.compareSync(password, user.password);
+  if (!isPasswordValid) {
+    return res.status(400).json({ success: false, error: 'Credenciales incorrectas. Intenta nuevamente.' });
+  }
+
+  // Generación de token
+  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+
   res.json({
     success: true,
     message: 'Login exitoso',
-    user: {
-      id: '2',
-      nombre: 'Admin Fruna',
-      email,
-      role: 'admin',
-    },
-    token: 'token-simulado-123456',
+    user: { id: user.id, nombre: user.nombre, email: user.email, role: user.role },
+    token,
     redirect: '/admin',
   });
 });
 
-// GET /api/clients - Todos los clientes
-router.get('/', async (req, res) => {
-  try {
-    const clientes = await clientesDAO.getAll();
-    res.json({
-      success: true,
-      count: clientes.length,
-      data: clientes,
-    });
-  } catch (error) {
-    console.error('[clientsRouter] getAll error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor al obtener clientes',
-    });
-  }
-});
-
-// POST /api/clients/register - Registrar cliente
+// Ruta de registro
 router.post('/register', validateRegister, handleValidationErrors, async (req, res) => {
   try {
     const cliente = await clientesDAO.save(req.body);

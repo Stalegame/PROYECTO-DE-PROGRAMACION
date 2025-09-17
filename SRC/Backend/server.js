@@ -6,9 +6,10 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const bcrypt = require('bcryptjs');
+require('dotenv').config();  // Cargar las variables de entorno desde el archivo .env
 const jwt = require('jsonwebtoken');
-
-try { require('dotenv').config(); } catch { /* opcional */ }
+// Usar la clave secreta
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;  // Cargar desde el archivo .env
 
 const PersistenceFactory = require('./PersistenceFactory');
 
