@@ -146,14 +146,20 @@ app.get('/healthcheck', (_req, res) => {
 
 // ============= Rutas API =============
 try {
+  const { auth, onlyAdminEmail } = require('./middlewares/auth');
   const productsRouter = require('./routes/productsRouter');
   const clientsRouter  = require('./routes/clientsRouter');
   const chatbotRouter  = require('./routes/chatbotRouter');
+  const adminRouter = require('./routes/adminRouter');
 
   // Rutas de login y registro
   app.use('/api/clients/login', strictLimiter);
   app.use('/api/clients/register', strictLimiter);
 
+  // Solo un admin por email
+  app.use('/api/admin', auth, onlyAdminEmail('admin@fruna.cl'), adminRouter);
+  
+  // Resto de APIs 
   app.use('/api/products', productsRouter);
   app.use('/api/clients',  clientsRouter);
   app.use('/api/chatbot',  chatbotRouter);

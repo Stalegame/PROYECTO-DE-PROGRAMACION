@@ -212,27 +212,27 @@
                 <h2>FRUNA Admin</h2>
             </div>
             
-            <div class="menu-item active" onclick="showSection('dashboard')">
+            <div class="menu-item active" onclick="showSection(this,'dashboard')">
                 <i>📊</i> Dashboard
             </div>
             
-            <div class="menu-item" onclick="showSection('products')">
+            <div class="menu-item" onclick="showSection(this,'products')">
                 <i>🛒</i> Productos
             </div>
             
-            <div class="menu-item" onclick="showSection('orders')">
+            <div class="menu-item" onclick="showSection(this,'orders')">
                 <i>📦</i> Pedidos
             </div>
             
-            <div class="menu-item" onclick="showSection('customers')">
+            <div class="menu-item" onclick="showSection(this,'customers')">
                 <i>👥</i> Clientes
             </div>
             
-            <div class="menu-item" onclick="showSection('reports')">
+            <div class="menu-item" onclick="showSection(this,'reports')">
                 <i>📈</i> Reportes
             </div>
             
-            <div class="menu-item" onclick="showSection('settings')">
+            <div class="menu-item" onclick="showSection(this,'settings')">
                 <i>⚙️</i> Configuración
             </div>
             
@@ -479,37 +479,72 @@
     </div>
 
     <script>
+        (function () {
+        // --- Guardia de sesión/rol ---
+        const token = localStorage.getItem('fruna_token');
+        const userStr = localStorage.getItem('fruna_user');
 
-        function showSection(sectionId) {
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            document.getElementById(sectionId).classList.add('active');
-
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            event.currentTarget.classList.add('active');
+        function deny(path) {
+            // Limpia sesión inconsistente y redirige
+            localStorage.removeItem('fruna_token');
+            localStorage.removeItem('fruna_user');
+            window.location.replace(path || '/login_users.html');
         }
-        
 
-        function logout() {
-            if(confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-                alert('Sesión cerrada. Redirigiendo al login...');
- 
-            }
+        if (!token || !userStr) {
+            return deny('/login_users.html'); // no logueado
         }
-        
 
+        let user = null;
+        try {
+            user = JSON.parse(userStr);
+        }catch{
+            return deny('/login_users.html');
+        }
+
+        // Exige rol admin
+        if ((user.role || '').toLowerCase() !== 'admin') {
+            return deny('/productos.html');
+        }
+
+        // (Opcional) Solo un admin específico:
+        const ONLY = 'admin@fruna.cl';
+        if ((user.email || '').toLowerCase() !== ONLY) return deny('/productos.html');
+
+        // --- Helper: inyecta Authorization en todos los fetch de esta página ---
+        const _fetch = window.fetch;
+        window.fetch = (input, init = {}) => {
+            init.headers = Object.assign({}, init.headers, { Authorization: `Bearer ${token}` });
+            return _fetch(input, init);
+        };
+
+        // --- Pinta fecha header ---
         function updateDate() {
             const now = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES', options);
+            const el = document.getElementById('current-date');
+            if (el) el.textContent = now.toLocaleDateString('es-ES', options);
         }
-        
         updateDate();
-    </script>
+
+        // --- Navegación de secciones ---
+        window.showSection = function (el, sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById(sectionId);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+            if (el && el.classList) el.classList.add('active');
+        };
+
+        // --- Logout ---
+        window.logout = function () {
+            if (!confirm('¿Estás seguro de que quieres cerrar sesión?')) return;
+            localStorage.removeItem('fruna_token');
+            localStorage.removeItem('fruna_user');
+            window.location.replace('/login_users.html');
+        };
+    })();
+</script>
 </body>
 </html>

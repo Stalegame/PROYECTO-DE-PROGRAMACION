@@ -87,6 +87,7 @@ class JsonClientesDAO {
       createdAt: new Date().toISOString(),
       passwordHash: bcrypt.hashSync(cliente.password, 10),
       role: cliente.role || 'user', // defecto todos "user"
+      activo: true // estado de un usuario.
     };
 
     delete toSave.password; // nunca guardes password plano

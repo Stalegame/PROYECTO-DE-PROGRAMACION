@@ -5,7 +5,8 @@
     "role": "admin",
     "id": "1758128875560",
     "createdAt": "2025-09-17T17:07:55.560Z",
-    "passwordHash": "$2a$10$4aSHdUOlzBsQZOkDg.PgIuu8i9l/8BCgcrF34PeFRenyat7bSZg.e"
+    "passwordHash": "$2a$10$4aSHdUOlzBsQZOkDg.PgIuu8i9l/8BCgcrF34PeFRenyat7bSZg.e",
+    "activo": true
   },
   {
     "nombre": "Pepe Acosta",
@@ -15,7 +16,8 @@
     "id": "1758129268033",
     "createdAt": "2025-09-17T17:14:28.033Z",
     "passwordHash": "$2a$10$oIF1EbvZs03v9SkbxzJP/e7Tq4Me8q5XnG.eEA6v73emAvqgzhS6i",
-    "role": "user"
+    "role": "user",
+    "activo": true
   },
   {
     "nombre": "Laura Fernández",
@@ -25,7 +27,8 @@
     "id": "1758131713782",
     "createdAt": "2025-09-17T17:55:13.782Z",
     "passwordHash": "$2a$10$UTXtcfGS4i4Q3uN3FrTrgutWqw1XOuEQx0cozV36QtQR561I26rcq",
-    "role": "user"
+    "role": "user",
+    "activo": true
   },
   {
     "nombre": "Martín Rojas",
@@ -35,7 +38,8 @@
     "id": "1758131811794",
     "createdAt": "2025-09-17T17:56:51.794Z",
     "passwordHash": "$2a$10$SBkoEWohAewpoTxJNig0AOKXcUE4rhFeCXeZPJDAHJsmBb11H9v.6",
-    "role": "user"
+    "role": "user",
+    "activo": true
   },
   {
     "nombre": "Camila Soto",
@@ -45,7 +49,8 @@
     "id": "1758131903313",
     "createdAt": "2025-09-17T17:58:23.313Z",
     "passwordHash": "$2a$10$aUi3G2/TR7bJeP98Et1y4OpVD3iSvo/mxvjVVj4QaoScq5lhNAUuS",
-    "role": "user"
+    "role": "user",
+    "activo": true
   },
   {
     "nombre": "Antonia Morales",
@@ -55,6 +60,7 @@
     "id": "1758131987333",
     "createdAt": "2025-09-17T17:59:47.333Z",
     "passwordHash": "$2a$10$xjj3p7Pb1ZscDcVmvfnqwuxAM1HfikP3SQjCe/Wok7Mw.Era4.e6i",
-    "role": "user"
+    "role": "user",
+    "activo": true
   }
 ]
