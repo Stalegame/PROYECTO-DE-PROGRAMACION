@@ -1,0 +1,312 @@
+/* Frontend/css/login_users.css */
+
+/* ESTILOS GENERALES */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', 'Arial', sans-serif;
+    background: linear-gradient(135deg, #ffebee 0%, #fce4ec 50%, #f8bbd0 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    position: relative;
+}
+
+/* Botón volver fijo en esquina superior izquierda */
+.btn-volver {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    gap: 10px;
+    left: 60px;
+    top: 60px;
+    background: #FFC107;
+    color: #333;
+    font-size: 25px;
+    font-weight: bold;
+    padding: 10px 28px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    text-decoration: none;
+    appearance: none;
+}
+
+.btn-volver:hover {
+    background: #FFD54F;
+    transform: scale(1.05);
+    text-decoration: none;
+}
+
+/* Contenedor principal centrado */
+.contenedor-principal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    width: 100%;
+    max-width: 500px;
+    margin: 40px auto 20px;
+}
+
+/* Header */
+header {
+    background: linear-gradient(135deg, #e91e63 0%, #ad1457 100%);
+    width: 100%;
+    padding: 20px;
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-bottom: -10px;
+    z-index: 10;
+}
+
+.logo-container {
+    max-width: 220px;
+    margin: 0 auto;
+    filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.2));
+}
+
+.logo-container img {
+    width: 100%;
+    height: auto;
+}
+
+/* Formulario de login */
+.user-login {
+    background: white;
+    border-radius: 0 0 15px 15px;
+    padding: 40px 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.user-login::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #E91E63, #FFC107, #E91E63);
+}
+
+.user-login h3 {
+    margin-bottom: 25px;
+    color: #E91E63;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.welcome-text {
+    text-align: center;
+    color: #777;
+    margin-bottom: 30px;
+    font-size: 15px;
+}
+
+/* Formulario */
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    background: #f9f9f9;
+    border-radius: 12px;
+    border: 2px solid #f1f1f1;
+    padding: 5px 15px;
+    transition: all 0.3s ease;
+}
+
+.form-group:focus-within {
+    border-color: #E91E63;
+    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-group i {
+    font-size: 18px;
+    color: #E91E63;
+    margin-right: 10px;
+}
+
+.form-group input {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 15px 10px;
+    font-size: 16px;
+    background: transparent;
+    color: #333;
+}
+
+.form-group input::placeholder {
+    color: #999;
+}
+
+.checkbox-cont {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+    font-size: 15px;
+    color: #555;
+}
+
+.checkbox-cont input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #E91E63;
+}
+
+.btn-ingresar {
+    width: 100%;
+    background: linear-gradient(135deg, #E91E63 0%, #C2185B 100%);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 15px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3);
+    margin-top: 10px;
+}
+
+.btn-ingresar:hover {
+    background: linear-gradient(135deg, #C2185B 0%, #E91E63 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(233, 30, 99, 0.4);
+}
+
+.btn-ingresar:active {
+    transform: translateY(0);
+}
+
+/* Enlaces adicionales */
+.login-links {
+    display: flex;
+    justify-content:center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.login-links a {
+    color: #E91E63;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.login-links a:hover {
+    color: #C2185B;
+    text-decoration: underline;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    margin-top: 30px;
+    color: #777;
+    font-size: 13px;
+    width: 100%;
+}
+
+/* Efectos de carga */
+.loading {
+    display: none;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.loading-dots {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 20px;
+}
+
+.loading-dots div {
+    position: absolute;
+    top: 0;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #E91E63;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.loading-dots div:nth-child(1) {
+    left: 8px;
+    animation: loading-dots1 0.6s infinite;
+}
+
+.loading-dots div:nth-child(2) {
+    left: 8px;
+    animation: loading-dots2 0.6s infinite;
+}
+
+.loading-dots div:nth-child(3) {
+    left: 32px;
+    animation: loading-dots2 0.6s infinite;
+}
+
+.loading-dots div:nth-child(4) {
+    left: 56px;
+    animation: loading-dots3 0.6s infinite;
+}
+
+@keyframes loading-dots1 {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+}
+
+@keyframes loading-dots3 {
+    0% { transform: scale(1); }
+    100% { transform: scale(0); }
+}
+
+@keyframes loading-dots2 {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(24px, 0); }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .btn-volver {
+        position: absolute;
+        left: 15px;
+        top: 15px;
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+    
+    .contenedor-principal {
+        margin-top: 60px;
+    }
+    
+    header {
+        padding: 15px;
+    }
+    
+    .user-login {
+        padding: 30px 20px;
+    }
+    
+    .login-links {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+}

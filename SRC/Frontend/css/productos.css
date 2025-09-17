@@ -1,0 +1,234 @@
+/* Frontend/css/contacto.css */
+
+/* ESTILOS GENERALES */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    background-color: #FFF9FA;
+}
+header {
+    background-color: #E91E63;
+    padding: 15px;
+    text-align: center;
+    position: relative;
+}
+.logo-container {
+    max-width: 150px;
+    margin: 0 auto;
+}
+.logo-container img {
+    width: 100%;
+    height: auto;
+}
+.logo {
+    font-size: 2em;
+    margin: 0;
+}
+.btn-login{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #FFC107;
+    color: #333;
+    font-size: 25px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    cursor: pointer;
+    z-index: 10;
+}
+.btn-login .icono-btn {
+    width: 30px;
+    height: 30px;
+}
+.btn-shop-bag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: absolute;
+    left: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+    background: none;
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+}
+.btn-shop-bag .icono-btn2 {
+    width: 80px;
+    height: 80px;
+}
+/* NAV */
+.main-nav{
+display:flex;
+justify-content:center;
+gap:40px;
+padding:12px 16px;
+background:#FFEBEE;
+border-top:1px solid rgba(0,0,0,0.06);
+border-bottom:1px solid rgba(0,0,0,0.06);
+}
+
+/* Botones tipo “pill” */
+.nav-pill{
+display:inline-block;
+padding:10px 50px;
+border-radius:9999px;
+text-decoration:none;
+font-weight:bold;
+color:#E91E63;
+background:#FFEBEE;
+transition:all .2s ease;
+}
+
+/* Hover/Focus: invierte colores para feedback */
+.nav-pill:hover,
+.nav-pill:focus{
+background:#c2185b;
+color:#fff;
+outline:none;
+}
+
+/* Estado activo (opcional, por página) */
+.nav-pill.is-active{
+background:#c2185b;
+color:#fff;
+}
+
+/* BARRA LATERAL oculta por defecto */
+.sidebar {
+    position: fixed;
+    bottom: 0;
+    left: -345px;  /* oculta a la izquierda */
+    width: 300px;
+    height: 60%;
+    background-color: #333;
+    color: #FFF9FA;
+    padding: 20px;
+    transition: left 0.3s ease; /* animación suave */
+    z-index: 1000;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+    border-radius: 15px;
+}
+
+/* Cuando está activa */
+.sidebar.active {
+    left: 0;
+}
+.btn-buy-bag {
+    bottom: 0;
+    width: 50%;
+    background: #FFC107;
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transition: background 0.3s;
+}
+
+/* Contenedor principal */
+.contenedor {
+    display: flex;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+/* Filtros */
+.filtros {
+    width: 250px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.filtros h3 {
+    color: #E91E63;
+    border-bottom: 2px solid #FFC107;
+    padding-bottom: 5px;
+}
+.filtros ul {
+    list-style: none;
+    padding: 0;
+}
+.filtros li {
+    margin: 15px 0;
+}
+.filtros a {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+}
+.filtros a:hover{
+    color:#E91E63;
+    outline:none;
+}
+
+/* Productos */
+.productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 0 20px;
+    flex: 1;
+}
+.producto {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+.producto:hover {
+    transform: translateY(-5px);
+}
+.producto img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-bottom: 2px solid #FFC107;
+}
+.producto-info {
+    padding: 15px;
+    text-align: center;
+}
+.producto h3 {
+    margin: 10px 0;
+    color: #E91E63;
+}
+.precio {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #333;
+}
+.iva {
+    font-size: 0.8em;
+    color: #777;
+}
+.btn-comprar {
+    background: #E91E63;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+    transition: background 0.3s;
+}
+.btn-comprar:hover {
+    background: #C2185B;
+}

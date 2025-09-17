@@ -1,0 +1,81 @@
+/* Frontend/css/page_404.css */
+
+/* ESTILOS GENERALES */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #FFF9FA;
+    color: #333;
+}
+
+header {
+    background-color: #E91E63;
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+}
+
+.logo-container {
+    max-width: 200px;
+    margin: 0 auto;
+}
+
+.logo-container img {
+    width: 100%;
+}
+
+/* Contenedor Principal */
+.content {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.content h1 {
+    font-size: 120px;
+    color: #E91E63;
+    margin-bottom: 10px;
+}
+
+.content p {
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+.btn-volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #FFC107;
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px 28px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn-volver:hover {
+    background: #ffb300;
+    transform: scale(1.05);
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+}
