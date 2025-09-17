@@ -16,7 +16,7 @@ try {
     clientesDAO = new JsonClientesDAO();
   } catch (e2) {
     console.error('[clientsRouter] Fallback JsonClientesDAO falló:', e2.message);
-    throw e2; // sin DAO no podemos continuar
+    throw e2; 
   }
 }
 

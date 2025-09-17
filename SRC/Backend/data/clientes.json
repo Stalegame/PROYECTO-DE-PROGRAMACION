@@ -19,5 +19,32 @@
     "role": "admin",
     "purchases": 15,
     "fechaRegistro": "2025-09-07T09:51:53.639Z"
+  },
+  {
+    "nombre": "angela muñoz martinez",
+    "email": "comprimidos2@gmail.com",
+    "password": "12345",
+    "telefono": "+56976730618",
+    "direccion": "Micasa #123",
+    "id": "1757994752844",
+    "createdAt": "2025-09-16T03:52:32.844Z"
+  },
+  {
+    "nombre": "angela muñoz martinez",
+    "email": "comprimidos2@gmail.com",
+    "password": "12312",
+    "telefono": "+56976730618",
+    "direccion": "MiCasa #123",
+    "id": "1758007390835",
+    "createdAt": "2025-09-16T07:23:10.836Z"
+  },
+  {
+    "nombre": "MABEL BEATRIZ MARTINEZ MANCILLA",
+    "email": "angelavalentinamunoz797@gmail.com",
+    "password": "12345",
+    "telefono": "+56976730618",
+    "direccion": "asdasda 232",
+    "id": "1758007471200",
+    "createdAt": "2025-09-16T07:24:31.200Z"
   }
 ]
