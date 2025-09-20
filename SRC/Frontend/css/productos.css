@@ -2,7 +2,7 @@
 
 /* ESTILOS GENERALES */
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: 'Poppins', 'Arial', sans-serif;
   margin: 0;
   background-color: #FFF9FA;
   color: #333;
@@ -199,43 +199,56 @@ header {
   color: #E91E63;
 }
 
-/* Grid de productos */
 .productos {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
-  flex: 1;
+  display: block;
   padding: 0 10px;
+  flex: 1;
 }
-.producto {
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-  transition: transform 0.3s;
-  display: flex;
-  flex-direction: column;
+
+/* Grid de productos*/
+#products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* varias por fila */
+  gap: 16px;
+  width: 100%;
+}
+/* Tarjeta del producto */
+#products-grid .producto {
+  background:#fff;
+  border-radius:8px;
+  overflow:hidden;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+  transition: transform .2s;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  text-align:center;
 }
 .producto:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
 }
-.producto img {
-  width: 100%;
-  height: 100px;
-  object-fit: cover;
-  border-bottom: 2px solid #FFC107;
+/* Imagen */
+#products-grid .producto img {
+  width:100%;
+  height:180px;
+  object-fit:contain;
+  border-bottom:2px solid #FFC107;
+  border-bottom: none;
 }
-.producto-info {
-  padding: 15px;
-  text-align: center;
+/* Info del producto */
+#products-grid .producto-info {
+  padding:10px;
 }
-.producto h3 {
-  margin: 10px 0;
-  color: #E91E63;
+.producto h3 a{
+  text-decoration: none;
+  margin: 6px 0;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
 }
 .precio {
   font-weight: bold;
-  font-size: 1.2em;
+  font-size: 1em;
   color: #333;
 }
 .iva {
@@ -246,10 +259,11 @@ header {
   background: #E91E63;
   color: white;
   border: none;
-  padding: 8px 15px;
+  padding: 6px 10px;
   border-radius: 20px;
+  text-decoration: none;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 8px;
   width: 100%;
   transition: background 0.3s;
 }
@@ -294,7 +308,7 @@ header {
 }
 .product-info-large h1{
   margin: 6px 0 10px;
-  color: #E91E63;
+  color: #333;
   font-size: 28px;
 }
 .product-meta-large{
@@ -338,6 +352,7 @@ header {
   text-decoration:none;
   color:#333;
   margin-bottom: 6px;
+  font-size: 18px;
 }
 .back-link:hover{ color:#E91E63 }
 

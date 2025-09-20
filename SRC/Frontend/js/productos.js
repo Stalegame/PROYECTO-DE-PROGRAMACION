@@ -91,26 +91,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const id    = p.id ?? p._id ?? '';
         const name  = p.name ?? p.nombre ?? 'Producto';
         const price = p.price ?? p.precio;
-        const cat   = p.category ?? p.categoria ?? '';
-        const desc  = p.description ?? p.descripcion ?? '';
         const img   = resolveImage(p.image ?? p.imagen);
 
         return `
-          <article class="product-card" data-id="${escapeHTML(id)}">
+          <article class="producto" data-id="${escapeHTML(id)}">
             <a class="product-media" href="one_product.html?id=${encodeURIComponent(id)}" aria-label="${escapeHTML(name)}">
               <img loading="lazy" src="${escapeHTML(img)}" alt="${escapeHTML(name)}">
             </a>
-            <div class="product-info">
-              <h3 class="product-name">
+            <div class="producto-info">
+              <h3>
                 <a href="one_product.html?id=${encodeURIComponent(id)}">${escapeHTML(name)}</a>
               </h3>
               <div class="product-meta">
-                <span class="product-price">${fmtCLP(price)}</span>
-                ${cat ? `<span class="product-cat">${escapeHTML(cat)}</span>` : ''}
+                <span class="precio">${fmtCLP(price)}</span>
+                IVA incluido
               </div>
-              ${desc ? `<p class="product-desc">${escapeHTML(desc)}</p>` : ''}
-              <div class="product-actions">
-                <a class="btn btn-primary" href="one_product.html?id=${encodeURIComponent(id)}">Ver detalle</a>
+              <br>
+              <div>
+                <a class="btn-comprar" href=#">Añadir al carrito</a>
               </div>
             </div>
           </article>
