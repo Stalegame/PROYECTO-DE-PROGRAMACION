@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Producto | FRUNA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Reutilizamos tu hoja de estilos del catálogo -->
+  <link rel="stylesheet" href="css/productos.css">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="logo-container">
+      <!-- Carrito -->
+      <button class="btn-shop-bag">
+        <img src="./img/shop_white.png" alt="shop_bag" class="icono-btn2">
+      </button>
+
+      <!-- Logo -->
+      <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
+
+      <!-- Login/Logout -->
+      <div id="authBox">
+        <a id="authLoginLink" href="login_users.html" class="btn-login">
+          <img src="./img/user_login.png" alt="Login" class="icono-btn">
+          Iniciar Sesión
+        </a>
+        <span id="authName" style="display:none;"></span>
+        <button id="authLogoutBtn" class="btn" style="display:none;">
+          <img src="./img/user_login.png" alt="User" class="icono-btn">
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== NAV ===== -->
+  <nav class="main-nav" aria-label="Navegación principal">
+    <a href="index.html" class="nav-pill">Inicio</a>
+    <a href="productos.html" class="nav-pill">Productos</a>
+    <a href="contacto.html" class="nav-pill">Contacto</a>
+  </nav>
+
+  <!-- ===== SIDEBAR ===== -->
+  <div class="sidebar">
+    <h2>Carrito</h2>
+    <p>No hay productos todavía</p>
+    <button class="btn-buy-bag" type="button">Comprar</button>
+  </div>
+
+  <!-- ===== CONTENIDO: Ficha de producto ===== -->
+  <main class="product-page">
+    <div class="product-media-large">
+      <img id="p-image" alt="Producto" src="/img/placeholder.png">
+    </div>
+
+    <div class="product-info-large">
+      <a class="back-link" href="productos.html">← Volver al catálogo</a>
+      <h1 id="p-name">Producto</h1>
+
+      <div class="product-meta-large">
+        <span id="p-price" class="product-price"></span>
+        <span id="p-category" class="product-cat"></span>
+      </div>
+
+      <p id="p-desc" class="product-desc-large"></p>
+
+      <div class="product-actions-large">
+        <button id="add-to-cart" class="btn-comprar">Añadir al carrito</button>
+      </div>
+    </div>
+  </main>
+</body>
+<script src="js/one_product.js" defer></script>
+</html>

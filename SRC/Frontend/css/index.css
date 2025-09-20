@@ -35,7 +35,6 @@ header {
   align-items: center;
   gap: 10px;
   justify-self:end; /* pegar a la derecha */
-  position: fixed;
   background: #FFC107;
   font-size: 20px;
   font-weight: bold;
@@ -95,7 +94,8 @@ header {
 
 /* Ícono Carrito*/
 .icono-btn2 {
-    width:100px; height:100px;
+    width:100px;
+    height:100px;
 }
 
 /* BANNER */
@@ -185,18 +185,20 @@ color:#fff;
     left: 0;
 }
 .btn-buy-bag {
-    bottom: 0;
-    width: 50%;
-    background: #FFC107;
-    color: #333;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px;
-    border-radius: 20px;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    transition: background 0.3s;
+  width: 100%;
+  background: #FFC107;
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  transition: background 0.3s;
+}
+.btn-buy-bag:hover {
+  background: #FFD54F;
 }
 
 /* PRODUCTOS DESTACADOS */

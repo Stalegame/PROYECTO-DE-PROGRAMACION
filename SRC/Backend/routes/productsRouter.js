@@ -40,6 +40,7 @@ const normalizeProductInput = (req, _res, next) => {
     stock: stockRaw !== undefined && stockRaw !== null ? Number(stockRaw) : undefined,
     category: (b.category ?? b.categoria ?? '').toString().trim(),
     description: (b.description ?? b.descripcion ?? '').toString().trim(),
+    image: (b.image ?? b.imagen ?? '').toString().trim()   // Campo de imagenes.
   };
   next();
 };
@@ -70,6 +71,11 @@ const validateCreateOrUpdate = [
     .optional()
     .isLength({ max: 500 }).withMessage('La descripción no puede tener más de 500 caracteres')
     .trim().escape(),
+
+  body('image')
+    .optional()
+    .isLength({ max: 300 }).withMessage('La URL/archivo de imagen no puede superar 300 caracteres')
+    .trim(),
 ];
 
 const validateProductId = [

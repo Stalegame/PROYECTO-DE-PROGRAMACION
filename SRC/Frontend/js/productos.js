@@ -1,59 +1,125 @@
 // Frontend/js/productos.js
 
-document.addEventListener("DOMContentLoaded", () => {
-    const carritoBtn = document.querySelector(".btn-shop-bag");
-    const sidebar = document.querySelector(".sidebar");
-
-    carritoBtn.addEventListener("click", () => {
-        sidebar.classList.toggle("active"); 
-    });
-});
-
-// --- UI de sesión (mostrar nombre y logout si hay sesión) ---
 document.addEventListener('DOMContentLoaded', () => {
+  // =============== 1) Toggle del carrito (sidebar) ===============
+  const carritoBtn = document.querySelector('.btn-shop-bag');
+  const sidebar = document.querySelector('.sidebar');
+  if (carritoBtn && sidebar) {
+    carritoBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+  }
+
+  // =============== 2) UI de sesión (nombre + logout) ===============
   const loginLink = document.getElementById('authLoginLink');   // <a href="login_users.html">
   const nameSpan  = document.getElementById('authName');        // <span id="authName">
   const logoutBtn = document.getElementById('authLogoutBtn');   // <button id="authLogoutBtn">
   const authBox   = document.getElementById('authBox');         // contenedor opcional
 
-  // Si no existen estos elementos en la página, return
-  if (!loginLink && !nameSpan && !logoutBtn) return;
-
+  // Lee sesión
   const token  = localStorage.getItem('fruna_token');
   const raw    = localStorage.getItem('fruna_user');
-
   let user = null;
   try { user = raw ? JSON.parse(raw) : null; } catch { user = null; }
 
   const hasSession = Boolean(token && user && (user.email || user.nombre));
-
   if (hasSession) {
-    // Construye nombre a mostrar
     const nombreMostrar =
       (user.nombre && String(user.nombre).trim()) ||
       (user.email ? String(user.email).split('@')[0] : 'Usuario');
 
-    if (nameSpan) {
-      nameSpan.textContent = `Hola, ${nombreMostrar}`;
-      nameSpan.style.display = '';
-    }
+    if (nameSpan) { nameSpan.textContent = `Hola, ${nombreMostrar}`; nameSpan.style.display = ''; }
     if (logoutBtn) {
       logoutBtn.style.display = '';
-      // Evita registrar múltiples listeners si recargas módulos
       logoutBtn.onclick = () => {
         localStorage.removeItem('fruna_token');
         localStorage.removeItem('fruna_user');
-        // Redirige donde prefieras tras salir:
         window.location.replace('/index.html');
       };
     }
     if (loginLink) loginLink.style.display = 'none';
     if (authBox)   authBox.dataset.logged = 'true';
   } else {
-    // Sin sesión: muestra "Iniciar sesión"
-    if (nameSpan)  nameSpan.textContent = '', nameSpan.style.display = 'none';
-    if (logoutBtn) logoutBtn.style.display = 'none', logoutBtn.onclick = null;
+    if (nameSpan)  { nameSpan.textContent = ''; nameSpan.style.display = 'none'; }
+    if (logoutBtn) { logoutBtn.style.display = 'none'; logoutBtn.onclick = null; }
     if (loginLink) loginLink.style.display = '';
     if (authBox)   authBox.dataset.logged = 'false';
   }
+
+  // =============== 3) Cargar y pintar productos ===============
+  const grid = document.getElementById('products-grid'); // <div id="products-grid"></div>
+  if (!grid) return;
+
+  grid.innerHTML = `<div class="loading">Cargando productos…</div>`;
+
+  const escapeHTML = (s) =>
+    String(s ?? '').replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+  const fmtCLP = (n) => {
+    if (n == null || isNaN(n)) return '';
+    try {
+      return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(n);
+    } catch {
+      return `$${Number(n).toLocaleString('es-CL')}`;
+    }
+  };
+
+  const resolveImage = (val) => {
+    const v = String(val || '').trim();
+    if (!v) return '/img/placeholder.png';
+    if (/^https?:\/\//i.test(v)) return v;
+    return `/img/products/${encodeURIComponent(v)}`;
+  };
+
+  async function loadProducts() {
+    try {
+      const res = await fetch('/api/products');
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok || payload.success === false) {
+        throw new Error(payload.error || 'No se pudo obtener la lista de productos');
+      }
+
+      const items = Array.isArray(payload.data) ? payload.data
+                  : (Array.isArray(payload) ? payload : []);
+
+      if (!items.length) {
+        grid.innerHTML = `<div class="empty">No hay productos disponibles.</div>`;
+        return;
+      }
+
+      grid.innerHTML = items.map((p) => {
+        const id    = p.id ?? p._id ?? '';
+        const name  = p.name ?? p.nombre ?? 'Producto';
+        const price = p.price ?? p.precio;
+        const cat   = p.category ?? p.categoria ?? '';
+        const desc  = p.description ?? p.descripcion ?? '';
+        const img   = resolveImage(p.image ?? p.imagen);
+
+        return `
+          <article class="product-card" data-id="${escapeHTML(id)}">
+            <a class="product-media" href="one_product.html?id=${encodeURIComponent(id)}" aria-label="${escapeHTML(name)}">
+              <img loading="lazy" src="${escapeHTML(img)}" alt="${escapeHTML(name)}">
+            </a>
+            <div class="product-info">
+              <h3 class="product-name">
+                <a href="one_product.html?id=${encodeURIComponent(id)}">${escapeHTML(name)}</a>
+              </h3>
+              <div class="product-meta">
+                <span class="product-price">${fmtCLP(price)}</span>
+                ${cat ? `<span class="product-cat">${escapeHTML(cat)}</span>` : ''}
+              </div>
+              ${desc ? `<p class="product-desc">${escapeHTML(desc)}</p>` : ''}
+              <div class="product-actions">
+                <a class="btn btn-primary" href="one_product.html?id=${encodeURIComponent(id)}">Ver detalle</a>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    } catch (e) {
+      grid.innerHTML = `<div class="error">Error: ${escapeHTML(e.message)}</div>`;
+    }
+  }
+
+  loadProducts();
 });
