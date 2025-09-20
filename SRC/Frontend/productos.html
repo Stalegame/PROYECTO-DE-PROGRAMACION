@@ -9,19 +9,32 @@
 </head>
 
 <body>
+    <!-- *************** Bloque Inicial *************** -->
     <header>
         <div class="logo-container">
-            <a href="login_users.html" class="btn-login">
+            <!-- Botón de bolsa de compras -->
+            <button class="btn-shop-bag">
+            <img src="./img/shop_white.png" alt="shop_bag" class="icono-btn2">
+            </button>
+
+            <!-- Logo -->
+            <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
+            
+            <!-- Bloque de login/logout -->
+            <div id="authBox">
+            <!-- Link visible para iniciar sesión -->
+            <a id="authLoginLink" href="login_users.html" class="btn-login">
                 <img src="./img/user_login.png" alt="Login" class="icono-btn">
                 Iniciar Sesión
             </a>
 
-            <button class="btn-shop-bag" onclick="">
-                <img src="./img/shop_white.png" alt="shop_bag" class="icono-btn2">
+            <!-- Nombre + logout visibles para cerrar sesión -->
+            <span id="authName" style="display:none;"></span>
+            <button id="authLogoutBtn" class="btn" style="display:none;">
+                <img src="./img/user_login.png" alt="User" class="icono-btn">
+                Cerrar Sesión
             </button>
-
-            <img src="./img/logo fruna.png" alt="FRUNA Chile">
-            
+            </div>
         </div>
     </header>
 

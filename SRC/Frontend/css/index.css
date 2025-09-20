@@ -11,61 +11,91 @@ body {
 /* HEADER */
 header {
     background-color: #E91E63;
-    padding: 20px 0;
-    text-align: center;
-    position: relative;
+    padding: 14px 18px; /* Ver esto*/
 }
 .logo-container {
-    max-width: 250px;  /* Revisar esto! */
-    margin: 0 auto;
+    display:grid;
+    grid-template-columns: 1fr auto 1fr;  /* izquierda | centro (logo) | derecha */
+    align-items:center;
+    gap:16px;
+    max-width: 1200px;   /* ancho del header */
+    margin:0 auto;
 }
-.logo-container img {
-    width: 100%;
-    height: auto;
+
+/* Logo centrado */
+.site-logo{
+  height:145px;
+  width:auto;
+  justify-self:center;   /* centra en la columna del medio */
 }
-.btn-login{
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    position: absolute;
-    right: 60px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #FFC107;
-    color: #333;
-    font-size: 25px;
-    font-weight: bold;
-    padding: 10px 20px;
-    border-radius: 30px;
-    text-decoration: none;
-    cursor: pointer;
-    z-index: 10;
+
+/* ====== BLOQUE LOGIN/LOGOUT ====== */
+#authBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-self:end; /* pegar a la derecha */
+  position: fixed;
+  background: #FFC107;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 8px 28px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  appearance: none;
 }
-.btn-login .icono-btn {
-    width: 30px;
-    height: 30px;
+#authBox a,
+#authBox button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-size: 22px;
+  font-weight: bold;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #333;
 }
-.btn-shop-bag {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    position: absolute;
-    left: 80px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: auto;
-    background: none;
-    color: #333;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px 20px;
-    border-radius: 20px;
-    border: none;
-    cursor: pointer;
+#authLoginLink {
+    color:#333;
 }
-.btn-shop-bag .icono-btn2 {
-    width: 80px;
-    height: 80px;
+#authLogoutBtn {
+  background:rgba(255,255,255,.15);
+  padding:6px 12px;
+  border-radius:6px;
+  transition:background .2s ease;
+}
+#authLogoutBtn:hover { 
+    background:rgba(255,255,255,.25);
+}
+#authName {
+  font-weight: 600;
+}
+
+/* Ícono Login*/
+.icono-btn {
+    width:40px;
+    height:40px;
+}
+
+/* Carrito*/
+.btn-shop-bag{
+  justify-self:start;      /* pegar a la izquierda */
+  border:none;
+  background:#E91E63;
+  padding:6px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:background .2s ease;
+}
+
+/* Ícono Carrito*/
+.icono-btn2 {
+    width:100px; height:100px;
 }
 
 /* BANNER */
