@@ -38,5 +38,15 @@
     "description": "Snack crocante de maní con el sabor clásico de siempre. Perfecto para compartir y disfrutar en cualquier ocasión.",
     "timestamp": "2025-09-17T22:57:47.672Z",
     "image": "Sufle_Chanfle_Mani.jpg"
+  },
+  {
+    "id": "1758489700270",
+    "name": "Tabletones Chocolate",
+    "price": 2290,
+    "stock": 7,
+    "category": "Chocolate",
+    "description": "Tabletones de galleta bañados en chocolate.",
+    "image": "tabletones.png",
+    "timestamp": "2025-09-21T21:21:40.270Z"
   }
 ]

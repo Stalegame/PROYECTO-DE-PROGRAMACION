@@ -30,17 +30,27 @@ try {
 const normalizeProductInput = (req, _res, next) => {
   const b = req.body || {};
   const priceRaw = b.price ?? b.precio;
-  const stockRaw = b.stock;
+  const stockRaw = b.stock ?? b.existencia;
 
-  // Deja preparado req.body con campos normalizados
+  const trimOrUndef = (v) => {
+    if (v === undefined || v === null) return undefined;
+    const s = String(v).trim();
+    return s === '' ? undefined : s;
+  };
+
+  const numOrUndef = (v) =>
+    (v === undefined || v === null || String(v).trim() === '')
+      ? undefined
+      : Number(v);
+
   req.body = {
-    id: b.id,
-    name: (b.name ?? b.nombre ?? '').toString().trim(),
-    price: priceRaw !== undefined && priceRaw !== null ? Number(priceRaw) : undefined,
-    stock: stockRaw !== undefined && stockRaw !== null ? Number(stockRaw) : undefined,
-    category: (b.category ?? b.categoria ?? '').toString().trim(),
-    description: (b.description ?? b.descripcion ?? '').toString().trim(),
-    image: (b.image ?? b.imagen ?? '').toString().trim()   // Campo de imagenes.
+    // ⚠️ Nunca tocar ni incluir id acá
+    name:        trimOrUndef(b.name ?? b.nombre),
+    price:       numOrUndef(priceRaw),
+    stock:       (numOrUndef(stockRaw) !== undefined ? parseInt(numOrUndef(stockRaw), 10) : undefined),
+    category:    trimOrUndef(b.category ?? b.categoria),
+    description: trimOrUndef(b.description ?? b.descripcion),
+    image:       trimOrUndef(b.image ?? b.imagen),
   };
   next();
 };
@@ -48,16 +58,19 @@ const normalizeProductInput = (req, _res, next) => {
 // ====== Validaciones ======
 const validateCreateOrUpdate = [
   body('name')
+    .optional()
     .notEmpty().withMessage('El nombre del producto es obligatorio')
     .isLength({ min: 2, max: 100 }).withMessage('El nombre debe tener entre 2 y 100 caracteres')
     .trim().escape(),
 
   body('price')
+    .optional()
     .notEmpty().withMessage('El precio es obligatorio')
     .isFloat({ min: 0 }).withMessage('El precio debe ser un número positivo')
     .toFloat(),
 
   body('stock')
+    .optional()
     .notEmpty().withMessage('El stock es obligatorio')
     .isInt({ min: 0 }).withMessage('El stock debe ser un número entero positivo')
     .toInt(),
@@ -155,29 +168,38 @@ router.post(
   })
 );
 
+//Hepler local
+const pick = (obj, fields) =>
+  fields.reduce((a,k)=> (obj[k]!==undefined ? (a[k]=obj[k],a) : a), {});
+
 // PUT /api/products/:id - actualizar
-router.put(
-  '/:id',
+router.put('/:id',
   validateProductId,
-  normalizeProductInput,
-  validateCreateOrUpdate,
+  normalizeProductInput,         // ← asegúrate que NO toque req.body.id
+  validateCreateOrUpdate,        // ← en update, que las reglas sean .optional()
   handleValidationErrors,
   ...protect(async (req, res) => {
     try {
-      const actualizado = await productosDAO.update(req.params.id, req.body);
+      const id = req.params.id;
+      const patch = pick(req.body, ['name','price','stock','category','description','image']);
+      delete patch.id;
+
+      const actualizado = await productosDAO.update(id, patch);
       if (!actualizado) {
-        return res.status(404).json({ success: false, error: 'Producto no encontrado' });
+        return res.status(404).json({ success:false, error:'Producto no encontrado' });
       }
-      res.json({ success: true, message: 'Producto actualizado exitosamente', data: actualizado });
+      res.json({ success:true, message:'Producto actualizado exitosamente', data: actualizado });
     } catch (error) {
+      console.error('PUT /products/:id ERROR:', { msg: error.message, stack: error.stack });
       res.status(500).json({
-        success: false,
-        error: 'Error interno del servidor al actualizar producto',
-        ...(IS_DEV && { detail: error.message }),
+        success:false,
+        error:'Error interno del servidor al actualizar producto',
+        detail: process.env.NODE_ENV !== 'production' ? error.message : undefined,
       });
     }
   })
 );
+
 
 // DELETE /api/products/:id - eliminar
 router.delete(

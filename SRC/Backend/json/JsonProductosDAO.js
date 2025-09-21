@@ -1,6 +1,9 @@
 const fs = require('fs').promises;
 const path = require('path');
 
+// ==================== Helper de validación/normalización ====================
+const pick = (obj, fields) => fields.reduce((a,k)=> (obj[k] !== undefined ? (a[k]=obj[k],a) : a), {});
+
 class JsonProductosDAO {
   constructor() {
     // data/ está al lado de json/
@@ -21,6 +24,15 @@ class JsonProductosDAO {
     } catch (error) {
       console.error('❌ Error inicializando productos DAO:', error);
     }
+  }
+
+  async _readAllRaw() {
+    const txt = await fs.readFile(this.filePath, 'utf8').catch(() => '[]');
+    return JSON.parse(txt || '[]');
+  }
+
+  async _writeAllRaw(arr) {
+    await fs.writeFile(this.filePath, JSON.stringify(arr, null, 2));
   }
 
   async getAll() {
@@ -74,30 +86,35 @@ class JsonProductosDAO {
     }
   }
 
-  async update(id, updatedProducto) {
-    try {
-      const productos = await this.getAll();
-      const index = productos.findIndex((p) => p.id === id);
+  async update(id, patchIn) {
+    const items = await this._readAllRaw();
+    const idx = items.findIndex(p => p.id === id);
+    if (idx === -1) return null;
 
-      if (index === -1) {
-        console.log('❌ Producto no encontrado para actualizar:', id);
-        return null;
-      }
+    const current = items[idx];
 
-      const now = new Date().toISOString();
-      productos[index] = {
-        ...productos[index],
-        ...updatedProducto,
-        ultimaActualizacion: now,
-      };
+    // Acepta SOLO campos editables
+    const patch = pick(patchIn, ['name','price','stock','category','description','image']);
+    delete patch.id;
 
-      await fs.writeFile(this.filePath, JSON.stringify(productos, null, 2));
-      console.log('✅ Producto actualizado:', id);
-      return productos[index];
-    } catch (error) {
-      console.error('❌ Error actualizando producto:', error);
-      throw error;
+    // (Opcional) mini-validaciones defensivas
+    if (patch.price !== undefined && !(typeof patch.price === 'number' && patch.price >= 0)) {
+      const err = new Error('price inválido'); err.code = 'PRICE_INVALID'; throw err;
     }
+    if (patch.stock !== undefined && !(Number.isInteger(patch.stock) && patch.stock >= 0)) {
+      const err = new Error('stock inválido'); err.code = 'STOCK_INVALID'; throw err;
+    }
+
+    const updated = {
+      ...current,
+      ...patch,
+      id: current.id, // <- fuerza conservar id
+      updatedAt: new Date().toISOString(),
+    };
+
+    items[idx] = updated;
+    await this._writeAllRaw(items);
+    return updated;
   }
 
   async delete(id) {
