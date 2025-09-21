@@ -153,8 +153,8 @@ table th {
 }
 
 .status.pending {
-    background-color: #FFF8E1;
-    color: #FFC107;
+    background-color: #ff000040;
+    color: #666;
 }
 
 .btn {

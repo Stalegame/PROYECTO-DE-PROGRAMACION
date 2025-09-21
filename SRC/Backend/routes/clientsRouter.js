@@ -11,7 +11,7 @@ const router = express.Router();
 let clientesDAO;
 try {
   const PersistenceFactory = require('../PersistenceFactory');
-  clientesDAO = PersistenceFactory.getDAO('clientes'); // Debe exponer: getByEmail, save, etc.
+  clientesDAO = PersistenceFactory.getDAO('clientes'); // Debe exponer: getByEmail, save, update, etc.
 } catch {
   const JsonClientesDAO = require(path.join(__dirname, '..', 'json', 'JsonClientesDAO'));
   clientesDAO = new JsonClientesDAO();
@@ -30,32 +30,64 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
-// ===== Reglas de validación =====
+// Whitelist de campos permitidos desde el cliente
+const pickAllowedFields = (obj, allowed) =>
+  allowed.reduce((acc, k) => {
+    if (Object.prototype.hasOwnProperty.call(obj, k) && obj[k] !== undefined) acc[k] = obj[k];
+    return acc;
+  }, {});
+
+// ===== Reglas de validación (router-level, defensa ligera) =====
 const validateLogin = [
   body('email')
-    .notEmpty().withMessage('Email es requerido')
-    .isEmail().withMessage('Email no válido')
-    .normalizeEmail(),
+    .isString().withMessage('Email es requerido')
+    .trim()
+    .isLength({ max: 100 }).withMessage('Email demasiado largo')
+    .isEmail().withMessage('Email no válido'),
   body('password')
-    .notEmpty().withMessage('Contraseña es requerida')
-    .isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres'),
+    .isString().withMessage('Contraseña es requerida')
+    .isLength({ min: 8, max: 64 }).withMessage('La contraseña debe tener entre 8 y 64 caracteres'),
 ];
 
 const validateRegister = [
   body('nombre')
-    .notEmpty().withMessage('El nombre es requerido')
-    .trim().escape(),
+    .isString().withMessage('El nombre es requerido')
+    .trim()
+    .isLength({ min: 2, max: 60 }).withMessage('El nombre debe tener entre 2 y 60 caracteres')
+    .matches(/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' -]+$/)
+    .withMessage('El nombre solo puede incluir letras (con tildes y ñ), espacios, guion y apóstrofe'),
   body('email')
-    .notEmpty().withMessage('Email es requerido')
+    .isString().withMessage('Email es requerido')
+    .trim()
+    .isLength({ max: 100 }).withMessage('Email demasiado largo')
     .isEmail().withMessage('Email no válido')
-    .normalizeEmail(),
+    .custom(v => !/\s/.test(v)).withMessage('El email no puede contener espacios')
+    .custom(v => !String(v).includes('..')).withMessage('El email no puede contener ".."'),
   body('password')
-    .notEmpty().withMessage('Contraseña es requerida')
-    .isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres'),
+    .isString().withMessage('Contraseña es requerida')
+    .isLength({ min: 8, max: 64 }).withMessage('La contraseña debe tener entre 8 y 64 caracteres')
+    .custom(v => !/\s/.test(v)).withMessage('La contraseña no puede contener espacios')
+    .custom(v => {
+      let classes = 0;
+      if (/[a-z]/.test(v)) classes++;
+      if (/[A-Z]/.test(v)) classes++;
+      if (/\d/.test(v)) classes++;
+      if (/[^A-Za-z0-9]/.test(v)) classes++;
+      return classes >= 2;
+    }).withMessage('La contraseña debe combinar al menos 2 de: mayúsculas, minúsculas, números o símbolos'),
   body('telefono')
-    .optional().isString().isLength({ max: 30 }).trim().escape(),
+    .optional({ nullable: true })
+    .isString().withMessage('El teléfono debe ser texto')
+    .trim()
+    .isLength({ max: 12 }).withMessage('El teléfono no puede superar los 12 caracteres'),
   body('direccion')
-    .optional().isString().isLength({ max: 200 }).trim().escape(),
+  .optional({ nullable: true })
+  .isString().withMessage('La dirección debe ser texto')
+  .trim()
+  .isLength({ min: 5, max: 200 }).withMessage('La dirección debe tener entre 5 y 200 caracteres')
+  .matches(/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s,.\-#°]+$/)
+  .withMessage('La dirección contiene caracteres no permitidos'),
+
 ];
 
 // ===== Rutas =====
@@ -70,36 +102,35 @@ router.get('/health', (req, res) => {
 // --- LOGIN ---
 router.post('/login', validateLogin, handleValidationErrors, async (req, res) => {
   try {
-    // Normaliza: evita undefined y espacios invisibles
-    const email = String(req.body.email || '').trim();
-    const passwordPlain = String(req.body.password || '').trim();
+    const email = String(req.body.email || '').toLowerCase().trim();
+    const passwordPlain = String(req.body.password || '');
 
-    // Busca usuario (debe venir con passwordHash)
     const user = await clientesDAO.getByEmail(email);
-    if (!user) {
-      return res.status(400).json({ success: false, error: 'Credenciales incorrectas. Intenta nuevamente.' });
+    // Misma respuesta para no filtrar existencia
+    if (!user || !user.passwordHash) {
+      return res.status(401).json({ success: false, error: 'Credenciales inválidas' });
     }
 
-    // Acepta solo passwordHash
-    const passwordHash = user.passwordHash;
-    if (!passwordHash) {
-      return res.status(500).json({ success: false, error: 'Cuenta sin hash. Vuelve a registrar este usuario.' });
+    if (user.activo === false) {
+      return res.status(403).json({ success: false, error: 'Cuenta deshabilitada' });
     }
 
-    // Compara con bcrypt
-    const isPasswordValid = await bcrypt.compare(passwordPlain, passwordHash);
+    const isPasswordValid = await bcrypt.compare(passwordPlain, user.passwordHash);
     if (!isPasswordValid) {
-      return res.status(400).json({ success: false, error: 'Credenciales incorrectas. Intenta nuevamente.' });
+      return res.status(401).json({ success: false, error: 'Credenciales inválidas' });
     }
 
-    const JWT_SECRET = process.env.JWT_SECRET_KEY ;
+    const JWT_SECRET = process.env.JWT_SECRET_KEY;
+    if (!JWT_SECRET) {
+      return res.status(500).json({ success: false, error: 'Configuración JWT faltante' });
+    }
+
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role || 'user' },
       JWT_SECRET,
       { expiresIn: '1h' }
     );
 
-    // No exponer hash
     const { passwordHash: _omit, password: _omitOld, ...publicUser } = user;
 
     res.json({
@@ -107,9 +138,10 @@ router.post('/login', validateLogin, handleValidationErrors, async (req, res) =>
       message: 'Login exitoso',
       user: publicUser,
       token,
-      redirect: user.role === 'admin' ? '/admin_controller.html' : '/productos.html', // Admin = admin_controller, si no, productos 
+      redirect: user.role === 'admin' ? '/admin_controller.html' : '/productos.html',
     });
-  } catch {
+  } catch (err) {
+    console.error('❌ Error en /login:', err);
     return res.status(500).json({ success: false, error: 'Error interno en login' });
   }
 });
@@ -117,28 +149,54 @@ router.post('/login', validateLogin, handleValidationErrors, async (req, res) =>
 // --- REGISTER ---
 router.post('/register', validateRegister, handleValidationErrors, async (req, res) => {
   try {
-    // El DAO debe: duplicados por email, hashear y guardar en clientes.json
-    const cliente = await clientesDAO.save(req.body);
+    // Whitelist antes de pasar al DAO
+    const input = pickAllowedFields(req.body, ['nombre', 'email', 'telefono', 'password']);
+    const cliente = await clientesDAO.save(input);
 
-    // Saneamos por si acaso
+    // Saneamos (el DAO ya entrega sin hash, pero por si acaso)
     delete cliente.passwordHash;
     delete cliente.password;
 
-    res.status(201).json({
-      success: true,
-      message: 'Cliente registrado exitosamente',
-      data: cliente,
-    });
-  } catch (error) {
-    if (error && error.code === 'EMAIL_DUP') {
-      return res.status(409).json({
-        success: false,
-        error: 'El email ya está registrado',
+    res
+      .status(201)
+      .set('Location', `/api/clients/${cliente.id}`)
+      .json({
+        success: true,
+        message: 'Cliente registrado exitosamente',
+        data: cliente,
       });
+
+  } catch (error) {
+    const code = error && error.code ? String(error.code) : 'INTERNAL';
+
+    // Mapa de códigos del DAO → HTTP
+    const errorMap = {
+      // Requeridos
+      NAME_REQUIRED:     { status: 400, msg: 'El nombre es requerido' },
+      EMAIL_REQUIRED:    { status: 400, msg: 'El email es requerido' },
+      PASSWORD_REQUIRED: { status: 400, msg: 'La contraseña es requerida' },
+
+      // Formato
+      NAME_INVALID:      { status: 400, msg: 'Nombre inválido' },
+      EMAIL_INVALID:     { status: 400, msg: 'Email inválido' },
+      PASSWORD_WEAK:     { status: 400, msg: 'Contraseña débil' },
+      PHONE_TOO_LONG:    { status: 400, msg: 'Teléfono demasiado largo (máx. 12 caracteres)' },
+
+      // Duplicados
+      EMAIL_DUP:         { status: 409, msg: 'El email ya está registrado' },
+      PHONE_DUP:         { status: 409, msg: 'El teléfono ya está registrado' },
+    };
+
+    const mapped = errorMap[code];
+    if (mapped) {
+      return res.status(mapped.status).json({ success: false, error: mapped.msg, code });
     }
+
+    console.error('❌ Error no mapeado en /register:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor al registrar cliente',
+      code,
     });
   }
 });

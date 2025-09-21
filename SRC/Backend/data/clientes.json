@@ -28,7 +28,7 @@
     "createdAt": "2025-09-17T17:55:13.782Z",
     "passwordHash": "$2a$10$UTXtcfGS4i4Q3uN3FrTrgutWqw1XOuEQx0cozV36QtQR561I26rcq",
     "role": "user",
-    "activo": true
+    "activo": false
   },
   {
     "nombre": "Martín Rojas",
