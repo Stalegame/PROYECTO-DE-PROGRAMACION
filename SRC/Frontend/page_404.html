@@ -1,34 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FRUNA Chile - Error 404</title>
   <link rel="icon" href="./img/logo fruna.png" type="image/png">
   <link rel="stylesheet" href="css/page_404.css">
 </head>
-
 <body>
   <!-- Header con logo -->
   <header>
-      <div class="logo-container">
-          <img src="./img/logo fruna.png" alt="FRUNA Chile">
-      </div>
+    <div class="logo-container">
+      <img src="./img/logo fruna.png" alt="FRUNA Chile">
+    </div>
   </header>
 
   <!-- Contenido principal -->
-  <div class="content">
-      <h1>Error 404</h1>
-      <p>Ups... Parece que te perdiste en el pasillo de los dulces... 🍭</p>
-      <a href="index.html" class="btn-volver">
-        <img src="./img/arrow-back.png" alt="Volver">
-        Volver al menú
-      </a>
-  </div>
+  <main class="content" role="main">
+    <div class="code" aria-hidden="true">404</div>
+    <h1 class="title">Página no encontrada</h1>
+    <p class="desc">Ups… parece que te perdiste en el pasillo de los dulces 🍭🍫</p>
+
+    <!-- Enlace con estilo de botón -->
+    <a class="btn-volver" href="index.html">
+      <img src="./img/arrow-back.png" alt="" aria-hidden="true">
+      Volver al menú
+    </a>
+  </main>
+
   <!-- Footer -->
   <footer>
-      <p>📍 Av. Providencia 1234, Santiago</p>
-      <p>© 2025 Fruna · Creado por Comprimidos Team.</p>
+    <p>📍 Av. Providencia 1234, Santiago</p>
+    <p>© 2025 Fruna · Creado por Comprimidos Team.</p>
   </footer>
 </body>
 </html>

@@ -1,77 +1,85 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo FRUNA | La dulcería de Chile</title>
-    <link rel="icon" href="./img/logo fruna.png" type="image/png">
-    <link rel="stylesheet" href="css/productos.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Catálogo FRUNA | La dulcería de Chile</title>
+  <link rel="icon" href="./img/logo fruna.png" type="image/png">
+  <link rel="stylesheet" href="css/productos.css">
 </head>
 
 <body>
-    <!-- *************** Bloque Inicial *************** -->
-    <header>
-        <div class="logo-container">
-            <!-- Botón de bolsa de compras -->
-            <button class="btn-shop-bag">
-            <img src="./img/shop_white.png" alt="shop_bag" class="icono-btn2">
-            </button>
+  <!-- *************** HEADER *************** -->
+  <header>
+    <div class="header-inner">
+      <!-- Botón Carrito -->
+      <button class="btn-shop-bag" aria-label="Abrir carrito" id="open-cart">
+        <img src="./img/shop_white.png" alt="Carrito" class="icono-btn2">
+        <span class="contador-carrito" id="contador">0</span>
+      </button>
 
-            <!-- Logo -->
-            <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
-            
-            <!-- Bloque de login/logout -->
-            <div id="authBox">
-            <!-- Link visible para iniciar sesión -->
-            <a id="authLoginLink" href="login_users.html" class="btn-login">
-                <img src="./img/user_login.png" alt="Login" class="icono-btn">
-                Iniciar Sesión
-            </a>
+      <!-- Logo -->
+      <div class="logo-container">
+        <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
+      </div>
 
-            <!-- Nombre + logout visibles para cerrar sesión -->
-            <span id="authName" style="display:none;"></span>
-            <button id="authLogoutBtn" class="btn" style="display:none;">
-                <img src="./img/user_login.png" alt="User" class="icono-btn">
-                Cerrar Sesión
-            </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- *************** NAV *************** -->
-    <nav class="main-nav" aria-label="Navegación principal">
-        <a href="index.html" class="nav-pill">Inicio</a>
-        <a href="productos.html" class="nav-pill">Productos</a>
-        <a href="contacto.html" class="nav-pill">Contacto</a>
-    </nav>
-
-    <!-- *************** SIDEBAR *************** -->
-    <div class="sidebar">
-        <h2>Carrito</h2>
-        <p>No hay productos todavía</p>
-        <button class="btn-buy-bag" type="submit">Comprar</button>
+      <!-- Auth -->
+      <div id="authBox">
+        <a id="authLoginLink" href="login_users.html" class="btn-login" aria-label="Iniciar sesión">
+          <img src="./img/user_login.png" alt="" class="icono-btn">
+          Iniciar Sesión
+        </a>
+        <span id="authName" style="display:none;"></span>
+        <button id="authLogoutBtn" class="btn" style="display:none;">
+          <img src="./img/user_login.png" alt="" class="icono-btn">
+          Cerrar Sesión
+        </button>
+      </div>
     </div>
-    
-    <div class="contenedor">
-        <!-- Filtros de categorías -->
-        <aside class="filtros">
-            <h3>Categorías</h3>
-            <ul>
-                <li><a href="#">Alfajores ($1.290 - $2.990)</a></li>
-                <li><a href="#">Chocolates ($1.990 - $3.490)</a></li>
-                <li><a href="#">Snacks ($1.000 - $2.490)</a></li>
-                <li><a href="#">Helados ($290 - $1.090)</a></li>
-                <li><a href="#">Bebidas ($1.490 - $2.490)</a></li>
-                <li><a href="#">Ofertas</a></li>
-                <li><a href="#">Novedades</a></li>
-            </ul>
-        </aside>
-        
-        <!-- Lista de productos -->
-        <main class="productos">
-            <div id="products-grid" class="products-grid"></div>
-        </main>
-    </div>
+  </header>
+
+  <!-- *************** NAV *************** -->
+  <nav class="main-nav" aria-label="Navegación principal">
+    <a href="index.html" class="nav-pill">Inicio</a>
+    <a href="productos.html" class="nav-pill is-active">Productos</a>
+    <a href="contacto.html" class="nav-pill">Contacto</a>
+  </nav>
+
+  <!-- *************** SIDEBAR CARRITO *************** -->
+  <aside class="sidebar" aria-label="Carrito de compras" id="cart-sidebar">
+    <h2>Carrito</h2>
+    <div class="cart-items" id="cart-items"><p>No hay productos todavía</p></div>
+    <p class="cart-total" id="cart-total">Total: $0</p>
+    <button class="btn-buy-bag" id="comprar-btn" type="button">Comprar</button>
+  </aside>
+
+  <!-- Notificación flotante -->
+  <div class="notif" id="notif" aria-live="polite"></div>
+
+  <!-- *************** CATÁLOGO *************** -->
+  <div class="contenedor">
+    <!-- Filtros -->
+    <aside class="filtros">
+      <h3>Categorías</h3>
+      <ul>
+        <li><a href="#" data-cat="alfajores">Alfajores ($1.290 – $2.990)</a></li>
+        <li><a href="#" data-cat="chocolates">Chocolates ($1.990 – $3.490)</a></li>
+        <li><a href="#" data-cat="snacks">Snacks ($1.000 – $2.490)</a></li>
+        <li><a href="#" data-cat="helados">Helados ($290 – $1.090)</a></li>
+        <li><a href="#" data-cat="bebidas">Bebidas ($1.490 – $2.490)</a></li>
+        <li><a href="#" data-cat="ofertas">Ofertas</a></li>
+        <li><a href="#" data-cat="novedades">Novedades</a></li>
+      </ul>
+    </aside>
+
+    <!-- Grid de productos (lo llena productos.js) -->
+    <main class="productos">
+      <div id="products-grid"></div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="cart.js" defer></script>
+  <script src="js/productos.js" defer></script>
 </body>
-<script src="js/productos.js"></script>
 </html>

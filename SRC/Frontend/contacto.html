@@ -1,56 +1,91 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contacto - FRUNA Chile</title>
-    <link rel="icon" href="./img/logo fruna.png" type="image/png">
-    <link rel="stylesheet" href="css/contacto.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contacto - FRUNA Chile</title>
+  <link rel="icon" href="./img/logo fruna.png" type="image/png">
+
+  <!-- Font Awesome para íconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <!-- Hoja de estilos separada -->
+  <link rel="stylesheet" href="css/contacto.css">
 </head>
-
 <body>
-    <!-- *************** Bloque Inicial *************** -->
-    <header>
-        <div class="logo-container">
-            <!-- Logo -->
-            <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
-        </div>
-    </header>
+  <!-- HEADER -->
+  <header>
+    <div class="logo-container">
+      <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
+    </div>
+  </header>
 
-    <!-- *************** NAV *************** -->
-    <nav class="main-nav" aria-label="Navegación principal">
-        <a href="index.html" class="nav-pill">Inicio</a>
-        <a href="productos.html" class="nav-pill">Productos</a>
-        <a href="contacto.html" class="nav-pill">Contacto</a>
-    </nav>
-    
-    <div class="contenido">
-       
-        <section class="formulario">
-            <h2>Envíanos un mensaje</h2>
-            <form>
-                <input type="text" placeholder="Nombre" required>
-                <input type="email" placeholder="Email" required>
-                <input type="tel" placeholder="Teléfono">
-                <textarea placeholder="Tu mensaje" rows="5" required></textarea>
-                <button type="submit">Enviar</button>
-            </form>
-        </section>
-        
-        <section class="info-contacto">
-            <h2>Contacto</h2>
-            <p>📞 Teléfono: +56 9 1234 5678</p>
-            <p>✉️ Email: contacto@fruna.cl</p>
-            <p>📍 Dirección: Av. Providencia 1234, Santiago</p>
-            
-            <div class="mapa">
-                <img src="" alt="Ubicación FRUNA" style="width:100%;height:100%;object-fit:cover;">
-            </div>
-        </section>
+  <!-- NAV -->
+  <nav class="main-nav" aria-label="Navegación principal">
+    <a href="index.html" class="nav-pill">Inicio</a>
+    <a href="productos.html" class="nav-pill">Productos</a>
+    <a href="contacto.html" class="nav-pill is-active">Contacto</a>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <div class="contenido">
+    <!-- FORMULARIO -->
+    <section class="formulario" aria-labelledby="form-title">
+      <h2 id="form-title">Envíanos un mensaje</h2>
+      <form>
+        <div class="input-container">
+          <label class="sr-only" for="nombre">Nombre</label>
+          <i class="fa fa-user"></i>
+          <input id="nombre" name="nombre" type="text" placeholder="Nombre" required>
+        </div>
+
+        <div class="input-container">
+          <label class="sr-only" for="email">Email</label>
+          <i class="fa fa-envelope"></i>
+          <input id="email" name="email" type="email" placeholder="Email" required>
+        </div>
+
+        <div class="input-container">
+          <label class="sr-only" for="telefono">Teléfono</label>
+          <i class="fa fa-phone"></i>
+          <input id="telefono" name="telefono" type="tel" placeholder="Teléfono">
+        </div>
+
+        <div class="input-container">
+          <label class="sr-only" for="mensaje">Mensaje</label>
+          <i class="fa fa-comment"></i>
+          <textarea id="mensaje" name="mensaje" placeholder="Tu mensaje" rows="5" required></textarea>
+        </div>
+
+        <button type="submit">Enviar</button>
+      </form>
+    </section>
+
+    <!-- INFO CONTACTO -->
+    <section class="info-contacto" aria-labelledby="info-title">
+      <h2 id="info-title">Contacto</h2>
+      <p>📞 Teléfono: +56 9 1234 5678</p>
+      <p>✉️ Email: contacto@fruna.cl</p>
+      <p>📍 Dirección: Av. Providencia 1234, Santiago</p>
+
+      <!-- Contenedor del mapa -->
+    <div class="mapa" aria-label="Mapa de ubicación FRUNA">
+        <iframe
+            class="map-frame"
+            title="Ubicación de Alimentos Fruna en Google Maps"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3268.9627096930903!2d-71.2469293242042!3d-34.982598772820914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x96645709416048b5%3A0x87d64994506f407a!2sAlimentos%20Fruna!5e0!3m2!1ses-419!2scl!4v1758560491969!5m2!1ses-419!2scl"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+            sandbox="allow-scripts allow-same-origin allow-popups"
+        ></iframe>
     </div>
-    
-    <div class="footer">
-        <p>© 2025 Fruna · Creado por Comprimidos Team.</p>
-    </div>
+    </section>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>© 2025 Fruna · Creado por Comprimidos Team.</p>
+  </div>
 </body>
 </html>

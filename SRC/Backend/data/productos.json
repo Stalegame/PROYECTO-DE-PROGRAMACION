@@ -10,16 +10,6 @@
     "image": "palo_palito.png"
   },
   {
-    "id": "1758149535138",
-    "name": "Alfajor Clásico",
-    "price": 1290,
-    "stock": 45,
-    "category": "Alfajores",
-    "description": "Alfajor tradicional con dulce de leche y coco.",
-    "timestamp": "2025-09-17T22:52:15.138Z",
-    "image": "alfajores.png"
-  },
-  {
     "id": "1758149775878",
     "name": "Cola Cola Clásica 2Lt",
     "price": 1490,
@@ -48,5 +38,15 @@
     "description": "Tabletones de galleta bañados en chocolate.",
     "image": "tabletones.png",
     "timestamp": "2025-09-21T21:21:40.270Z"
+  },
+  {
+    "name": "Alfajor Clásico",
+    "price": 1290,
+    "stock": 20,
+    "category": "Alfajores",
+    "description": "alfajor tradicional",
+    "image": "alfajores.png",
+    "id": "1758571251073",
+    "timestamp": "2025-09-22T20:00:51.073Z"
   }
 ]

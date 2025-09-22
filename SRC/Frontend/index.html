@@ -9,31 +9,28 @@
 </head>
 
 <body>
-    <!-- *************** Bloque Inicial *************** -->
+    <!-- *************** HEADER *************** -->
     <header>
         <div class="logo-container">
-            <!-- Botón de bolsa de compras -->
+            <!-- Botón Carrito -->
             <button class="btn-shop-bag">
-            <img src="./img/shop_white.png" alt="shop_bag" class="icono-btn2">
+                <img src="./img/shop_white.png" alt="shop_bag" class="icono-btn2">
             </button>
 
             <!-- Logo -->
             <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
 
-            <!-- Bloque de login/logout -->
+            <!-- Auth -->
             <div id="authBox">
-            <!-- Link visible para iniciar sesión -->
-            <a id="authLoginLink" href="login_users.html" class="btn-login">
-                <img src="./img/user_login.png" alt="Login" class="icono-btn">
-                Iniciar Sesión
-            </a>
-
-            <!-- Nombre + logout visibles para cerrar sesión -->
-            <span id="authName" style="display:none;"></span>
-            <button id="authLogoutBtn" class="btn" style="display:none;">
-                <img src="./img/user_login.png" alt="User" class="icono-btn">
-                Cerrar Sesión
-            </button>
+                <a id="authLoginLink" href="login_users.html" aria-label="Iniciar sesión">
+                    <img src="./img/user_login.png" alt="" class="icono-btn">
+                    Iniciar Sesión
+                </a>
+                <span id="authName" style="display:none;"></span>
+                <button id="authLogoutBtn" style="display:none;">
+                    <img src="./img/user_login.png" alt="" class="icono-btn">
+                    Cerrar Sesión
+                </button>
             </div>
         </div>
     </header>
@@ -88,65 +85,54 @@
 
     </section>
     
-    <!-- *************** PRODUCTOS *************** -->
+    <!-- *************** PRODUCTOS DESTACADOS *************** -->
     <section class="destacados">
         <h2>Productos Destacados</h2>
         
         <div class="producto">
-            
             <img src="./img/products/alfajores.png" alt="Alfajor Clásico">
-           
             <h3>Alfajor Clásico</h3>
             <p>$1.290</p>
-            <button class="btn-comprar" >Comprar</button>
+            <button class="btn-comprar">Comprar</button>
         </div>
         
         <div class="producto">
-            
             <img src="./img/products/tabletones.png" alt="Tableton Maní">
-           
             <h3>Tableton Maní</h3>
             <p>$2.490</p>
             <button class="btn-comprar">Comprar</button>
         </div>
 
         <div class="producto">
-            
             <img src="./img/products/cola_cola_fruna.jpg" alt="Cola cola">
-           
             <h3>Cola Cola Clásica</h3>
             <p>$1.490</p>
             <button class="btn-comprar">Comprar</button>
         </div>
 
         <div class="producto">
-            
             <img src="./img/products/Alfajor_Panchito.jpg" alt="Alfajor Panchito">
-           
             <h3>Alfajor Panchito</h3>
             <p>$490</p>
             <button class="btn-comprar">Comprar</button>
         </div>
 
         <div class="producto">
-            
             <img src="./img/products/Sufle_Chanfle_Mani.jpg" alt="Sufle Maní">
-           
             <h3>Sufle Mani</h3>
             <p>$990</p>
             <button class="btn-comprar">Comprar</button>
         </div>
 
         <div class="producto">
-            
             <img src="./img/products/palo_palito.png" alt="Palo Palito">
-           
             <h3>Palo Palito</h3>
             <p>$290</p>
             <button class="btn-comprar">Comprar</button>
         </div>
     </section>
     
+    <!-- *************** FOOTER *************** -->
     <footer>
         <p>📍 Av. Providencia 1234, Santiago</p>
         <p>© 2025 Fruna · Creado por Comprimidos Team.</p>
@@ -154,4 +140,3 @@
 </body>
 <script src="js/index.js"></script>
 </html>
-

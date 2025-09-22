@@ -62,5 +62,25 @@
     "passwordHash": "$2a$10$xjj3p7Pb1ZscDcVmvfnqwuxAM1HfikP3SQjCe/Wok7Mw.Era4.e6i",
     "role": "user",
     "activo": true
+  },
+  {
+    "id": "1758564458773",
+    "createdAt": "2025-09-22T18:07:38.773Z",
+    "nombre": "angela muñoz",
+    "email": "angela@gmail.com",
+    "telefono": "+56912345678",
+    "passwordHash": "$2a$10$gmQGdDF1jia592kEN0Fnp.sOV68EgSHsEEF7INMIKVi2k4kK6MXxa",
+    "role": "user",
+    "activo": true
+  },
+  {
+    "id": "1758571061501",
+    "createdAt": "2025-09-22T19:57:41.501Z",
+    "nombre": "angela otro",
+    "email": "angela@hotmail.com",
+    "telefono": "+56912341234",
+    "passwordHash": "$2a$10$OnayP6tdoHiL28h1OkkrG.GJ4G5Mgp9L/ioCUCy.B6RedQsHsCH7C",
+    "role": "user",
+    "activo": true
   }
 ]

@@ -1,5 +1,3 @@
-/* Frontend/css/index.css */
-
 /* ESTILOS GENERALES */
 body {
     font-family: 'Arial', sans-serif;
@@ -11,14 +9,14 @@ body {
 /* HEADER */
 header {
     background-color: #E91E63;
-    padding: 14px 18px; /* Ver esto*/
+    padding: 14px 18px;
 }
 .logo-container {
     display:grid;
-    grid-template-columns: 1fr auto 1fr;  /* izquierda | centro (logo) | derecha */
+    grid-template-columns: 1fr auto 1fr;
     align-items:center;
     gap:16px;
-    max-width: 1200px;   /* ancho del header */
+    max-width: 1200px;
     margin:0 auto;
 }
 
@@ -26,7 +24,7 @@ header {
 .site-logo{
   height:145px;
   width:auto;
-  justify-self:center;   /* centra en la columna del medio */
+  justify-self:center;
 }
 
 /* ====== BLOQUE LOGIN/LOGOUT ====== */
@@ -34,7 +32,7 @@ header {
   display: flex;
   align-items: center;
   gap: 10px;
-  justify-self:end; /* pegar a la derecha */
+  justify-self:end;
   background: #FFC107;
   font-size: 20px;
   font-weight: bold;
@@ -44,7 +42,6 @@ header {
   cursor: pointer;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
   text-decoration: none;
-  appearance: none;
 }
 #authBox a,
 #authBox button {
@@ -52,38 +49,27 @@ header {
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: bold;
   border: none;
   background: none;
   cursor: pointer;
   color: #333;
 }
-#authLoginLink {
-    color:#333;
-}
+#authLoginLink { color:#333; }
 #authLogoutBtn {
   background:rgba(255,255,255,.15);
   padding:6px 12px;
   border-radius:6px;
   transition:background .2s ease;
 }
-#authLogoutBtn:hover { 
-    background:rgba(255,255,255,.25);
-}
-#authName {
-  font-weight: 600;
-}
-
-/* Ícono Login*/
-.icono-btn {
-    width:40px;
-    height:40px;
-}
+#authLogoutBtn:hover { background:rgba(255,255,255,.25); }
+#authName { font-weight: 600; }
+.icono-btn { width:40px; height:40px; }
 
 /* Carrito*/
 .btn-shop-bag{
-  justify-self:start;      /* pegar a la izquierda */
+  justify-self:start;
   border:none;
   background:#E91E63;
   padding:6px 10px;
@@ -91,8 +77,6 @@ header {
   cursor:pointer;
   transition:background .2s ease;
 }
-
-/* Ícono Carrito*/
 .icono-btn2 {
     width:100px;
     height:100px;
@@ -110,39 +94,33 @@ header {
 
 /* NAV */
 .main-nav{
-display:flex;
-justify-content:center;
-gap:40px;
-padding:12px 16px;
-background:#FFEBEE;
-border-top:1px solid rgba(0,0,0,0.06);
-border-bottom:1px solid rgba(0,0,0,0.06);
+    display:flex;
+    justify-content:center;
+    gap:40px;
+    padding:12px 16px;
+    background:#FFEBEE;
+    border-top:1px solid rgba(0,0,0,0.06);
+    border-bottom:1px solid rgba(0,0,0,0.06);
 }
-
-/* Botones tipo “pill” */
 .nav-pill{
-display:inline-block;
-padding:10px 50px;
-border-radius:9999px;
-text-decoration:none;
-font-weight:bold;
-color:#E91E63;
-background:#FFEBEE;
-transition:all .2s ease;
+    display:inline-block;
+    padding:10px 50px;
+    border-radius:9999px;
+    text-decoration:none;
+    font-weight:bold;
+    color:#E91E63;
+    background:#FFEBEE;
+    transition:all .2s ease;
 }
-
-/* Hover/Focus: invierte colores para feedback */
 .nav-pill:hover,
 .nav-pill:focus{
-background:#c2185b;
-color:#fff;
-outline:none;
+    background:#c2185b;
+    color:#fff;
+    outline:none;
 }
-
-/* Estado activo (opcional, por página) */
 .nav-pill.is-active{
-background:#c2185b;
-color:#fff;
+    background:#c2185b;
+    color:#fff;
 }
 
 /* CATEGORÍAS */
@@ -164,26 +142,22 @@ color:#fff;
     border: 3px solid #E91E63;
 }
 
-/* BARRA LATERAL oculta por defecto */
+/* SIDEBAR */
 .sidebar {
     position: fixed;
     bottom: 0;
-    left: -345px;  /* oculta a la izquierda */
+    left: -345px;
     width: 300px;
     height: 60%;
     background-color: #333;
     color: #FFF9FA;
     padding: 20px;
-    transition: left 0.3s ease; /* animación suave */
+    transition: left 0.3s ease;
     z-index: 1000;
     box-shadow: 0 3px 10px rgba(0,0,0,0.3);
     border-radius: 15px;
 }
-
-/* Cuando está activa */
-.sidebar.active {
-    left: 0;
-}
+.sidebar.active { left: 0; }
 .btn-buy-bag {
   width: 100%;
   background: #FFC107;
@@ -197,9 +171,7 @@ color:#fff;
   box-shadow: 0 3px 10px rgba(0,0,0,0.1);
   transition: background 0.3s;
 }
-.btn-buy-bag:hover {
-  background: #FFD54F;
-}
+.btn-buy-bag:hover { background: #FFD54F; }
 
 /* PRODUCTOS DESTACADOS */
 .destacados {
@@ -217,9 +189,7 @@ color:#fff;
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     transition: transform 0.3s;
 }
-.producto:hover {
-    transform: translateY(-5px);
-}
+.producto:hover { transform: translateY(-5px); }
 .producto img {
     width: 100%;
     border-radius: 8px;
@@ -236,9 +206,7 @@ color:#fff;
     width: 100%;
     transition: background 0.3s;
 }
-.btn-comprar:hover {
-    background: #C2185B;
-}
+.btn-comprar:hover { background: #C2185B; }
 
 /* FOOTER */
 footer {
