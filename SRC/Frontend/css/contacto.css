@@ -120,7 +120,7 @@ button:active { transform: scale(0.98); box-shadow: 0 4px 12px rgba(233,30,99,0.
 
 /* ======== FOOTER ======== */
 .footer {
-  background: #E91E63; color: white; text-align: center;
+  background: #333; color: white; text-align: center;
   padding: 20px; margin-top: 50px; font-size: 14px;
   box-shadow: 0 -3px 10px rgba(0,0,0,0.15);
 }

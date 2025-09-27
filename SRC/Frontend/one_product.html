@@ -8,27 +8,29 @@
   <link rel="stylesheet" href="css/productos.css">
 </head>
 <body>
-
-  <!-- ===== HEADER ===== -->
+  <!-- *************** HEADER *************** -->
   <header>
-    <div class="logo-container">
-      <!-- Carrito -->
-      <button class="btn-shop-bag">
-        <img src="./img/shop_white.png" alt="shop_bag" class="icono-btn2">
+    <div class="header-inner">
+      <!-- Botón Carrito -->
+      <button class="btn-shop-bag" aria-label="Abrir carrito" id="open-cart">
+        <img src="./img/shop_white.png" alt="Carrito" class="icono-btn2">
+        <span class="contador-carrito" id="contador">0</span>
       </button>
 
       <!-- Logo -->
-      <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
+      <div class="logo-container">
+        <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
+      </div>
 
-      <!-- Login/Logout -->
+      <!-- Auth -->
       <div id="authBox">
-        <a id="authLoginLink" href="login_users.html" class="btn-login">
-          <img src="./img/user_login.png" alt="Login" class="icono-btn">
+        <a id="authLoginLink" href="login_users.html" class="btn-login" aria-label="Iniciar sesión">
+          <img src="./img/user_login.png" alt="" class="icono-btn">
           Iniciar Sesión
         </a>
         <span id="authName" style="display:none;"></span>
         <button id="authLogoutBtn" class="btn" style="display:none;">
-          <img src="./img/user_login.png" alt="User" class="icono-btn">
+          <img src="./img/user_login.png" alt="" class="icono-btn">
           Cerrar Sesión
         </button>
       </div>
