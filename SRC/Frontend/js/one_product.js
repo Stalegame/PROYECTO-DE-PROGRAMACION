@@ -86,6 +86,21 @@ document.addEventListener('DOMContentLoaded', () => {
       $('p-price').textContent = fmtCLP(p.price ?? p.precio);
       $('p-category').textContent = p.category ?? p.categoria ?? '';
       $('p-desc').textContent = p.description ?? p.descripcion ?? '';
+      $('p-stock').textContent = p.stock ?? '';
+
+      const stock = p.stock;
+      const stockElement = document.getElementById("p-stock");
+
+      if (stock > 0) {
+        stockElement.textContent = `Cantidad de stock: ${stock}`;
+        stockElement.parentElement.style.backgroundColor = "#F1F8E9"; // verde claro
+        stockElement.style.color = "#33691E";
+      } else {
+        stockElement.textContent = "Sin stock";
+        stockElement.parentElement.style.backgroundColor = "#FFEBEE"; // rojo claro
+        stockElement.parentElement.style.borderColor = "#fc7f7fff";
+        stockElement.style.color = "#C62828";
+      }
 
       const img = $('p-image');
       const src = resolveImage(p.image ?? p.imagen);
