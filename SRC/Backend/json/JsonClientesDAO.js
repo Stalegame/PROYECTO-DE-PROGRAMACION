@@ -17,6 +17,14 @@ function pickAllowedFields(obj, allowed) {
   }, {});
 }
 
+// Sanitizador específico para direcciones
+function normalizeDireccion(val) {
+  if (val == null) return null;
+  let s = String(val).normalize('NFC').trim();
+  s = s.replace(/\s+/g, ' '); // colapsa espacios internos
+  return s === '' ? null : s;
+}
+
 function isValidNombre(nombre) {
   if (!nombre) return false;
   if (hasEmoji(nombre)) return false;
@@ -121,7 +129,7 @@ class JsonClientesDAO {
   async save(cliente) {
     try {
       // 1) Whitelist de entrada
-      const input = pickAllowedFields(cliente, ['nombre', 'email', 'telefono', 'password']);
+      const input = pickAllowedFields(cliente, ['nombre', 'email', 'telefono', 'password', 'direccion']);
 
       // 2) Normalización
       const nombre = stripAndCollapse(input.nombre);
@@ -144,6 +152,14 @@ class JsonClientesDAO {
         throw err;
       }
 
+      // Teléfono requerido
+      const telefonoRaw = String(input.telefono ?? '').trim();
+      if (!telefonoRaw) {
+        const err = new Error('El teléfono es requerido');
+        err.code = 'PHONE_REQUIRED';
+        throw err;
+      }
+
       // 4) Validaciones de formato
       if (!isValidNombre(nombre)) {
         const err = new Error('Nombre inválido: usa solo letras (puede incluir tildes y ñ), espacios, guion o apóstrofe; 2 a 60 caracteres.');
@@ -160,17 +176,40 @@ class JsonClientesDAO {
         err.code = 'PASSWORD_WEAK';
         throw err;
       }
-      // 4.1) Solo límite de largo para el teléfono (si viene)
-      let telefono = null;
-      if (input.telefono !== undefined && input.telefono !== null) {
-        telefono = String(input.telefono).trim();
-        if (telefono.length > 12) {
-          const err = new Error('Teléfono demasiado largo (máx. 12 caracteres).');
-          err.code = 'PHONE_TOO_LONG';
-          throw err;
+
+      // 4.1) Teléfono: 8 dígitos numéricos
+      if (!/^\d+$/.test(telefonoRaw)) {
+        const err = new Error('El teléfono solo puede contener números.');
+        err.code = 'PHONE_INVALID_CHARS';
+        throw err;
+      }
+      if (telefonoRaw.length !== 8) {
+        const err = new Error('El teléfono debe tener exactamente 8 dígitos.');
+        err.code = 'PHONE_INVALID_LENGTH';
+        throw err;
+      }
+      const telefono = telefonoRaw;
+
+      // 4.2) Dirección opcional
+      let direccion = null;
+      if (input.direccion != null) {
+        const d = normalizeDireccion(input.direccion);
+        if (d !== null) {
+          if (d.length > 120) {
+            const err = new Error('La dirección no puede superar 120 caracteres.');
+            err.code = 'ADDRESS_TOO_LONG';
+            throw err;
+          }
+          // mismos caracteres permitidos que en el validador de ruta
+          if (!/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s,.\-#°º/()]+$/.test(d)) {
+            const err = new Error('La dirección contiene caracteres no permitidos.');
+            err.code = 'ADDRESS_INVALID_CHARS';
+            throw err;
+          }
+          direccion = d;
+        } else {
+          direccion = null;
         }
-        // si permites vacío como “sin teléfono”
-        if (telefono === '') telefono = null;
       }
 
       // 5) Leer base
@@ -184,13 +223,20 @@ class JsonClientesDAO {
         throw err;
       }
 
-      // 7) Construir y persistir (ignorar role/id/activo del cliente)
+      console.log({
+        frontKey: Object.keys(cliente).find(k => k.toLowerCase().includes('dir')),
+        inputRaw: input.direccion,
+        normalizada: direccion
+      });
+
+      // 7) Construir y persistir
       const toSave = {
         id: Date.now().toString(),
         createdAt: new Date().toISOString(),
         nombre,
         email,
-        telefono,
+        telefono: `+569${telefono}`,
+        direccion,
         passwordHash: bcrypt.hashSync(input.password, 10),
         role: 'user',
         activo: true,
@@ -219,7 +265,7 @@ class JsonClientesDAO {
 
     // Whitelist de campos permitidos en update
     const patchIn = pickAllowedFields(updatedCliente, [
-      'nombre', 'email', 'telefono', 'password', 'activo'
+      'nombre', 'email', 'telefono', 'password', 'activo', 'direccion'
     ]);
 
     const patch = {};
@@ -243,7 +289,7 @@ class JsonClientesDAO {
         err.code = 'EMAIL_INVALID';
         throw err;
       }
-      const dup = clientes.find((c, i) => i !== idx && String(c.email || '').toLowerCase() === email);
+      const dup = clientes.find((c, i) => i !== idx && String(c.email || '').toLowerCase().trim() === email);
       if (dup) {
         const err = new Error('El email ya está registrado por otro usuario');
         err.code = 'EMAIL_DUP';
@@ -252,16 +298,50 @@ class JsonClientesDAO {
       patch.email = email;
     }
 
-    // --- Teléfono (solo largo) ---
+    // --- Teléfono ---
     if (patchIn.telefono !== undefined) {
-      let telefono = String(patchIn.telefono).trim();
-      if (telefono === '') telefono = null;
-      if (telefono && telefono.length > 12) {
-        const err = new Error('Teléfono demasiado largo (máx. 12 caracteres).');
-        err.code = 'PHONE_TOO_LONG';
+      const t = String(patchIn.telefono).trim();
+
+      if (t === '') {
+        const err = new Error('El teléfono es requerido');
+        err.code = 'PHONE_REQUIRED';
         throw err;
       }
-      patch.telefono = telefono;
+      if (!/^\d+$/.test(t)) {
+        const err = new Error('El teléfono solo puede contener números.');
+        err.code = 'PHONE_INVALID_CHARS';
+        throw err;
+      }
+      if (t.length !== 8) {
+        const err = new Error('El teléfono debe tener exactamente 8 dígitos.');
+        err.code = 'PHONE_INVALID_LENGTH';
+        throw err;
+      }
+
+      // Guardar normalizado a +569 ...
+      patch.telefono = `+569${t}`;
+    }
+
+    // --- Dirección (opcional) ---
+    if (patchIn.direccion !== undefined) {
+      const dRaw = String(patchIn.direccion ?? '').trim();
+      if (dRaw === '') {
+        patch.direccion = null; // borrar dirección
+      } else {
+        const d = normalizeDireccion(dRaw);
+        if (d.length > 120) {
+          const err = new Error('La dirección no puede superar 120 caracteres.');
+          err.code = 'ADDRESS_TOO_LONG';
+          throw err;
+        }
+        // valida caracteres permitidos como en el validador
+        if (!/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s,.\-#°º/()]+$/.test(d)) {
+          const err = new Error('La dirección contiene caracteres no permitidos.');
+          err.code = 'ADDRESS_INVALID_CHARS';
+          throw err;
+        }
+        patch.direccion = d;
+      }
     }
 
     // --- Password ---
@@ -284,6 +364,14 @@ class JsonClientesDAO {
     delete patch.role;
     delete patch.id;
     delete patch.createdAt;
+
+    // Asegurar que el modelo siga teniendo teléfono (obligatorio)
+    const finalTelefono = (patch.telefono !== undefined) ? patch.telefono : current.telefono;
+    if (!finalTelefono) {
+      const err = new Error('El teléfono es requerido');
+      err.code = 'PHONE_REQUIRED';
+      throw err;
+    }
 
     const updated = {
       ...current,

@@ -51,22 +51,25 @@ const validateLogin = [
 
 const validateRegister = [
   body('nombre')
-    .isString().withMessage('El nombre es requerido')
     .trim()
-    .isLength({ min: 2, max: 60 }).withMessage('El nombre debe tener entre 2 y 60 caracteres')
+    .notEmpty().withMessage('El nombre es requerido').bail()
+    .isLength({ min: 2, max: 60 }).withMessage('El nombre debe tener entre 2 y 60 caracteres').bail()
     .matches(/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' -]+$/)
-    .withMessage('El nombre solo puede incluir letras (con tildes y ñ), espacios, guion y apóstrofe'),
+    .withMessage('El nombre solo puede incluir letras (con tildes y ñ), espacios, guion y apóstrofe')
+    .customSanitizer(v => v.replace(/\s+/g, ' ')),
+
   body('email')
-    .isString().withMessage('Email es requerido')
     .trim()
-    .isLength({ max: 100 }).withMessage('Email demasiado largo')
-    .isEmail().withMessage('Email no válido')
-    .custom(v => !/\s/.test(v)).withMessage('El email no puede contener espacios')
-    .custom(v => !String(v).includes('..')).withMessage('El email no puede contener ".."'),
+    .notEmpty().withMessage('El email es requerido').bail()
+    .isLength({ max: 100 }).withMessage('Email demasiado largo').bail()
+    .isEmail().withMessage('Email no válido').bail()
+    .custom(v => !/\s/.test(v)).withMessage('El email no puede contener espacios').bail()
+    .custom(v => !v.includes('..')).withMessage('El email no puede contener ".."'),
+
   body('password')
-    .isString().withMessage('Contraseña es requerida')
-    .isLength({ min: 8, max: 64 }).withMessage('La contraseña debe tener entre 8 y 64 caracteres')
-    .custom(v => !/\s/.test(v)).withMessage('La contraseña no puede contener espacios')
+    .notEmpty().withMessage('La contraseña es requerida').bail()
+    .isLength({ min: 8, max: 64 }).withMessage('La contraseña debe tener entre 8 y 64 caracteres').bail()
+    .custom(v => !/\s/.test(v)).withMessage('La contraseña no puede contener espacios').bail()
     .custom(v => {
       let classes = 0;
       if (/[a-z]/.test(v)) classes++;
@@ -75,19 +78,20 @@ const validateRegister = [
       if (/[^A-Za-z0-9]/.test(v)) classes++;
       return classes >= 2;
     }).withMessage('La contraseña debe combinar al menos 2 de: mayúsculas, minúsculas, números o símbolos'),
-  body('telefono')
-    .optional({ nullable: true })
-    .isString().withMessage('El teléfono debe ser texto')
-    .trim()
-    .isLength({ max: 12 }).withMessage('El teléfono no puede superar los 12 caracteres'),
-  body('direccion')
-  .optional({ nullable: true })
-  .isString().withMessage('La dirección debe ser texto')
-  .trim()
-  .isLength({ min: 5, max: 200 }).withMessage('La dirección debe tener entre 5 y 200 caracteres')
-  .matches(/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s,.\-#°]+$/)
-  .withMessage('La dirección contiene caracteres no permitidos'),
 
+  body('telefono')
+    .trim()
+    .notEmpty().withMessage('El teléfono es requerido').bail()
+    .matches(/^\d{8}$/).withMessage('El teléfono debe tener exactamente 8 dígitos'),
+
+  body('direccion')
+    .customSanitizer(v => typeof v === 'string' ? v.trim() : v)
+    .optional({ nullable: true, checkFalsy: true })
+    .isLength({ min: 5, max: 120 }).withMessage('La dirección debe tener entre 5 y 120 caracteres')
+    .matches(/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s,.\-#°º/()]+$/)
+    .withMessage('La dirección contiene caracteres no permitidos')
+    .matches(/[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]/)
+    .withMessage('La dirección debe contener al menos una letra o un número')
 ];
 
 // ===== Rutas =====
@@ -150,7 +154,7 @@ router.post('/login', validateLogin, handleValidationErrors, async (req, res) =>
 router.post('/register', validateRegister, handleValidationErrors, async (req, res) => {
   try {
     // Whitelist antes de pasar al DAO
-    const input = pickAllowedFields(req.body, ['nombre', 'email', 'telefono', 'password']);
+    const input = pickAllowedFields(req.body, ['nombre', 'email', 'telefono', 'password', 'direccion']);
     const cliente = await clientesDAO.save(input);
 
     // Saneamos (el DAO ya entrega sin hash, pero por si acaso)
@@ -175,16 +179,19 @@ router.post('/register', validateRegister, handleValidationErrors, async (req, r
       NAME_REQUIRED:     { status: 400, msg: 'El nombre es requerido' },
       EMAIL_REQUIRED:    { status: 400, msg: 'El email es requerido' },
       PASSWORD_REQUIRED: { status: 400, msg: 'La contraseña es requerida' },
+      PHONE_REQUIRED:    { status: 400, msg: 'El telefono es requerido'},
 
       // Formato
       NAME_INVALID:      { status: 400, msg: 'Nombre inválido' },
       EMAIL_INVALID:     { status: 400, msg: 'Email inválido' },
       PASSWORD_WEAK:     { status: 400, msg: 'Contraseña débil' },
-      PHONE_TOO_LONG:    { status: 400, msg: 'Teléfono demasiado largo (máx. 12 caracteres)' },
+      ADDRESS_TOO_LONG:  { status: 400, msg: 'Direccion demasiado larga, maximo 120 caracteres'},
+      ADDRESS_INVALID_CHARS: {status: 400, msg: 'La dirección contiene caracteres no permitidos.'},
+      PHONE_INVALID_CHARS:{ status: 400, msg: 'El teléfono solo puede contener números' },
+      PHONE_INVALID_LENGTH:{ status: 400, msg: 'El teléfono debe tener exactamente 8 dígitos' },
 
       // Duplicados
       EMAIL_DUP:         { status: 409, msg: 'El email ya está registrado' },
-      PHONE_DUP:         { status: 409, msg: 'El teléfono ya está registrado' },
     };
 
     const mapped = errorMap[code];
