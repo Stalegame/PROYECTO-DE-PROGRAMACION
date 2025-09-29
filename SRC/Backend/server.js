@@ -165,6 +165,7 @@ try {
   const clientsRouter  = require('./routes/clientsRouter');
   const chatbotRouter  = require('./routes/chatbotRouter');
   const adminRouter = require('./routes/adminRouter');
+  const cartRouter = require('./routes/cartRouter');
 
   // Rutas de login y registro
   app.use('/api/clients/login', strictLimiter);
@@ -177,6 +178,7 @@ try {
   app.use('/api/products', productsRouter);
   app.use('/api/clients',  clientsRouter);
   app.use('/api/chatbot',  chatbotRouter);
+  app.use('/api/cart', cartRouter);
 
   console.log('✅ Rutas API cargadas correctamente');
 } catch (error) {
@@ -207,6 +209,7 @@ app.use((err, _req, res, _next) => {
       console.log('🧩 API Products:', base + '/api/products');
       console.log('👥 API Clients:',  base + '/api/clients');
       console.log('🤖 API Chatbot:',  base + '/api/chatbot');
+      console.log(' API Cart:',  base + '/api/cart');
       if (FRONTEND_DIR) {
         console.log('🗂️  Frontend dir:', FRONTEND_DIR);
         console.log('🌐 Páginas: /  /login  /admin  /contacto  /productos');

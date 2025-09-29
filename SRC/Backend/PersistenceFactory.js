@@ -4,6 +4,7 @@ const path = require('path');
 const JsonProductosDAO = require(path.join(__dirname, 'json', 'JsonProductosDAO'));
 const JsonClientesDAO  = require(path.join(__dirname, 'json', 'JsonClientesDAO'));
 const JsonChatbotDAO   = require(path.join(__dirname, 'json', 'JsonChatbotDAO'));
+const JsonCartDAO      = require(path.join(__dirname, 'json', 'JsonCartDAO'));
 
 console.log('[PersistenceFactory] loaded at', __filename);
 
@@ -24,6 +25,9 @@ class PersistenceFactory {
       case 'chatbot':
         return new JsonChatbotDAO();
 
+      case 'cart':
+        return new JsonCartDAO();
+
       default:
         console.error('[PersistenceFactory] unsupported:', JSON.stringify(type), '(normalized:', JSON.stringify(key), ')');
         throw new Error(`Tipo de DAO no soportado: ${type}`);
@@ -37,6 +41,7 @@ class PersistenceFactory {
         this.getDAO('productos'),
         this.getDAO('clientes'),
         this.getDAO('chatbot'),
+        this.getDAO('cart'),
       ];
       // Forzar init de cada DAO si lo exponen en constructor
       console.log('✅ Capa de persistencia inicializada');

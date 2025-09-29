@@ -8,27 +8,29 @@
   <link rel="stylesheet" href="css/productos.css">
 </head>
 <body>
-
-  <!-- ===== HEADER ===== -->
+  <!-- *************** HEADER *************** -->
   <header>
-    <div class="logo-container">
-      <!-- Carrito -->
-      <button class="btn-shop-bag">
-        <img src="./img/shop_white.png" alt="shop_bag" class="icono-btn2">
+    <div class="header-inner">
+      <!-- Botón Carrito -->
+      <button class="btn-shop-bag" aria-label="Abrir carrito" id="open-cart">
+        <img src="./img/shop_white.png" alt="Carrito" class="icono-btn2">
+        <span class="contador-carrito" id="contador">0</span>
       </button>
 
       <!-- Logo -->
-      <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
+      <div class="logo-container">
+        <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
+      </div>
 
-      <!-- Login/Logout -->
+      <!-- Auth -->
       <div id="authBox">
-        <a id="authLoginLink" href="login_users.html" class="btn-login">
-          <img src="./img/user_login.png" alt="Login" class="icono-btn">
+        <a id="authLoginLink" href="login_users.html" class="btn-login" aria-label="Iniciar sesión">
+          <img src="./img/user_login.png" alt="" class="icono-btn">
           Iniciar Sesión
         </a>
         <span id="authName" style="display:none;"></span>
         <button id="authLogoutBtn" class="btn" style="display:none;">
-          <img src="./img/user_login.png" alt="User" class="icono-btn">
+          <img src="./img/user_login.png" alt="" class="icono-btn">
           Cerrar Sesión
         </button>
       </div>
@@ -42,12 +44,31 @@
     <a href="contacto.html" class="nav-pill">Contacto</a>
   </nav>
 
-  <!-- ===== SIDEBAR ===== -->
-  <div class="sidebar">
-    <h2>Carrito</h2>
-    <p>No hay productos todavía</p>
-    <button class="btn-buy-bag" type="button">Comprar</button>
+  <!-- *************** SIDEBAR CARRITO *************** -->
+  <div class="sidebar" id="carritoSidebar">
+      <!-- Encabezado -->
+      <div class="sidebar-header">
+      <h2 class="titulo-carrito">🛒 Tu Carrito</h2>
+      <button class="cerrar-sidebar" id="cerrarSidebar">✖</button>
+      </div>
+
+      <!-- Items del carrito -->
+      <div class="carrito-items">
+      <p class="mensaje-vacio">Tu carrito está vacío 😞...</p>
+      </div>
+
+      <!-- Total + botón -->
+      <div class="carrito-total">
+      <p>Total: <strong>$0</strong></p>
+      <button class="btn-buy-bag">Finalizar Compra</button>
+      </div>
   </div>
+
+  <!-- Overlay desenfoque -->
+  <div class="sidebar-overlay"></div>
+
+  <!-- Notificación flotante -->
+  <div class="notif" id="notif" aria-live="polite"></div>
 
   <!-- ===== CONTENIDO: Ficha de producto ===== -->
   <main class="product-page">
@@ -66,11 +87,16 @@
 
       <p id="p-desc" class="product-desc-large"></p>
 
+      <div class="stock-box">
+        <p id="p-stock" class="product-stock"></p>
+      </div>
+
       <div class="product-actions-large">
         <button id="add-to-cart" class="btn-comprar">Añadir al carrito</button>
       </div>
     </div>
   </main>
 </body>
+<script src="js/cart.js" defer></script>
 <script src="js/one_product.js" defer></script>
 </html>

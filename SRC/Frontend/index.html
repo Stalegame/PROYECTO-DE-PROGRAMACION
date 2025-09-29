@@ -9,34 +9,34 @@
 </head>
 
 <body>
-    <!-- *************** Bloque Inicial *************** -->
-    <header>
-        <div class="logo-container">
-            <!-- Botón de bolsa de compras -->
-            <button class="btn-shop-bag">
-            <img src="./img/shop_white.png" alt="shop_bag" class="icono-btn2">
-            </button>
+    <!-- *************** HEADER *************** -->
+  <header>
+    <div class="header-inner">
+      <!-- Botón Carrito -->
+      <button class="btn-shop-bag" aria-label="Abrir carrito" id="open-cart">
+        <img src="./img/shop_white.png" alt="Carrito" class="icono-btn2">
+        <span class="contador-carrito" id="contadorCarrito">0</span>
+      </button>
 
-            <!-- Logo -->
-            <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
+      <!-- Logo -->
+      <div class="logo-container">
+        <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
+      </div>
 
-            <!-- Bloque de login/logout -->
-            <div id="authBox">
-            <!-- Link visible para iniciar sesión -->
-            <a id="authLoginLink" href="login_users.html" class="btn-login">
-                <img src="./img/user_login.png" alt="Login" class="icono-btn">
-                Iniciar Sesión
-            </a>
-
-            <!-- Nombre + logout visibles para cerrar sesión -->
-            <span id="authName" style="display:none;"></span>
-            <button id="authLogoutBtn" class="btn" style="display:none;">
-                <img src="./img/user_login.png" alt="User" class="icono-btn">
-                Cerrar Sesión
-            </button>
-            </div>
-        </div>
-    </header>
+      <!-- Auth -->
+      <div id="authBox">
+        <a id="authLoginLink" href="login_users.html" class="btn-login" aria-label="Iniciar sesión">
+          <img src="./img/user_login.png" alt="" class="icono-btn">
+          Iniciar Sesión
+        </a>
+        <span id="authName" style="display:none;"></span>
+        <button id="authLogoutBtn" class="btn" style="display:none;">
+          <img src="./img/user_login.png" alt="" class="icono-btn">
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </header>
 
     <!-- *************** BANNER *************** -->
     <div class="banner">
@@ -50,12 +50,31 @@
         <a href="contacto.html" class="nav-pill">Contacto</a>
     </nav>
 
-    <!-- *************** SIDEBAR *************** -->
-    <div class="sidebar">
-        <h2>Carrito</h2>
-        <p>No hay productos todavía</p>
-        <button class="btn-buy-bag" type="submit">Comprar</button>
+    <!-- *************** SIDEBAR CARRITO *************** -->
+    <div class="sidebar" id="carritoSidebar">
+        <!-- Encabezado -->
+        <div class="sidebar-header">
+        <h2 class="titulo-carrito">🛒 Tu Carrito</h2>
+        <button class="cerrar-sidebar" id="cerrarSidebar">✖</button>
+        </div>
+
+        <!-- Items del carrito -->
+        <div class="carrito-items">
+        <p class="mensaje-vacio">Tu carrito está vacío 😞...</p>
+        </div>
+
+        <!-- Total + botón -->
+        <div class="carrito-total">
+        <p>Total: <strong>$0</strong></p>
+        <button class="btn-buy-bag">Finalizar Compra</button>
+        </div>
     </div>
+
+    <!-- Overlay desenfoque -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Notificación flotante -->
+    <div class="notif" id="notif" aria-live="polite"></div>
     
     <!-- *************** CATEGORÍAS *************** -->
     <section class="categorias">
@@ -88,70 +107,59 @@
 
     </section>
     
-    <!-- *************** PRODUCTOS *************** -->
+    <!-- *************** PRODUCTOS DESTACADOS *************** -->
     <section class="destacados">
         <h2>Productos Destacados</h2>
         
-        <div class="producto">
-            
+        <div class="producto" data-id="1758571251073">
             <img src="./img/products/alfajores.png" alt="Alfajor Clásico">
-           
             <h3>Alfajor Clásico</h3>
             <p>$1.290</p>
-            <button class="btn-comprar" >Comprar</button>
+            <button class="btn-comprar">Comprar</button>
         </div>
         
-        <div class="producto">
-            
+        <div class="producto" data-id="1758489700270">
             <img src="./img/products/tabletones.png" alt="Tableton Maní">
-           
             <h3>Tableton Maní</h3>
             <p>$2.490</p>
             <button class="btn-comprar">Comprar</button>
         </div>
 
-        <div class="producto">
-            
+        <div class="producto" data-id="1758149775878">
             <img src="./img/products/cola_cola_fruna.jpg" alt="Cola cola">
-           
             <h3>Cola Cola Clásica</h3>
             <p>$1.490</p>
             <button class="btn-comprar">Comprar</button>
         </div>
 
-        <div class="producto">
-            
+        <div class="producto" data-id="1759101595903">
             <img src="./img/products/Alfajor_Panchito.jpg" alt="Alfajor Panchito">
-           
             <h3>Alfajor Panchito</h3>
             <p>$490</p>
             <button class="btn-comprar">Comprar</button>
         </div>
 
-        <div class="producto">
-            
+        <div class="producto" data-id="1758149867672">
             <img src="./img/products/Sufle_Chanfle_Mani.jpg" alt="Sufle Maní">
-           
             <h3>Sufle Mani</h3>
             <p>$990</p>
             <button class="btn-comprar">Comprar</button>
         </div>
 
-        <div class="producto">
-            
+        <div class="producto" data-id="1758149195472">
             <img src="./img/products/palo_palito.png" alt="Palo Palito">
-           
             <h3>Palo Palito</h3>
             <p>$290</p>
             <button class="btn-comprar">Comprar</button>
         </div>
     </section>
     
+    <!-- *************** FOOTER *************** -->
     <footer>
         <p>📍 Av. Providencia 1234, Santiago</p>
         <p>© 2025 Fruna · Creado por Comprimidos Team.</p>
     </footer>
 </body>
-<script src="js/index.js"></script>
+<script src="js/cart.js" defer></script>
+<script src="js/index.js" defer></script>
 </html>
-

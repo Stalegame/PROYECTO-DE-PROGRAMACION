@@ -1,15 +1,6 @@
 // Frontend/js/productos.js
 
 document.addEventListener('DOMContentLoaded', () => {
-  // =============== 1) Toggle del carrito (sidebar) ===============
-  const carritoBtn = document.querySelector('.btn-shop-bag');
-  const sidebar = document.querySelector('.sidebar');
-  if (carritoBtn && sidebar) {
-    carritoBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('active');
-    });
-  }
-
   // =============== 2) UI de sesión (nombre + logout) ===============
   const loginLink = document.getElementById('authLoginLink');   // <a href="login_users.html">
   const nameSpan  = document.getElementById('authName');        // <span id="authName">
@@ -108,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
               <br>
               <div>
-                <a class="btn-comprar" href=#">Añadir al carrito</a>
+                <button class="btn-comprar">Añadir al carrito</button>
               </div>
             </div>
           </article>
