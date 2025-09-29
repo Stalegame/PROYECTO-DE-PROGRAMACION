@@ -1,15 +1,14 @@
 // /js/carrito.js
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const carritoBtn     = document.querySelector(".btn-shop-bag");
-  const sidebar        = document.querySelector(".sidebar");
-  const cerrarSidebar  = document.querySelector(".cerrar-sidebar");
-  const overlay        = document.querySelector(".sidebar-overlay");
-  const contenedorItems = document.querySelector(".carrito-items");
-  const totalTexto     = document.querySelector(".carrito-total strong");
-  const contador       = document.getElementById("contadorCarrito") || document.getElementById("contador");
-  const btnFinalizar   = document.querySelector(".btn-buy-bag");
-  const botonesComprar = document.querySelectorAll(".btn-comprar");
+  const carritoBtn       = document.querySelector(".btn-shop-bag");
+  const sidebar          = document.querySelector(".sidebar");
+  const cerrarSidebar    = document.querySelector(".cerrar-sidebar");
+  const overlay          = document.querySelector(".sidebar-overlay");
+  const contenedorItems  = document.querySelector(".carrito-items");
+  const totalTexto       = document.querySelector(".carrito-total strong");
+  const contador         = document.getElementById("contadorCarrito") || document.getElementById("contador");
+  const btnFinalizar     = document.querySelector(".btn-buy-bag");
 
   let carrito = [];
 
@@ -18,12 +17,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       const res = await fetch("/api/cart", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId, quantity: cantidad })
+        body: JSON.stringify({ productId: String(productId), quantity: Number(cantidad) })
       });
 
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.error || "No se pudo actualizar el carrito");
+      // Si la ruta no existe, queda clarísimo:
+      if (res.status === 404) {
+        const text = await res.text().catch(() => "");
+        console.warn("[carrito] /api/cart 404 →", text);
+        alert("La ruta /api/cart no está disponible en el backend.");
+        return;
+      }
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data?.success === false) {
+        alert(data?.error || "No se pudo actualizar el carrito");
         return;
       }
 
@@ -37,9 +44,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function fetchCart() {
     try {
-      const res = await fetch("/api/cart");
-      const data = await res.json();
-      carrito = data.data || [];
+      const res = await fetch("/api/cart", { cache: "no-store" });
+      const data = await res.json().catch(() => ({}));
+      carrito = Array.isArray(data?.data) ? data.data : [];
     } catch (err) {
       console.error("Error al cargar carrito:", err.message);
       carrito = [];
@@ -51,7 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     contenedorItems.innerHTML = "";
 
-    if (carrito.length === 0) {
+    if (!carrito.length) {
       contenedorItems.innerHTML = `<p class="mensaje-vacio">Tu carrito está vacío 😞...</p>`;
       totalTexto.textContent = "$0";
       contador.textContent = "0";
@@ -61,18 +68,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     let total = 0;
 
     carrito.forEach(item => {
-      const p = item.product || {};
-      const nombre = p.name || "Producto eliminado";
-      const precio = p.price || 0;
-      const imagen = p.image || "placeholder.png";
-      const cantidad = item.quantity || 1;
-      const subtotal = precio * cantidad;
+      const p         = item.product || {};
+      const nombre    = p.name || p.nombre || "Producto eliminado";
+      const precio    = Number(p.price ?? p.precio ?? 0);
+      const imagen    = p.image || p.imagen || "placeholder.png";
+      const cantidad  = Number(item.quantity || 1);
+      const subtotal  = precio * cantidad;
       total += subtotal;
+
+      const esAbsoluta = /^https?:\/\//i.test(imagen);
+      const src = esAbsoluta ? imagen : `/img/products/${imagen}`;
 
       const div = document.createElement("div");
       div.className = "carrito-item";
       div.innerHTML = `
-        <img class="item-img" src="/img/products/${imagen}" alt="${nombre}" />
+        <img class="item-img" src="${src}" alt="${nombre}" />
         <div class="item-info">
           <p class="item-nombre">${nombre}</p>
           <p class="item-detalle">$${subtotal.toLocaleString()}</p>
@@ -88,26 +98,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     totalTexto.textContent = `$${total.toLocaleString()}`;
-    contador.textContent = carrito.reduce((acc, p) => acc + p.quantity, 0);
+    contador.textContent = carrito.reduce((acc, p) => acc + (Number(p.quantity) || 0), 0);
 
-    // Listeners dinámicos
-    document.querySelectorAll(".btn-eliminar").forEach(btn => {
+    // Listeners dinámicos (elementos recién pintados)
+    contenedorItems.querySelectorAll(".btn-eliminar").forEach(btn => {
       btn.onclick = async () => {
         const id = btn.dataset.id;
-        await fetch(`/api/cart/${id}`, { method: "DELETE" });
+        await fetch(`/api/cart/${encodeURIComponent(id)}`, { method: "DELETE" });
         await fetchCart();
         actualizarCarritoUI();
       };
     });
 
-    document.querySelectorAll(".btn-sumar").forEach(btn => {
+    contenedorItems.querySelectorAll(".btn-sumar").forEach(btn => {
       btn.onclick = () => {
         const id = btn.dataset.id;
         actualizarCarritoProducto(id, 1);
       };
     });
 
-    document.querySelectorAll(".btn-restar").forEach(btn => {
+    contenedorItems.querySelectorAll(".btn-restar").forEach(btn => {
       btn.onclick = () => {
         const id = btn.dataset.id;
         const item = carrito.find(p => p.productId === id);
@@ -118,20 +128,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Botón de compra en cards de productos
-  botonesComprar.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const card = btn.closest(".producto");
-      const id = card?.dataset?.id;
-      if (!id) return;
+  // ================== Delegación para "Añadir al carrito" ==================
+  // En lugar de capturar NodeList al cargar (que no incluye productos renderizados después),
+  // usamos delegación para que funcione con tarjetas futuras.
+  document.body.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-add-to-cart], .btn-comprar");
+    if (!btn) return;
 
-      actualizarCarritoProducto(id, 1);
-      sidebar?.classList.add("active");
-      overlay?.classList.add("active");
-    });
+    // Evita que un <a> padre interrumpa el flujo
+    e.preventDefault();
+    e.stopPropagation();
+
+    const card = btn.closest(".producto");
+    const id = btn.dataset.productId || card?.dataset?.id;
+    if (!id) {
+      console.warn("[carrito] No se encontró productId en el botón/tarjeta");
+      return;
+    }
+
+    actualizarCarritoProducto(String(id), 1);
+    // Abrir sidebar para feedback
+    sidebar?.classList.add("active");
+    overlay?.classList.add("active");
   });
 
-  // Abrir/cerrar sidebar
+  // ================== Abrir/cerrar sidebar ==================
   carritoBtn?.addEventListener("click", () => {
     sidebar?.classList.add("active");
     overlay?.classList.add("active");
@@ -148,9 +169,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     overlay?.classList.remove("active");
   });
 
-  // Finalizar compra
+  // ================== Finalizar compra ==================
   btnFinalizar?.addEventListener("click", async () => {
-    if (carrito.length === 0) {
+    if (!carrito.length) {
       alert("Tu carrito está vacío.");
       return;
     }
@@ -166,7 +187,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Carga inicial
+  // ================== Carga inicial ==================
   await fetchCart();
   actualizarCarritoUI();
 });

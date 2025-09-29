@@ -1,6 +1,6 @@
 const fs = require('fs').promises;
 const path = require('path');
-const CART_FILE = path.join(__dirname, 'cart.json');
+const CART_FILE = path.join(__dirname,'..' ,'data' ,'cart.json');
 
 class JsonCartDAO {
   constructor() {

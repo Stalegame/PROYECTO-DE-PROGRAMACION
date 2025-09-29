@@ -1,7 +1,6 @@
 // Frontend/js/productos.js
-
 document.addEventListener('DOMContentLoaded', () => {
-  // =============== 2) UI de sesión (nombre + logout) ===============
+  // =============== 1) UI de sesión (nombre + logout) ===============
   const loginLink = document.getElementById('authLoginLink');   // <a href="login_users.html">
   const nameSpan  = document.getElementById('authName');        // <span id="authName">
   const logoutBtn = document.getElementById('authLogoutBtn');   // <button id="authLogoutBtn">
@@ -37,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (authBox)   authBox.dataset.logged = 'false';
   }
 
-  // =============== 3) Cargar y pintar productos ===============
+  // =============== 2) Cargar y pintar productos ===============
   const grid = document.getElementById('products-grid'); // <div id="products-grid"></div>
   if (!grid) return;
 
@@ -67,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch('/api/products');
       const payload = await res.json().catch(() => ({}));
       if (!res.ok || payload.success === false) {
-        throw new Error(payload.error || 'No se pudo obtener la lista de productos');
+        throw new Error(payload.error || `No se pudo obtener la lista de productos (HTTP ${res.status})`);
       }
 
       const items = Array.isArray(payload.data) ? payload.data
@@ -83,15 +82,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const name  = p.name ?? p.nombre ?? 'Producto';
         const price = p.price ?? p.precio;
         const img   = resolveImage(p.image ?? p.imagen);
+        const stock = p.stock; // si no manejas stock, asume alto
 
         return `
-          <article class="producto" data-id="${escapeHTML(id)}">
-            <a class="product-media" href="one_product.html?id=${encodeURIComponent(id)}" aria-label="${escapeHTML(name)}">
+          <article class="producto" data-id="${escapeHTML(String(id))}">
+            <a class="product-media" href="one_product.html?id=${encodeURIComponent(String(id))}" aria-label="${escapeHTML(name)}">
               <img loading="lazy" src="${escapeHTML(img)}" alt="${escapeHTML(name)}">
             </a>
             <div class="producto-info">
               <h3>
-                <a href="one_product.html?id=${encodeURIComponent(id)}">${escapeHTML(name)}</a>
+                <a href="one_product.html?id=${encodeURIComponent(String(id))}">${escapeHTML(name)}</a>
               </h3>
               <div class="product-meta">
                 <span class="precio">${fmtCLP(price)}</span>
@@ -99,7 +99,14 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
               <br>
               <div>
-                <button class="btn-comprar">Añadir al carrito</button>
+                <button
+                  class="btn-comprar"
+                  data-add-to-cart
+                  data-product-id="${escapeHTML(String(id))}"
+                  ${stock <= 0 ? 'disabled' : ''}
+                >
+                  ${stock <= 0 ? 'Sin stock' : 'Añadir al carrito'}
+                </button>
               </div>
             </div>
           </article>

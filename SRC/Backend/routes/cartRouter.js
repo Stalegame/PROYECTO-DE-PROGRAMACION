@@ -1,4 +1,4 @@
-// routes/cartRoutes.js
+// routes/cartRouter.js
 const path = require('path');
 const express = require('express');
 const { body, param, validationResult } = require('express-validator');
@@ -100,7 +100,7 @@ router.post(
 
       if (nuevaCantidad > producto.stock) {
         return res.status(400).json({
-          //Agregar alerta 
+          // alerta de stock
           success: false,
           error: `No hay suficiente stock disponible. Stock máximo: ${producto.stock}`,
         });

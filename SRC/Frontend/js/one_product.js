@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
       img.alt = p.name ?? p.nombre ?? 'Producto';
 
       // Acción de carrito (placeholder)
-      const addBtn = document.getElementById('add-to-cart');
+      const addBtn = document.getElementById('btn-comprar');
       if (addBtn) {
         addBtn.onclick = () => {
           

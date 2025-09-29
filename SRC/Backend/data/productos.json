@@ -33,11 +33,12 @@
     "id": "1758489700270",
     "name": "Tabletones Chocolate",
     "price": 2290,
-    "stock": 7,
+    "stock": 1,
     "category": "Chocolate",
     "description": "Tabletones de galleta bañados en chocolate.",
     "image": "tabletones.png",
-    "timestamp": "2025-09-21T21:21:40.270Z"
+    "timestamp": "2025-09-21T21:21:40.270Z",
+    "updatedAt": "2025-09-29T20:32:20.589Z"
   },
   {
     "name": "Alfajor Clásico",

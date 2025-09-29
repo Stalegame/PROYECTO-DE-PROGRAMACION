@@ -4,11 +4,12 @@ const PersistenceFactory = require('../PersistenceFactory');
 
 const clientesDAO = PersistenceFactory.getDAO('clientes');
 
+//Busca header y crea token
 function getBearerToken(req) {
   const h = req.headers.authorization || req.header('Authorization') || '';
   if (!h) return null;
-  const parts = h.split(' ');
-  return (parts.length === 2 && /^Bearer$/i.test(parts[0])) ? parts[1] : null;
+  const parts = h.split(' '); //Divide en 2 el token por espacios
+  return (parts.length === 2 && /^Bearer$/i.test(parts[0])) ? parts[1] : null; //Retorna la parte 1. Contrario retorna null.
 }
 
 const auth = async (req, res, next) => {
