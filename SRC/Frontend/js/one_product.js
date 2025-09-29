@@ -1,15 +1,6 @@
 // Frontend/js/one_product.js
 
 document.addEventListener('DOMContentLoaded', () => {
-  // =============== 1) Toggle del carrito (sidebar) ===============
-  const carritoBtn = document.querySelector('.btn-shop-bag');
-  const sidebar = document.querySelector('.sidebar');
-  if (carritoBtn && sidebar) {
-    carritoBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('active');
-    });
-  }
-
   // =============== 2) UI de sesión (nombre + logout) ===============
   const loginLink = document.getElementById('authLoginLink');
   const nameSpan  = document.getElementById('authName');
@@ -111,8 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const addBtn = document.getElementById('add-to-cart');
       if (addBtn) {
         addBtn.onclick = () => {
-          // Aquí puedes integrar tu lógica de carrito
-          alert('Producto añadido al carrito (demo)');
+          
         };
       }
     } catch (e) {

@@ -46,12 +46,27 @@
   </nav>
 
   <!-- *************** SIDEBAR CARRITO *************** -->
-  <aside class="sidebar" aria-label="Carrito de compras" id="cart-sidebar">
-    <h2>Carrito</h2>
-    <div class="cart-items" id="cart-items"><p>No hay productos todavía</p></div>
-    <p class="cart-total" id="cart-total">Total: $0</p>
-    <button class="btn-buy-bag" id="comprar-btn" type="button">Comprar</button>
-  </aside>
+  <div class="sidebar" id="carritoSidebar">
+    <!-- Encabezado -->
+    <div class="sidebar-header">
+    <h2 class="titulo-carrito">🛒 Tu Carrito</h2>
+    <button class="cerrar-sidebar" id="cerrarSidebar">✖</button>
+    </div>
+
+    <!-- Items del carrito -->
+    <div class="carrito-items">
+    <p class="mensaje-vacio">Tu carrito está vacío 😞...</p>
+    </div>
+
+    <!-- Total + botón -->
+    <div class="carrito-total">
+    <p>Total: <strong>$0</strong></p>
+    <button class="btn-buy-bag">Finalizar Compra</button>
+    </div>
+  </div>
+
+  <!-- Overlay desenfoque -->
+  <div class="sidebar-overlay"></div>
 
   <!-- Notificación flotante -->
   <div class="notif" id="notif" aria-live="polite"></div>
@@ -79,7 +94,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="cart.js" defer></script>
+  <script src="js/cart.js" defer></script>
   <script src="js/productos.js" defer></script>
 </body>
 </html>

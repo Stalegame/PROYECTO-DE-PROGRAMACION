@@ -85,37 +85,196 @@ header{
 }
 .nav-pill.is-active{ background:var(--rosa); color:#fff }
 
-/* ====== SIDEBAR CARRITO ====== */
-.sidebar{
-  position:fixed; bottom:0; left:-345px;
-  width:300px; height:60%; background:#333; color:var(--bg);
-  padding:20px; border-radius:15px; box-shadow:0 3px 10px rgba(0,0,0,.3);
-  transition:left .3s ease; z-index:1000; display:flex; flex-direction:column; gap:12px
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -100%;              
+  width: 360px;
+  height: 100%;
+  background: #FFF9FA;
+  border-right: 4px solid #E91E63;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 6px 0 20px rgba(0,0,0,0.25);
+  transition: left 0.4s ease, opacity 0.4s ease;
+  z-index: 9999;
+  font-family: 'Poppins', sans-serif;
+  opacity: 0;
 }
-.sidebar.active{ left:0 }
-.cart-items{ margin:16px 0 }
-.cart-item{
-  border-bottom:1px solid #555; padding:10px 0;
-  display:flex; align-items:center; justify-content:space-between; gap:10px
+.sidebar.active {
+  left: 0;                  
+  opacity: 1;
+  animation: sidebarSlide 0.4s ease forwards;
 }
-.cart-left{ display:flex; align-items:center; gap:10px }
-.cart-thumb{ width:40px; height:40px; object-fit:cover; border-radius:6px; border:1px solid #555 }
-.cart-meta{ display:flex; flex-direction:column; line-height:1.2 }
-.cart-right{ display:flex; flex-direction:column; align-items:flex-end; gap:6px }
-.cart-controls{ display:flex; align-items:center; gap:8px }
-.cart-controls .mas, .cart-controls .menos{
-  background:var(--rosa); border:none; color:#fff; width:28px; height:24px; border-radius:6px; cursor:pointer; font-weight:700
+@keyframes sidebarSlide {
+  from { transform: translateX(-40px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
 }
-.cart-controls .menos{ background:var(--rosaOsc) }
-.line-subtotal{ font-weight:700 }
-.cart-total{ font-weight:700; font-size:18px; margin-top:10px; text-align:right; border-top:1px solid #555; padding-top:10px }
-.btn-buy-bag{
-  margin-top:auto; align-self:center; width:70%;
-  background:var(--amarillo); color:#333; font-size:16px; font-weight:700;
-  padding:10px; border-radius:20px; border:none; cursor:pointer;
-  box-shadow:0 3px 10px rgba(0,0,0,.1); transition:background .2s ease
+
+/* --- Header dentro del sidebar --- */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #E91E63, #AD1457);
+  padding: 16px 18px;
+  border-bottom: 3px solid #FFC107;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
-.btn-buy-bag:hover{ background:#FFD54F }
+.titulo-carrito {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+.cerrar-sidebar {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, color 0.2s;
+}
+.cerrar-sidebar:hover {
+  transform: scale(1.2);
+  color: #FFC107;
+}
+
+/* --- Items dentro del carrito --- */
+.carrito-items {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 12px;
+}
+.carrito-items::-webkit-scrollbar { width: 6px; }
+.carrito-items::-webkit-scrollbar-thumb { background: #FFC107; border-radius: 4px; }
+.carrito-items::-webkit-scrollbar-track { background: transparent; }
+
+.carrito-item {
+  background: #fff;
+  padding: 14px 16px;
+  border-radius: 14px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border-left: 5px solid #E91E63;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+  animation: fadeSlide 0.4s ease forwards;
+  opacity: 0;
+  transform: translateX(-20px);
+}
+@keyframes fadeSlide {
+  to { opacity: 1; transform: translateX(0); }
+}
+.item-img {
+  width: 55px;
+  height: 55px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid #FFC107;
+  flex-shrink: 0;
+}
+.item-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.item-nombre { font-size: 15px; font-weight: bold; color: #333; }
+.item-detalle { font-size: 14px; color: #777; }
+
+/* Controles de cantidad */
+.item-cantidad {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.cantidad-btn {
+  background-color: #FFC107;
+  border: none;
+  color: #333;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+.cantidad-btn:hover { background-color: #FFB300; transform: scale(1.1); }
+.cantidad-texto { font-weight: bold; min-width: 20px; text-align: center; color: #333; }
+
+/* Botón eliminar */
+.btn-eliminar {
+  background: none;
+  border: 2px solid #FFC107;
+  color: #E91E63;
+  border-radius: 50%;
+  padding: 6px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.btn-eliminar:hover { background: #FFC107; color: #333; }
+
+/* --- Total y botón comprar --- */
+.carrito-total {
+  padding: 16px;
+  text-align: center;
+  border-top: 2px dashed #FFC107;
+  background: #FFF9FA;
+  box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.15);
+}
+.carrito-total p {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px 0;
+  color: #E91E63;
+}
+.btn-buy-bag {
+  background: linear-gradient(135deg, #E91E63 0%, #AD1457 100%);
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  padding: 14px 28px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-buy-bag:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+.mensaje-vacio {
+  text-align: center;
+  font-size: 15px;
+  color: #888;
+  padding: 25px 0;
+}
+
+/* --- Overlay oscuro detrás del carrito --- */
+.sidebar-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 9998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.sidebar.active ~ .sidebar-overlay {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .sidebar { width: 100%; }
+  .btn-buy-bag { width: 100%; }
+}
 
 /* Notificación */
 .notif{

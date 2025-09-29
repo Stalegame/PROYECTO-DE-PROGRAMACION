@@ -44,12 +44,31 @@
     <a href="contacto.html" class="nav-pill">Contacto</a>
   </nav>
 
-  <!-- ===== SIDEBAR ===== -->
-  <div class="sidebar">
-    <h2>Carrito</h2>
-    <p>No hay productos todavía</p>
-    <button class="btn-buy-bag" type="button">Comprar</button>
+  <!-- *************** SIDEBAR CARRITO *************** -->
+  <div class="sidebar" id="carritoSidebar">
+      <!-- Encabezado -->
+      <div class="sidebar-header">
+      <h2 class="titulo-carrito">🛒 Tu Carrito</h2>
+      <button class="cerrar-sidebar" id="cerrarSidebar">✖</button>
+      </div>
+
+      <!-- Items del carrito -->
+      <div class="carrito-items">
+      <p class="mensaje-vacio">Tu carrito está vacío 😞...</p>
+      </div>
+
+      <!-- Total + botón -->
+      <div class="carrito-total">
+      <p>Total: <strong>$0</strong></p>
+      <button class="btn-buy-bag">Finalizar Compra</button>
+      </div>
   </div>
+
+  <!-- Overlay desenfoque -->
+  <div class="sidebar-overlay"></div>
+
+  <!-- Notificación flotante -->
+  <div class="notif" id="notif" aria-live="polite"></div>
 
   <!-- ===== CONTENIDO: Ficha de producto ===== -->
   <main class="product-page">
@@ -78,5 +97,6 @@
     </div>
   </main>
 </body>
+<script src="js/cart.js" defer></script>
 <script src="js/one_product.js" defer></script>
 </html>

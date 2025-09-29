@@ -15,7 +15,7 @@
       <!-- Botón Carrito -->
       <button class="btn-shop-bag" aria-label="Abrir carrito" id="open-cart">
         <img src="./img/shop_white.png" alt="Carrito" class="icono-btn2">
-        <span class="contador-carrito" id="contador">0</span>
+        <span class="contador-carrito" id="contadorCarrito">0</span>
       </button>
 
       <!-- Logo -->
@@ -51,12 +51,27 @@
     </nav>
 
     <!-- *************** SIDEBAR CARRITO *************** -->
-    <aside class="sidebar" aria-label="Carrito de compras" id="cart-sidebar">
-        <h2>Carrito</h2>
-        <div class="cart-items" id="cart-items"><p>No hay productos todavía</p></div>
-        <p class="cart-total" id="cart-total">Total: $0</p>
-        <button class="btn-buy-bag" id="comprar-btn" type="button">Comprar</button>
-    </aside>
+    <div class="sidebar" id="carritoSidebar">
+        <!-- Encabezado -->
+        <div class="sidebar-header">
+        <h2 class="titulo-carrito">🛒 Tu Carrito</h2>
+        <button class="cerrar-sidebar" id="cerrarSidebar">✖</button>
+        </div>
+
+        <!-- Items del carrito -->
+        <div class="carrito-items">
+        <p class="mensaje-vacio">Tu carrito está vacío 😞...</p>
+        </div>
+
+        <!-- Total + botón -->
+        <div class="carrito-total">
+        <p>Total: <strong>$0</strong></p>
+        <button class="btn-buy-bag">Finalizar Compra</button>
+        </div>
+    </div>
+
+    <!-- Overlay desenfoque -->
+    <div class="sidebar-overlay"></div>
 
     <!-- Notificación flotante -->
     <div class="notif" id="notif" aria-live="polite"></div>
@@ -96,42 +111,42 @@
     <section class="destacados">
         <h2>Productos Destacados</h2>
         
-        <div class="producto">
+        <div class="producto" data-id="1758571251073">
             <img src="./img/products/alfajores.png" alt="Alfajor Clásico">
             <h3>Alfajor Clásico</h3>
             <p>$1.290</p>
             <button class="btn-comprar">Comprar</button>
         </div>
         
-        <div class="producto">
+        <div class="producto" data-id="1758489700270">
             <img src="./img/products/tabletones.png" alt="Tableton Maní">
             <h3>Tableton Maní</h3>
             <p>$2.490</p>
             <button class="btn-comprar">Comprar</button>
         </div>
 
-        <div class="producto">
+        <div class="producto" data-id="1758149775878">
             <img src="./img/products/cola_cola_fruna.jpg" alt="Cola cola">
             <h3>Cola Cola Clásica</h3>
             <p>$1.490</p>
             <button class="btn-comprar">Comprar</button>
         </div>
 
-        <div class="producto">
+        <div class="producto" data-id="1759101595903">
             <img src="./img/products/Alfajor_Panchito.jpg" alt="Alfajor Panchito">
             <h3>Alfajor Panchito</h3>
             <p>$490</p>
             <button class="btn-comprar">Comprar</button>
         </div>
 
-        <div class="producto">
+        <div class="producto" data-id="1758149867672">
             <img src="./img/products/Sufle_Chanfle_Mani.jpg" alt="Sufle Maní">
             <h3>Sufle Mani</h3>
             <p>$990</p>
             <button class="btn-comprar">Comprar</button>
         </div>
 
-        <div class="producto">
+        <div class="producto" data-id="1758149195472">
             <img src="./img/products/palo_palito.png" alt="Palo Palito">
             <h3>Palo Palito</h3>
             <p>$290</p>
@@ -145,5 +160,6 @@
         <p>© 2025 Fruna · Creado por Comprimidos Team.</p>
     </footer>
 </body>
-<script src="js/index.js"></script>
+<script src="js/cart.js" defer></script>
+<script src="js/index.js" defer></script>
 </html>

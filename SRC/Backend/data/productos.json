@@ -48,5 +48,15 @@
     "image": "alfajores.png",
     "id": "1758571251073",
     "timestamp": "2025-09-22T20:00:51.073Z"
+  },
+  {
+    "name": "Alfajor Panchito",
+    "price": 490,
+    "stock": 45,
+    "category": "Alfajores",
+    "description": "Alfajor recubierto de chocolate y relleno de manjar.",
+    "image": "Alfajor_Panchito.jpg",
+    "id": "1759101595903",
+    "timestamp": "2025-09-28T23:19:55.903Z"
   }
 ]
