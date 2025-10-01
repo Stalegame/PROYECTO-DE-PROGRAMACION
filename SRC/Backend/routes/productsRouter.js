@@ -1,4 +1,8 @@
 // routes/productsRouter.js
+//esto tiene rutas que todos pueden ver y otras que solo el admin puede ver, los POST, PUT y DELETE son solo para el admin.
+// Tiene sistema de seguridad, ponemos auth y adminAuth si existen, sino deja pasar a cualquiera
+//Validaciones que hace: - Nombre = Entre 2 y 100 caracteres - Precio = Número positivo -Stock = Número entero positivo -Categoría = Máximo 50 caracteres - Descripción = Máximo 500 caracteres
+// - Imagen = Máximo 300 caracteres
 const path = require('path');
 const express = require('express');
 const { body, param, validationResult } = require('express-validator');
@@ -8,219 +12,261 @@ const router = express.Router();
 
 const IS_DEV = process.env.NODE_ENV !== 'production';
 
-// ====== DAO con fallback ======
+//  Nuestro "asistente de productos" 
 let productosDAO;
 try {
+  // Intentamos usar el sistema principal
   productosDAO = PersistenceFactory.getDAO('productos');
 } catch (e) {
+  // Si falla, usamos el de respaldo directo
   const JsonProductosDAO = require(path.join(__dirname, '..', 'json', 'JsonProductosDAO'));
   productosDAO = new JsonProductosDAO();
 }
 
-// ====== Middlewares de auth para mutaciones ======
+//seguridad para modificar productos (es como un guardia)
 let auth, adminAuth;
 try {
+  // Intentamos cargar los guardias de seguridad
   ({ auth, adminAuth } = require('../middlewares/auth'));
 } catch (_) {
-  // Si no existe el middleware aún, las rutas mutables quedarán públicas (solo en dev).
-  if (IS_DEV) console.warn('[productsRouter] middlewares/auth no disponible: POST/PUT/DELETE sin protección');
+  // Si no existen los guardias (en desarrollo), avisamos pero seguimos
+  if (IS_DEV) console.warn('[productsRouter] Los guardias de seguridad no están disponibles: CUALQUIERA podrá modificar productos');
 }
 
-// ====== Normalización de body (soporta ES/EN) ======
+//"Traductor" de datos (soporta español e inglés) 
 const normalizeProductInput = (req, _res, next) => {
-  const b = req.body || {};
-  const priceRaw = b.price ?? b.precio;
-  const stockRaw = b.stock ?? b.existencia;
+  const datos = req.body || {};
+  
+  // Aceptamos tanto "price" como "precio", tanto "stock" como "existencia" (tema de alcance de idioma se tomo en consideracion)
+  const precioRaw = datos.price ?? datos.precio;
+  const stockRaw = datos.stock ?? datos.existencia;
 
-  const trimOrUndef = (v) => {
+  // Función para limpiar textos
+  const limpiarTexto = (v) => {
     if (v === undefined || v === null) return undefined;
-    const s = String(v).trim();
-    return s === '' ? undefined : s;
+    const textoLimpio = String(v).trim();
+    return textoLimpio === '' ? undefined : textoLimpio;
   };
 
-  const numOrUndef = (v) =>
+  // Función para limpiar números
+  const limpiarNumero = (v) =>
     (v === undefined || v === null || String(v).trim() === '')
       ? undefined
       : Number(v);
 
+  // Preparamos los datos limpios y normalizados
   req.body = {
-    // ⚠️ Nunca tocar ni incluir id acá
-    name:        trimOrUndef(b.name ?? b.nombre),
-    price:       numOrUndef(priceRaw),
-    stock:       (numOrUndef(stockRaw) !== undefined ? parseInt(numOrUndef(stockRaw), 10) : undefined),
-    category:    trimOrUndef(b.category ?? b.categoria),
-    description: trimOrUndef(b.description ?? b.descripcion),
-    image:       trimOrUndef(b.image ?? b.imagen),
+    //IMPORTANTE: Nunca tocamos el ID aquí
+    name:        limpiarTexto(datos.name ?? datos.nombre),
+    price:       limpiarNumero(precioRaw),
+    stock:       (limpiarNumero(stockRaw) !== undefined ? parseInt(limpiarNumero(stockRaw), 10) : undefined),
+    category:    limpiarTexto(datos.category ?? datos.categoria),
+    description: limpiarTexto(datos.description ?? datos.descripcion),
+    image:       limpiarTexto(datos.image ?? datos.imagen),
   };
   next();
 };
 
-// ====== Validaciones ======
+//Reglas para validar productos
 const validateCreateOrUpdate = [
   body('name')
-    .optional()
-    .notEmpty().withMessage('El nombre del producto es obligatorio')
-    .isLength({ min: 2, max: 100 }).withMessage('El nombre debe tener entre 2 y 100 caracteres')
+    .optional() // En actualizaciones puede ser opcional
+    .notEmpty().withMessage('Tienes que poner un nombre al producto')
+    .isLength({ min: 2, max: 100 }).withMessage('El nombre debe tener entre 2 y 100 letras')
     .trim().escape(),
 
   body('price')
     .optional()
-    .notEmpty().withMessage('El precio es obligatorio')
+    .notEmpty().withMessage('Tienes que poner un precio')
     .isFloat({ min: 0 }).withMessage('El precio debe ser un número positivo')
     .toFloat(),
 
   body('stock')
     .optional()
-    .notEmpty().withMessage('El stock es obligatorio')
+    .notEmpty().withMessage('Tienes que indicar cuántos hay en stock')
     .isInt({ min: 0 }).withMessage('El stock debe ser un número entero positivo')
     .toInt(),
 
   body('category')
     .optional()
-    .isLength({ max: 50 }).withMessage('La categoría no puede tener más de 50 caracteres')
+    .isLength({ max: 50 }).withMessage('La categoría no puede tener más de 50 letras')
     .trim().escape(),
 
   body('description')
     .optional()
-    .isLength({ max: 500 }).withMessage('La descripción no puede tener más de 500 caracteres')
+    .isLength({ max: 500 }).withMessage('La descripción no puede tener más de 500 letras')
     .trim().escape(),
 
   body('image')
     .optional()
-    .isLength({ max: 300 }).withMessage('La URL/archivo de imagen no puede superar 300 caracteres')
+    .isLength({ max: 300 }).withMessage('La imagen no puede tener más de 300 caracteres')
     .trim(),
 ];
 
 const validateProductId = [
   param('id')
-    .notEmpty().withMessage('El ID del producto es requerido')
-    .isLength({ min: 1, max: 64 }).withMessage('ID inválido')
+    .notEmpty().withMessage('Tienes que especificar qué producto')
+    .isLength({ min: 1, max: 64 }).withMessage('El ID no es válido')
     .trim().escape(),
 ];
 
+// Revisa si hubo errores en las validaciones
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
       success: false,
-      error: 'Datos de entrada inválidos',
+      error: 'Los datos del producto no son válidos',
       details: errors.mapped(),
     });
   }
   next();
 };
 
-// ==================== RUTAS PÚBLICAS ====================
+// ==================== RUTAS PÚBLICAS (todos pueden ver) ====================
 
-// GET /api/products - listado público
+// GET /api/products - Ver todos los productos
 router.get('/', async (_req, res) => {
   try {
     const productos = await productosDAO.getAll();
-    res.json({ success: true, count: productos.length, data: productos });
+    res.json({ 
+      success: true, 
+      count: productos.length, 
+      data: productos,
+      message: `Encontrados ${productos.length} productos` 
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: 'Error interno del servidor al obtener productos',
-      ...(IS_DEV && { detail: error.message }),
+      error: 'No pudimos cargar los productos',
+      ...(IS_DEV && { detail: error.message }), // Solo mostramos detalles en desarrollo
     });
   }
 });
 
-// GET /api/products/:id - detalle público
+// GET /api/products/:id - Ver un producto específico
 router.get('/:id', validateProductId, handleValidationErrors, async (req, res) => {
   try {
     const producto = await productosDAO.getById(req.params.id);
     if (!producto) {
-      return res.status(404).json({ success: false, error: 'Producto no encontrado' });
+      return res.status(404).json({ 
+        success: false, 
+        error: 'No encontramos este producto' 
+      });
     }
-    res.json({ success: true, data: producto });
+    res.json({ 
+      success: true, 
+      data: producto,
+      message: 'Producto encontrado' 
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: 'Error interno del servidor al obtener el producto',
+      error: 'Error al buscar el producto',
       ...(IS_DEV && { detail: error.message }),
     });
   }
 });
 
-// ==================== RUTAS ADMIN (protegidas) ====================
+// RUTAS DE ADMINISTRADOR (solo admin puede modificar) 
 
-// Aplica protección solo si los middlewares existen
-const protect = (fn) => (auth && adminAuth) ? [auth, adminAuth, fn] : [fn];
+// Función inteligente que aplica seguridad si existe, sino deja pasar
+const protect = (funcion) => (auth && adminAuth) ? [auth, adminAuth, funcion] : [funcion];
 
-// POST /api/products - crear
+// Ayuda para tomar solo los campos que nos interesan
+const pick = (obj, campos) =>
+  campos.reduce((acumulador, clave)=> (obj[clave]!==undefined ? (acumulador[clave]=obj[clave],acumulador) : acumulador), {});
+
+// POST /api/products - Crear nuevo producto
 router.post(
   '/',
-  normalizeProductInput,
-  validateCreateOrUpdate,
-  handleValidationErrors,
-  ...protect(async (req, res) => {
+  normalizeProductInput,     // Primero traducimos y limpiamos
+  validateCreateOrUpdate,    // Luego validamos
+  handleValidationErrors,    // Revisamos errores
+  ...protect(async (req, res) => {  // Finalmente, si pasa todo, creamos el producto (con seguridad si existe)
     try {
-      const nuevo = await productosDAO.save(req.body);
-      res.status(201).json({ success: true, message: 'Producto creado exitosamente', data: nuevo });
+      const nuevoProducto = await productosDAO.save(req.body);
+      res.status(201).json({ 
+        success: true, 
+        message: '¡Producto creado exitosamente!', 
+        data: nuevoProducto 
+      });
     } catch (error) {
       res.status(500).json({
         success: false,
-        error: 'Error interno del servidor al crear producto',
+        error: 'No pudimos crear el producto',
         ...(IS_DEV && { detail: error.message }),
       });
     }
   })
 );
 
-//Hepler local
-const pick = (obj, fields) =>
-  fields.reduce((a,k)=> (obj[k]!==undefined ? (a[k]=obj[k],a) : a), {});
-
-// PUT /api/products/:id - actualizar
+// PUT /api/products/:id - Actualizar producto existente
 router.put('/:id',
-  validateProductId,
-  normalizeProductInput,         // ← asegúrate que NO toque req.body.id
-  validateCreateOrUpdate,        // ← en update, que las reglas sean .optional()
-  handleValidationErrors,
-  ...protect(async (req, res) => {
+  validateProductId,         // Validamos que el ID sea correcto
+  normalizeProductInput,     // Traducimos y limpiamos (no toca la id por si acaso)
+  validateCreateOrUpdate,    // Validamos los datos
+  handleValidationErrors,    // Revisamos errores
+  ...protect(async (req, res) => {  // Aplicamos seguridad
     try {
       const id = req.params.id;
-      const patch = pick(req.body, ['name','price','stock','category','description','image']);
-      delete patch.id;
+      
+      // Tomamos solo los campos que se pueden actualizar
+      const cambios = pick(req.body, ['name','price','stock','category','description','image']);
+      delete cambios.id; // Por seguridad, nunca cambiamos el ID
 
-      const actualizado = await productosDAO.update(id, patch);
-      if (!actualizado) {
-        return res.status(404).json({ success:false, error:'Producto no encontrado' });
+      const productoActualizado = await productosDAO.update(id, cambios);
+      if (!productoActualizado) {
+        return res.status(404).json({ 
+          success: false, 
+          error: 'No encontramos el producto para actualizar' 
+        });
       }
-      res.json({ success:true, message:'Producto actualizado exitosamente', data: actualizado });
+      
+      res.json({ 
+        success: true, 
+        message: 'Producto actualizado correctamente', 
+        data: productoActualizado 
+      });
     } catch (error) {
-      console.error('PUT /products/:id ERROR:', { msg: error.message, stack: error.stack });
+      console.error('ERROR al actualizar producto:', { 
+        mensaje: error.message, 
+        stack: error.stack 
+      });
       res.status(500).json({
-        success:false,
-        error:'Error interno del servidor al actualizar producto',
+        success: false,
+        error: 'No pudimos actualizar el producto',
         detail: process.env.NODE_ENV !== 'production' ? error.message : undefined,
       });
     }
   })
 );
 
-
-// DELETE /api/products/:id - eliminar
+// DELETE /api/products/:id - Eliminar producto
 router.delete(
   '/:id',
-  validateProductId,
-  handleValidationErrors,
-  ...protect(async (req, res) => {
+  validateProductId,         // Validamos el ID
+  handleValidationErrors,    // Revisamos errores
+  ...protect(async (req, res) => {  // Aplicamos seguridad
     try {
-      const ok = await productosDAO.delete(req.params.id);
-      if (!ok) {
-        return res.status(404).json({ success: false, error: 'Producto no encontrado' });
+      const seElimino = await productosDAO.delete(req.params.id);
+      if (!seElimino) {
+        return res.status(404).json({ 
+          success: false, 
+          error: 'No encontramos el producto para eliminar' 
+        });
       }
-      res.json({ success: true, message: 'Producto eliminado exitosamente' });
+      res.json({ 
+        success: true, 
+        message: 'Producto eliminado correctamente' 
+      });
     } catch (error) {
       res.status(500).json({
         success: false,
-        error: 'Error interno del servidor al eliminar producto',
+        error: 'No pudimos eliminar el producto',
         ...(IS_DEV && { detail: error.message }),
       });
     }
   })
 );
-
 module.exports = router;

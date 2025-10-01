@@ -1,119 +1,154 @@
-// server.js — Backend FRUNA (CommonJS)
 const fs = require('fs');
 const path = require('path');
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
+const express = require('express'); // El "motor" que hace funcionar todo
+const cors = require('cors'); // El que controla quién puede entrar, es como un portero
+const helmet = require('helmet'); // seguridad contra hackers
 const rateLimit = require('express-rate-limit');
-const bcrypt = require('bcryptjs');
-require('dotenv').config();  // Cargar las variables de entorno desde el archivo .env
-const jwt = require('jsonwebtoken');
-// Usar la clave secreta
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;  // Cargar desde el archivo .env
+const bcrypt = require('bcryptjs'); // Es como un candado para contraseñas
+const jwt = require('jsonwebtoken'); // El "carnet de identidad digital"
+require('dotenv').config(); // Lee las "instrucciones secretas" del archivo .env (importante tener todo lo necesario del .env sino no sirve de nada)
 
 const PersistenceFactory = require('./PersistenceFactory');
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-const IS_PROD = process.env.NODE_ENV === 'production';
+// Nuestro mensajero de WhatsApp
+const ws = require('./whatsappService');
+// Acepta diferentes formas de exportar (por si cambiamos algo)
+const enviarWhatsApp =
+  (ws && (ws.enviarWhatsApp || ws.default || ws));
+const enviarConfirmacionPedido =
+  (ws && (ws.enviarConfirmacionPedido || ws.enviarConfirmacionPedidoDefault));
 
-// ============= Middlewares base y de seguridad =============
-// Configuración de trust proxy según entorno
-if (process.env.NODE_ENV === 'production') {
-  app.set('trust proxy', 1);   // en hosting real, con proxy delante.
-  console.log('[server] trust proxy = 1 (production)');
-} else {
-  app.set('trust proxy', false); // en tu compu, sin proxy.
-  console.log('[server] trust proxy = false (development)');
+// Verificamos que el mensajero esté listo para trabajar
+if (typeof enviarWhatsApp !== 'function') {
+  console.error('[whatsappService] Lo que recibimos:', ws);
+  throw new Error('El mensajero de WhatsApp no está funcionando correctamente');
 }
 
-app.use(helmet({
-  contentSecurityPolicy: {
-    useDefaults: true,
-    directives: {
-      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-      "style-src": ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
-      "script-src": ["'self'", "'unsafe-inline'"],
-      "font-src": ["'self'", "https://cdnjs.cloudflare.com", "data:"],
-      "img-src": ["'self'", "https:", "data:"]
+// Configuración básica 
+const app = express(); //Creamos la aplicación PRIMERO, OJO
+const PORT = process.env.PORT || 3000;
+const IS_PROD = process.env.NODE_ENV === 'production'; //Estamos en producción?
+
+// Seguridad y ayudantes 
+
+// Configuración para cuando estamos detrás de un proxy (como NGINX) el proxy es un intermediario entre el usuario y el servidor
+// Si usas NGINX o similar, asegúrate de que esta opción esté activada
+// Si no usas proxy, déjala en false (por defecto)
+if (IS_PROD) {
+  app.set('trust proxy', 1);
+  console.log('[server] Confiamos en el proxy (estamos en producción)');
+} else {
+  app.set('trust proxy', false);
+  console.log('[server] No usamos proxy (estamos en desarrollo)');
+}
+
+// Helmet (es como se dice un casco que protege al servidor de ataques comunes)
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "style-src": ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
+        "script-src": ["'self'", "'unsafe-inline'"],
+        "font-src": ["'self'", "https://cdnjs.cloudflare.com", "data:"],
+        "img-src": ["'self'", "https:", "data:"]
+      }
     }
-  }
-}));
+  })
+);
 
-app.use(cors({
-  origin: IS_PROD ? ['https://tudominio.com'] : ['http://localhost:3000', 'http://localhost:8080'],
-  credentials: true
-}));
+// CORS, el "portero" que decide quién puede entrar
+app.use(
+  cors({
+    origin: IS_PROD
+      ? ['https://tudominio.com'] // En producción: solo tu dominio
+      : ['http://localhost:3000', 'http://localhost:8080'], // En desarrollo: localhost
+    credentials: true
+  })
+);
 
-// Rate limit general para /api/*
+// Límite de peticiones - el control de fila
+// Evita que alguien sature el servidor con muchas peticiones
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 min
-  max: 100,                  // máximo 100 requests por IP
-  standardHeaders: true,     // devuelve info en headers estándar
-  legacyHeaders: false,      // desactiva headers obsoletos
-  message: { error: 'Demasiadas peticiones, inténtalo más tarde.' }
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // máximo 100 peticiones por IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: '¡Demasiadas peticiones! Espera un poco y vuelve a intentar.' }
 });
 app.use('/api/', apiLimiter);
 
-// Rate limit estricto para endpoints sensibles
+// Límite estricto para login/registro - más seguridad en áreas sensibles
 const strictLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 min
-  max: 5,                   // máximo 5 intentos
-  message: { error: 'Demasiados intentos, espera 15 minutos.' }
+  windowMs: 15 * 60 * 1000, // 15 minutos (se calcula en milisegundos)
+  max: 5, // solo 5 intentos
+  message: { error: 'Demasiados intentos fallidos. Espera 15 minutos.' }
 });
 
-app.use(express.json({
-  limit: '10kb',
-  verify: (req, _res, buf) => {
-    if (!buf || !buf.length) return;
-    try { JSON.parse(buf.toString()); } catch { throw new Error('JSON malformado'); }
-  }
-}));
-
-// Agregar para soportar <form method="POST">
+// Traductores de datos convierten lo que manda el frontend
+app.use(
+  express.json({
+    limit: '10kb', // No aceptamos datos muy grandes (para evitar ataques) (como el overflow de memoria)
+    verify: (req, _res, buf) => {
+      if (!buf || !buf.length) return;
+      try {
+        JSON.parse(buf.toString()); // Verificamos que sea JSON válido
+      } catch {
+        throw new Error('El JSON que mandaste está mal formado');
+      }
+    }
+  })
+);
 app.use(express.urlencoded({ extended: true }));
 
-// Log mínimo de requests
+// El secretario que apunta todo lo que pasa
 app.use((req, _res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   next();
 });
 
-// ============= Frontend estático =============
-function exists(p) { try { return fs.existsSync(p); } catch { return false; } }
+// Nuestras páginas web (Frontend)
+function exists(p) {
+  try { return fs.existsSync(p); } catch { return false; }
+}
 
+// Buscamos dónde están nuestras páginas web
 const FRONTEND_DIR_MAIN = path.join(__dirname, '..', 'Frontend');
 const FRONTEND_DIR_ALT  = path.join(__dirname, 'Frontend');
-const FRONTEND_DIR = exists(FRONTEND_DIR_MAIN) ? FRONTEND_DIR_MAIN :
-                     (exists(FRONTEND_DIR_ALT) ? FRONTEND_DIR_ALT : null);
+const FRONTEND_DIR =
+  exists(FRONTEND_DIR_MAIN) ? FRONTEND_DIR_MAIN :
+  (exists(FRONTEND_DIR_ALT) ? FRONTEND_DIR_ALT : null);
 
-console.log('[server] FRONTEND_DIR =', FRONTEND_DIR, 'exists?', !!FRONTEND_DIR && exists(FRONTEND_DIR));
+console.log('[server] Carpeta Frontend:', FRONTEND_DIR, '¿Existe?', !!FRONTEND_DIR && exists(FRONTEND_DIR));
+
+// Si encontramos las páginas web, las servimos
 if (FRONTEND_DIR) {
-  const IS_DEV = process.env.NODE_ENV !== 'production';
+  const IS_DEV = !IS_PROD;
 
+  // Servimos archivos estáticos (CSS, JS, imágenes)
   app.use(express.static(FRONTEND_DIR, {
     index: false,
     setHeaders: (res, filePath) => {
       if (IS_DEV) {
-        // En desarrollo: nunca cachear HTML, JS ni CSS
+        // En desarrollo: casi nada se cachea
         if (/\.(html?|js|css)$/i.test(filePath)) {
           res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
         } else {
           res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
         }
       } else {
-        // En producción:
+        // En producción: cacheamos assets pero no HTML
         if (/\.(html?)$/i.test(filePath)) {
-          // HTML siempre fresco
           res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
         } else {
-          // JS, CSS, imágenes, etc. cacheados 1 día
           res.setHeader('Cache-Control', 'public, max-age=86400, immutable');
         }
       }
     }
   }));
 
+  // Elbibliotecario que busca páginas
   const sendPage = (res, ...names) => {
     for (const name of names) {
       const full = path.join(FRONTEND_DIR, name);
@@ -122,103 +157,126 @@ if (FRONTEND_DIR) {
         return res.sendFile(full);
       }
     }
-    return res.status(404).json({ error: 'Archivo no encontrado', searched: names, base: FRONTEND_DIR });
+    return res.status(404).json({ error: 'No encontramos esta página', buscadas: names, carpeta: FRONTEND_DIR });
   };
 
-  // Rutas de páginas
+  // Definimos las direcciones de nuestras páginas
   app.get('/',          (_req, res) => sendPage(res, 'index.html'));
   app.get('/login',     (_req, res) => sendPage(res, 'login_users.html', 'login.html', 'index.html'));
   app.get('/admin',     (_req, res) => sendPage(res, 'admin_controller.html', 'admin.html', 'index.html'));
   app.get('/contacto',  (_req, res) => sendPage(res, 'contacto.html', 'index.html'));
   app.get('/productos', (_req, res) => sendPage(res, 'productos.html', 'index.html'));
 
-  // ============= Página 404 para el frontend =============
+  // Página "no encontrada" para rutas web
   app.use((req, res, next) => {
-    // Si es una ruta de la API, seguimos al manejador API
     if (req.path.startsWith('/api')) return next();
-
-    // Si es cualquier otra ruta no definida, devolvemos la página 404 del frontend
     const full = path.join(FRONTEND_DIR, 'page_404.html');
     res.status(404).sendFile(full);
   });
 }
 
-// ============= Healthchecks =============
+// check del health 
+// Para verificar que el servidor está vivo
 app.get('/health', (_req, res) => {
   res.json({
     status: 'OK',
-    message: 'Servidor funcionando correctamente',
+    message: '¡El servidor está funcionando perfectamente!',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     version: '1.0.0'
   });
 });
-
 app.get('/healthcheck', (_req, res) => {
-  res.json({ status: 'OK', message: 'Health check funcionando', timestamp: new Date().toISOString() });
+  res.json({ status: 'OK', message: 'Todo está en orden', timestamp: new Date().toISOString() });
 });
 
-// ============= Rutas API =============
+// Nuestras APIs 
 try {
+  // Los "guardias de seguridad"
   const { auth, onlyAdminEmail } = require('./middlewares/auth');
+  
+  // Nuestros encargados de ciertas areas 
   const productsRouter = require('./routes/productsRouter');
   const clientsRouter  = require('./routes/clientsRouter');
   const chatbotRouter  = require('./routes/chatbotRouter');
-  const adminRouter = require('./routes/adminRouter');
-  const cartRouter = require('./routes/cartRouter');
+  const adminRouter    = require('./routes/adminRouter');
 
-  // Rutas de login y registro
+  // Areas sensibles con seguridad extra
   app.use('/api/clients/login', strictLimiter);
   app.use('/api/clients/register', strictLimiter);
 
-  // Solo un admin por email
+  // Area de administración - solo para jefes
   app.use('/api/admin', auth, onlyAdminEmail('admin@fruna.cl'), adminRouter);
-  
-  // Resto de APIs 
+
+  // Los demás mostradores de atención
   app.use('/api/products', productsRouter);
   app.use('/api/clients',  clientsRouter);
   app.use('/api/chatbot',  chatbotRouter);
-  app.use('/api/cart', cartRouter);
 
-  console.log('✅ Rutas API cargadas correctamente');
+  console.log('✅ Todos los mostradores de atención están listos');
 } catch (error) {
-  console.log('⚠️  Algunas rutas API no están disponibles:', error.message);
+  console.log('⚠️  Algunos mostradores no están disponibles:', error.message);
 }
 
-//============= 404 API para el Backend ============
+// Nuestro mensajero de WhatsApp
+// Ruta para probar que el mensajero funciona
+app.get('/api/test-whatsapp', async (_req, res) => {
+  try {
+    const to = process.env.TEST_WSP_TO || '56976730618'; // número de prueba (numero de la QA)
+    const resultado = await enviarWhatsApp(
+      to,
+      `¡Hola! 🤖
+
+Esta es una prueba EXITOSA de FRUNA WhatsApp 🍫
+
+✅ Tu API Key está funcionando
+📱 Los pedidos enviarán WhatsApp automáticamente
+
+¡El sistema está listo! 🎉`
+    );
+    res.json({ mensaje: 'Prueba de WhatsApp completada', resultado });
+  } catch (error) {
+    res.status(500).json({ error: 'Error en la prueba: ' + error.message });
+  }
+});
+
+// ====== "No encontrado" para APIs ======
 app.use('/api', (req, res) => {
-  res.status(404).json({ error: 'API route not found', path: req.originalUrl });
+  res.status(404).json({ error: 'Esta API no existe', path: req.originalUrl });
 });
 
-// ============= Manejo de errores global =============
+// ====== Manejador de errores global ======
+// Por si algo sale mal en cualquier parte
 app.use((err, _req, res, _next) => {
-  console.error('🔥 Unhandled error:', err);
+  console.error('🔥 Error inesperado:', err);
   const msg = IS_PROD ? 'Error interno del servidor' : err.message;
-  res.status(err.status || 500).json({ error: 'Error interno del servidor', message: msg });
+  res.status(err.status || 500).json({ error: 'Algo salió mal', message: msg });
 });
-
-// ============= Arranque =============
+// encender el servidor
 (async () => {
   try {
-    await PersistenceFactory.initialize(); // crea/valida archivos JSON de data
+    // Preparamos todos nuestros "asistentes de datos"
+    await PersistenceFactory.initialize();
+    
+    // Encendemos el servidor
     app.listen(PORT, () => {
       const base = `http://localhost:${PORT}`;
-      console.log('🟢 Servidor FRUNA corriendo en puerto ' + PORT);
-      console.log('📍 URL:', base);
-      console.log('❤️ Health:', base + '/health');
-      console.log('🧩 API Products:', base + '/api/products');
-      console.log('👥 API Clients:',  base + '/api/clients');
-      console.log('🤖 API Chatbot:',  base + '/api/chatbot');
-      console.log(' API Cart:',  base + '/api/cart');
+      console.log('🟢 ¡Servidor FRUNA encendido en puerto ' + PORT + '!');
+      console.log('📍 Dirección:', base);
+      console.log('❤️  Chequeo de salud:', base + '/health');
+      console.log('🧩 Mostrador de productos:', base + '/api/products');
+      console.log('👥 Mostrador de clientes:', base + '/api/clients');
+      console.log('🤖 Mostrador del chatbot:', base + '/api/chatbot');
+      console.log('📲 Probador de WhatsApp:', base + '/api/test-whatsapp');
       if (FRONTEND_DIR) {
-        console.log('🗂️  Frontend dir:', FRONTEND_DIR);
-        console.log('🌐 Páginas: /  /login  /admin  /contacto  /productos');
+        console.log('🗂️  Carpeta de páginas:', FRONTEND_DIR);
+        console.log('🌐 Páginas disponibles: /  /login  /admin  /contacto  /productos');
       }
     });
   } catch (e) {
-    console.error('❌ Error inicializando persistencia:', e);
+    console.error('❌ No pudimos preparar los asistentes de datos:', e);
     process.exit(1);
   }
 })();
-
+// Exportamos la app para poder hacer pruebas
 module.exports = app;

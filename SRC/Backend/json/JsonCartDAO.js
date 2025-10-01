@@ -7,7 +7,7 @@ class JsonCartDAO {
     this.cartFile = CART_FILE;
   }
 
-  // Carga el carrito completo
+  // Carga el carrito completo; Es como abrir la caja del carrito para ver qué hay dentro
   async _loadCart() {
     try {
       const data = await fs.readFile(this.cartFile, 'utf8');
@@ -18,7 +18,7 @@ class JsonCartDAO {
   }
 
   // Guarda el carrito completo
-  async _saveCart(cart) {
+  async _saveCart(cart) { //Es como guardar la caja del carrito después de hacer cambios
     await fs.writeFile(this.cartFile, JSON.stringify(cart, null, 2));
   }
 

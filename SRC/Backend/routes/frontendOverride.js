@@ -4,86 +4,113 @@ const path = require("path");
 const express = require("express");
 
 module.exports = function (app) {
+  // Función para verificar si una carpeta o archivo existe
   const exists = (p) => {
-    try { return fs.existsSync(p); } catch { return false; }
+    try { 
+      return fs.existsSync(p); 
+    } catch { 
+      return false; 
+    }
   };
 
-  // 🔎 Calcula la ruta base del proyecto: .../SRC
-  // __dirname => .../SRC/Backend/routes
+  // Busca dónde está la carpeta Frontend
+  // Partimos desde esta carpeta (routes) y subimos dos niveles para llegar a SRC
   const SRC_DIR = path.resolve(__dirname, "..", "..");
   let FRONTEND_DIR = path.join(SRC_DIR, "Frontend");
 
-  // Por si alguien movió Frontend (fallback dentro de Backend)
+  // Por si la carpeta Frontend está en otro lugar (fallback)
   if (!exists(FRONTEND_DIR)) {
-    const inside = path.join(__dirname, "..", "Frontend");
-    if (exists(inside)) FRONTEND_DIR = inside;
+    const dentroDeBackend = path.join(__dirname, "..", "Frontend");
+    if (exists(dentroDeBackend)) FRONTEND_DIR = dentroDeBackend;
   }
 
-  console.log("[frontendOverride] SRC_DIR      =", SRC_DIR);
-  console.log("[frontendOverride] FRONTEND_DIR =", FRONTEND_DIR, "exists?", exists(FRONTEND_DIR));
+  console.log("[frontendOverride] Buscando en SRC_DIR:", SRC_DIR);
+  console.log("[frontendOverride] Carpeta Frontend encontrada en:", FRONTEND_DIR, "¿Existe?", exists(FRONTEND_DIR));
 
-  // Si no existe, avisa y no montes nada (para no romper API)
+  // Si no encontramos la carpeta Frontend, avisamos pero no rompemos todo (se inluyo hace poco, para que no se caiga todo el backend si no está)
   if (!exists(FRONTEND_DIR)) {
-    console.warn("[frontendOverride] ⚠️ No se encontró la carpeta Frontend. " +
-                 "Verifica la ruta: SRC/Frontend");
-    return; // sigue sin servir estáticos, pero el backend funciona
+    console.warn("[frontendOverride] ⚠️ ¡Cuidado! No encontramos la carpeta Frontend. " +
+                 "Revisa que esté en: SRC/Frontend");
+    return; // El backend sigue funcionando para las APIs, pero no servirá páginas web
   }
 
-  // 🧱 Servir archivos estáticos (CSS/JS/IMG/…)
-  // Cache agresivo para assets (no HTML). HTML se sirve con no-cache más abajo.
+  // Servimos los archivos estáticos (CSS, JavaScript, imágenes, etc.)
   app.use(express.static(FRONTEND_DIR, {
     etag: true,
     lastModified: true,
-    index: false,                  // no servir index automáticamente
+    index: false,                  // No servir index.html automáticamente
     setHeaders: (res, filePath) => {
-      // No cachear HTML, cachear assets por 1h
+      // Las páginas HTML no se cachean (siempre se piden al servidor)
       if (/\.(html?)$/i.test(filePath)) {
         res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
       } else {
+        // Los otros archivos (CSS, JS, imágenes) se cachean por 1 hora
         res.setHeader("Cache-Control", "public, max-age=3600, immutable");
       }
     },
   }));
 
-  // Helper seguro para enviar HTML con fallback(s)
-  function sendHtml(res, primary, alternatives = []) {
-    const candidates = [primary, ...alternatives];
-    for (const rel of candidates) {
-      const full = path.join(FRONTEND_DIR, rel);
-      if (exists(full)) {
+  // Función para enviar páginas HTML
+  function sendHtml(res, paginaPrincipal, alternativas = []) {
+    // Lista de páginas a intentar, en orden de prioridad
+    const opciones = [paginaPrincipal, ...alternativas];
+    
+    for (const nombreArchivo of opciones) {
+      const rutaCompleta = path.join(FRONTEND_DIR, nombreArchivo);
+      if (exists(rutaCompleta)) {
         try {
+          // Las páginas HTML nunca se cachean
           res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
-          return res.sendFile(full);
+          return res.sendFile(rutaCompleta);
         } catch (err) {
-          console.error("[frontendOverride] sendFile error:", err.message);
-          return res.status(500).json({ error: "No se pudo enviar el HTML", file: rel });
+          console.error("[frontendOverride] Error al enviar archivo:", err.message);
+          return res.status(500).json({ error: "No pudimos cargar la página", archivo: nombreArchivo });
         }
       }
     }
-    console.warn("[frontendOverride] ❌ No se encontró ninguno de:", candidates, "en", FRONTEND_DIR);
-    return res.status(404).json({ error: "Archivo no encontrado", searched: candidates, base: FRONTEND_DIR });
+    
+    // Si no encontramos ninguna de las opciones
+    console.warn("[frontendOverride] ❌ No encontramos ninguna de estas páginas:", opciones, "en", FRONTEND_DIR);
+    return res.status(404).json({ 
+      error: "Página no encontrada", 
+      buscadas: opciones, 
+      carpeta: FRONTEND_DIR 
+    });
   }
 
-  // 🌐 Rutas “páginas” (ajusta nombres según tus archivos reales en Frontend)
-  app.get("/",           (_req, res) => sendHtml(res, "index.html", ["inicio.html"]));
-  app.get("/login",      (_req, res) => sendHtml(res, "login_users.html", ["login.html", "index.html"]));
-  app.get("/admin",      (_req, res) => sendHtml(res, "admin_controller.html", ["admin.html", "index.html"]));
-  app.get("/contacto",   (_req, res) => sendHtml(res, "contacto.html", ["index.html"]));
-  app.get("/productos",  (_req, res) => sendHtml(res, "productos.html", ["index.html"]));
+  // rutas páginas web
 
-  // 404 sólo para RUTAS WEB (cuando no matcheó nada anterior)
+  // Página principal
+  app.get("/", (_req, res) => sendHtml(res, "index.html", ["inicio.html"]));
+  
+  // Página de login (intenta login_users.html primero, luego login.html, luego index.html)
+  app.get("/login", (_req, res) => sendHtml(res, "login_users.html", ["login.html", "index.html"]));
+  
+  // Panel de administración
+  app.get("/admin", (_req, res) => sendHtml(res, "admin_controller.html", ["admin.html", "index.html"]));
+  
+  // Página de contacto
+  app.get("/contacto", (_req, res) => sendHtml(res, "contacto.html", ["index.html"]));
+  
+  // Página de productos
+  app.get("/productos", (_req, res) => sendHtml(res, "productos.html", ["index.html"]));
+
+  // 🚫 Manejo de páginas no encontradas (404)
   app.use((req, res, next) => {
-    // Si ya se respondió (API o estático), no entra aquí.
-    // Si la petición acepta HTML, intenta devolver index.html como fallback (SPA) o 404 JSON.
+    // Si la petición viene de un navegador 
     const accept = req.headers.accept || "";
     if (accept.includes("text/html")) {
-      // SPA fallback opcional:
+      // Intenta mostrar index.html como última opción (para aplicaciones de una sola página)
       const indexPath = path.join(FRONTEND_DIR, "index.html");
       if (exists(indexPath)) {
         res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
         return res.status(404).sendFile(indexPath);
       }
     }
-    return res.status(404).json({ error: "Ruta no encontrada", path: req.path });
+    // Si no es un navegador o no tenemos index.html, devolvemos error JSON
+    return res.status(404).json({ 
+      error: "Esta ruta no existe", 
+      path: req.path 
+    });
   });
 };
