@@ -85,7 +85,45 @@ class JsonProductosDAO {
       const productos = await this.getAll();
       const ahora = new Date().toISOString();
 
-      // Preparamos el producto para guardar
+      // Requeridos por defensa
+      if (!producto || typeof producto !== 'object') {
+        const err = new Error('Payload inválido');
+        err.code = 'INTERNAL';
+        throw err;
+      }
+
+      // Verificamos que tenga los datos obligatorios
+      if (!producto.name || String(producto.name).trim() === '') {
+        const err = new Error('El nombre es obligatorio');
+        err.code = 'NAME_REQUIRED';
+        throw err;
+      }
+      if (producto.price === undefined || producto.price === null) {
+        const err = new Error('El precio es obligatorio');
+        err.code = 'PRICE_REQUIRED';
+        throw err;
+      }
+      if (producto.stock === undefined || producto.stock === null) {
+        const err = new Error('El stock es obligatorio');
+        err.code = 'STOCK_REQUIRED';
+        throw err;
+      }
+
+      // Normalizaciones/validaciones numéricas
+      const price = Number(producto.price);
+      const stock = Number(producto.stock);
+
+      if (!(Number.isInteger(price) && price >= 1 && price <= 1_000_000)) {
+        const err = new Error('El precio debe ser un entero entre 1 y 1.000.000');
+        err.code = 'PRICE_INVALID';
+        throw err;
+      }
+      if (!(Number.isInteger(stock) && stock >= 0 && stock <= 1_000_000)) {
+        const err = new Error('El stock debe ser un entero entre 0 y 1.000.000');
+        err.code = 'STOCK_INVALID';
+        throw err;
+      }
+
       const productoAGuardar = {
         ...producto,
         id: producto.id || Date.now().toString(), // Si no tiene ID, le damos uno
@@ -123,20 +161,23 @@ class JsonProductosDAO {
     // Nos aseguramos de no cambiar el ID
     delete cambiosAplicados.id;
 
-    // Validamos que el precio sea un número positivo
-    if (cambiosAplicados.price !== undefined && 
-        !(typeof cambiosAplicados.price === 'number' && cambiosAplicados.price >= 0)) {
-      const err = new Error('El precio debe ser un número positivo');
-      err.code = 'PRICE_INVALID';
-      throw err;
+    if (cambiosAplicados.price !== undefined) {
+      const price = Number(cambiosAplicados.price);
+      if (!(Number.isInteger(price) && price >= 1 && price <= 1_000_000)) {
+        const err = new Error('El precio debe ser un entero entre 1 y 1.000.000');
+        err.code = 'PRICE_INVALID';
+        throw err;
+      }
+      cambiosAplicados.price = price;
     }
-    
-    // Validamos que el stock sea un número entero positivo
-    if (cambiosAplicados.stock !== undefined && 
-        !(Number.isInteger(cambiosAplicados.stock) && cambiosAplicados.stock >= 0)) {
-      const err = new Error('El stock debe ser un número entero positivo');
-      err.code = 'STOCK_INVALID';
-      throw err;
+    if (cambiosAplicados.stock !== undefined) {
+      const stock = Number(cambiosAplicados.stock);
+      if (!(Number.isInteger(stock) && stock >= 0 && stock <= 1_000_000)) {
+        const err = new Error('El stock debe ser un entero entre 0 y 1.000.000');
+        err.code = 'STOCK_INVALID';
+        throw err;
+      }
+      cambiosAplicados.stock = stock;
     }
 
     // Combinamos los cambios con el producto actual

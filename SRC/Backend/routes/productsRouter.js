@@ -12,6 +12,10 @@ const router = express.Router();
 
 const IS_DEV = process.env.NODE_ENV !== 'production';
 
+// Toma solo los campos que nos interesan (por seguridad)
+const pickAllowedFields = (obj = {}, allowed = []) =>
+  allowed.reduce((acc, k) => (obj[k] !== undefined ? (acc[k] = obj[k], acc) : acc), {});
+
 //  Nuestro "asistente de productos" 
 let productosDAO;
 try {
@@ -78,13 +82,13 @@ const validateCreateOrUpdate = [
   body('price')
     .optional()
     .notEmpty().withMessage('Tienes que poner un precio')
-    .isFloat({ min: 0 }).withMessage('El precio debe ser un número positivo')
-    .toFloat(),
+    .isInt({ min: 1, max: 1_000_000 }).withMessage('El precio debe ser un entero entre 1 y 1.000.000')
+    .toInt(),
 
   body('stock')
     .optional()
     .notEmpty().withMessage('Tienes que indicar cuántos hay en stock')
-    .isInt({ min: 0 }).withMessage('El stock debe ser un número entero positivo')
+    .isInt({ min: 0, max: 1_000_000 }).withMessage('El stock debe ser un entero entre 0 y 1.000.000')
     .toInt(),
 
   body('category')
@@ -102,6 +106,17 @@ const validateCreateOrUpdate = [
     .isLength({ max: 300 }).withMessage('La imagen no puede tener más de 300 caracteres')
     .trim(),
 ];
+
+// En POST: name, price y stock son obligatorios
+const requireOnCreate = (field, msg) =>
+  body(field).if((_, { req }) => req.method === 'POST')
+    .notEmpty().withMessage(msg);
+
+validateCreateOrUpdate.unshift(
+  requireOnCreate('name',  'El nombre es obligatorio al crear'),
+  requireOnCreate('price', 'El precio es obligatorio al crear'),
+  requireOnCreate('stock', 'El stock es obligatorio al crear'),
+);
 
 const validateProductId = [
   param('id')
@@ -173,10 +188,6 @@ router.get('/:id', validateProductId, handleValidationErrors, async (req, res) =
 // Función inteligente que aplica seguridad si existe, sino deja pasar
 const protect = (funcion) => (auth && adminAuth) ? [auth, adminAuth, funcion] : [funcion];
 
-// Ayuda para tomar solo los campos que nos interesan
-const pick = (obj, campos) =>
-  campos.reduce((acumulador, clave)=> (obj[clave]!==undefined ? (acumulador[clave]=obj[clave],acumulador) : acumulador), {});
-
 // POST /api/products - Crear nuevo producto
 router.post(
   '/',
@@ -185,14 +196,44 @@ router.post(
   handleValidationErrors,    // Revisamos errores
   ...protect(async (req, res) => {  // Finalmente, si pasa todo, creamos el producto (con seguridad si existe)
     try {
-      const nuevoProducto = await productosDAO.save(req.body);
-      res.status(201).json({ 
-        success: true, 
-        message: '¡Producto creado exitosamente!', 
-        data: nuevoProducto 
-      });
+      const input = pickAllowedFields(req.body, ['name','price','stock','category','description','image']);
+      const nuevo = await productosDAO.save(input);
+
+      return res
+        .status(201)
+        .set('Location', `/api/products/${nuevo.id}`)
+        .json({
+          success: true,
+          message: '¡Producto creado exitosamente!',
+          data: nuevo,
+        });
+
     } catch (error) {
-      res.status(500).json({
+      const codigoError = error && error.code ? String(error.code) : 'INTERNAL';
+
+      const mapaDeErrores = {
+        // Requeridos
+        'NAME_REQUIRED':  { status: 400, msg: 'El nombre es obligatorio' },
+        'PRICE_REQUIRED': { status: 400, msg: 'El precio es obligatorio' },
+        'STOCK_REQUIRED': { status: 400, msg: 'El stock es obligatorio' },
+
+        // Reglas de negocio
+        'PRICE_INVALID':  { status: 400, msg: 'El precio debe ser un entero entre 1 y 1.000.000' },
+        'STOCK_INVALID':  { status: 400, msg: 'El stock debe ser un entero entre 0 y 1.000.000' },
+      };
+
+      const errorMapeado = mapaDeErrores[codigoError];
+      if (errorMapeado) {
+        return res.status(errorMapeado.status).json({
+          success: false,
+          error: errorMapeado.msg,
+          code: codigoError,
+        });
+      }
+
+      // Error desconocido
+      console.error('❌ Error no esperado al crear el producto:', error);
+      return res.status(500).json({
         success: false,
         error: 'No pudimos crear el producto',
         ...(IS_DEV && { detail: error.message }),
@@ -212,7 +253,7 @@ router.put('/:id',
       const id = req.params.id;
       
       // Tomamos solo los campos que se pueden actualizar
-      const cambios = pick(req.body, ['name','price','stock','category','description','image']);
+      const cambios = pickAllowedFields(req.body, ['name','price','stock','category','description','image']);
       delete cambios.id; // Por seguridad, nunca cambiamos el ID
 
       const productoActualizado = await productosDAO.update(id, cambios);
@@ -229,14 +270,18 @@ router.put('/:id',
         data: productoActualizado 
       });
     } catch (error) {
-      console.error('ERROR al actualizar producto:', { 
-        mensaje: error.message, 
-        stack: error.stack 
-      });
+      const mapped = translateProductError(error);
+      if (mapped) {
+        return res.status(mapped.status).json({
+          success: false,
+          error: mapped.msg,
+          code: error.code,
+        });
+      }
       res.status(500).json({
         success: false,
         error: 'No pudimos actualizar el producto',
-        detail: process.env.NODE_ENV !== 'production' ? error.message : undefined,
+        ...(IS_DEV && { detail: error.message }),
       });
     }
   })
