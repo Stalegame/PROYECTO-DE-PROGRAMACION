@@ -18,6 +18,7 @@ El "Proyecto Fruna" es una plataforma web destinada a gestionar productos y clie
 
 ## Objetivo
 Desarrollar una solución web completa para simular un sistema de compras en línea para el supermercado Fruna. El sistema incluirá la gestión de un catálogo de productos, con funcionalidades de lectura, inserción y actualización de datos, y la integración con una API externa que proporcionará información nutricional. Además, esta API contará con un chatbot interactivo, donde los usuarios podrán realizar consultas y recibir respuestas automáticas de manera ágil.
+
 ## 📊 API Endpoints
 - ** 🔐 Autenticación**
 POST /api/clients/login - Inicio de sesión
@@ -97,5 +98,6 @@ Gradiente Botones	linear-gradient(45deg, #E31837, #C1122D)	<div style="backgroun
 ## 📌 Enlaces
 - **Repositorio:** [🔗 GitHub Proyecto Fruna](https://github.com/Stalegame/PROYECTO-DE-PROGRAMACION)
 - **Tablero Kanban:** [🔗 Proyecto Fruna – Kanban](https://trello.com/invite/b/689ccd69233da4f45016f66b/ATTI3a846a1aa484032cb15c2812a627865b229B87B7/proyecto-fruna)
+
 
 
