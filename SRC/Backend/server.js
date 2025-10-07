@@ -10,28 +10,8 @@ require('dotenv').config(); // Lee las "instrucciones secretas" del archivo .env
 
 const PersistenceFactory = require('./PersistenceFactory');
 
-// Nuestro mensajero de WhatsApp
-let enviarWhatsApp = async () => {
-  console.log('[whatsappService] deshabilitado (stub).');
-  return { ok: false, disabled: true };
-};
-let enviarConfirmacionPedido = async () => ({ ok: false, disabled: true });
-
-try {
-  const ws = require('./whatsappService'); // si existe, se usará
-  enviarWhatsApp =
-    ws.enviarWhatsApp || ws.default || ws.sendWhatsApp || enviarWhatsApp;
-  enviarConfirmacionPedido =
-    ws.enviarConfirmacionPedido || ws.enviarConfirmacionPedidoDefault || enviarConfirmacionPedido;
-
-  if (typeof enviarWhatsApp === 'function') {
-    console.log('[whatsappService] cargado correctamente');
-  } else {
-    console.warn('[whatsappService] módulo sin función válida; uso stub.');
-  }
-} catch {
-  console.warn('[whatsappService] no encontrado. Continúo sin WhatsApp.');
-}
+// Nuestro mensajero de WhatsApp //BLOQUEADO POR AHORA
+//const ws = require('./whatsappService');
 
 // Configuración básica 
 const app = express(); //Creamos la aplicación PRIMERO, OJO
@@ -52,20 +32,16 @@ if (IS_PROD) {
 }
 
 // Helmet (es como se dice un casco que protege al servidor de ataques comunes)
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      useDefaults: true,
-      directives: {
-        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-        "style-src": ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
-        "script-src": ["'self'", "'unsafe-inline'"],
-        "font-src": ["'self'", "https://cdnjs.cloudflare.com", "data:"],
-        "img-src": ["'self'", "https:", "data:"]
-      }
-    }
-  })
-);
+app.use(helmet());
+app.use(helmet.contentSecurityPolicy({
+  useDefaults: true,
+  directives: {
+    "style-src": ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
+    "script-src": ["'self'", "'unsafe-inline'"],
+    "font-src": ["'self'", "https://cdnjs.cloudflare.com", "data:"],
+    "img-src": ["'self'", "https:", "data:"]
+  }
+}));
 
 // CORS, el "portero" que decide quién puede entrar
 app.use(
@@ -222,34 +198,37 @@ try {
   app.use('/api/products', productsRouter);
   app.use('/api/clients',  clientsRouter);
   app.use('/api/chatbot',  chatbotRouter);
-  app.use('/api/cart',     cartRouter); 
+  app.use('/api/cart',     cartRouter);
 
   console.log('✅ Todos los mostradores de atención están listos');
 } catch (error) {
   console.log('⚠️  Algunos mostradores no están disponibles:', error.message);
 }
 
-// Nuestro mensajero de WhatsApp
-// Ruta para probar que el mensajero funciona
-app.get('/api/test-whatsapp', async (_req, res) => {
-  try {
-    const to = process.env.TEST_WSP_TO || '56976730618'; // número de prueba (numero de la QA)
-    const resultado = await enviarWhatsApp(
-      to,
-      `¡Hola! 🤖
+// Nuestro mensajero de WhatsApp (stubs por defecto)
+let enviarWhatsApp = async () => {
+  console.log('[whatsappService] deshabilitado (stub).');
+  return { ok: false, disabled: true };
+};
+let enviarConfirmacionPedido = async () => ({ ok: false, disabled: true });
 
-Esta es una prueba EXITOSA de FRUNA WhatsApp 🍫
+try {
+  // Carga opcional del servicio real
+  const ws = require(path.join(__dirname, 'whatsappService.js'));
+  enviarWhatsApp =
+    ws.enviarWhatsApp || ws.default || ws.sendWhatsApp || enviarWhatsApp;
+  enviarConfirmacionPedido =
+    ws.enviarConfirmacionPedido || enviarConfirmacionPedido;
 
-✅ Tu API Key está funcionando
-📱 Los pedidos enviarán WhatsApp automáticamente
-
-¡El sistema está listo! 🎉`
-    );
-    res.json({ mensaje: 'Prueba de WhatsApp completada', resultado });
-  } catch (error) {
-    res.status(500).json({ error: 'Error en la prueba: ' + error.message });
+  if (typeof enviarWhatsApp === 'function') {
+    console.log('[whatsappService] cargado correctamente');
+  } else {
+    console.warn('[whatsappService] módulo sin función válida; uso stub.');
   }
-});
+} catch (e) {
+  console.warn('[whatsappService] no encontrado o con error. Uso stub. Detalle:', e.message);
+}
+
 
 // ====== "No encontrado" para APIs ======
 app.use('/api', (req, res) => {
