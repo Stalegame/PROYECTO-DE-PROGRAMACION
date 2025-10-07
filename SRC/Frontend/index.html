@@ -6,9 +6,15 @@
     <title>FRUNA Chile - Dulces Tradicionales</title>
     <link rel="icon" href="./img/logo fruna.png" type="image/png">
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/page_loader.css">
 </head>
 
 <body>
+    <!-- Loader Pages -->
+    <div id="loader-fruna" aria-hidden="true" class="hidden" data-asset-base="/img/dulces/">
+        <div class="lf-backdrop"></div>
+        <div class="lf-stage" aria-label="Cargando… dulces cayendo"></div>
+    </div>
     <!-- *************** HEADER *************** -->
   <header>
     <div class="header-inner">
@@ -160,6 +166,7 @@
         <p>© 2025 Fruna · Creado por Comprimidos Team.</p>
     </footer>
 </body>
+<script src="js/page_loader.js" defer></script>
 <script src="js/cart.js" defer></script>
 <script src="js/index.js" defer></script>
 </html>

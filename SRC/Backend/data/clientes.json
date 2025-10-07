@@ -82,5 +82,16 @@
     "passwordHash": "$2a$10$OnayP6tdoHiL28h1OkkrG.GJ4G5Mgp9L/ioCUCy.B6RedQsHsCH7C",
     "role": "user",
     "activo": true
+  },
+  {
+    "id": "1759864866502",
+    "createdAt": "2025-10-07T19:21:06.502Z",
+    "nombre": "PruebaUno",
+    "email": "prueba1@gmail.com",
+    "telefono": "+56912312312",
+    "direccion": "mi casa tio #777",
+    "passwordHash": "$2a$10$BbMKwBrGzJDVNbtlXNueX.Gl0jlzRQdJJIPO5jxvwCzpMnN9qU8OO",
+    "role": "user",
+    "activo": true
   }
 ]

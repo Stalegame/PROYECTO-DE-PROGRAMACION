@@ -7,9 +7,15 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" href="./img/logo fruna.png" type="image/png">
   <link rel="stylesheet" href="css/crear_user.css">
+  <link rel="stylesheet" href="css/page_loader.css">
 </head>
 
 <body>
+  <!-- Loader Pages -->
+  <div id="loader-fruna" aria-hidden="true" class="hidden" data-asset-base="/img/dulces/">
+    <div class="lf-backdrop"></div>
+    <div class="lf-stage" aria-label="Cargando… dulces cayendo"></div>
+  </div>
   <!-- Botón Volver -->
   <a href="login_users.html" class="btn-volver">
     <i class="fas fa-arrow-left"></i>
@@ -74,5 +80,6 @@
     </div>
   </div>
 </body>
+<script src="js/page_loader.js" defer></script>
 <script src="js/crear_user.js"></script>
 </html>

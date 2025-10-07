@@ -6,8 +6,14 @@
   <title>FRUNA Chile - Error 404</title>
   <link rel="icon" href="./img/logo fruna.png" type="image/png">
   <link rel="stylesheet" href="css/page_404.css">
+  <link rel="stylesheet" href="css/page_loader.css">
 </head>
 <body>
+  <!-- Loader Pages -->
+  <div id="loader-fruna" aria-hidden="true" class="hidden" data-asset-base="/img/dulces/">
+    <div class="lf-backdrop"></div>
+    <div class="lf-stage" aria-label="Cargando… dulces cayendo"></div>
+  </div>
   <!-- Header con logo -->
   <header>
     <div class="logo-container">
@@ -34,4 +40,5 @@
     <p>© 2025 Fruna · Creado por Comprimidos Team.</p>
   </footer>
 </body>
+<script src="js/page_loader.js" defer></script>
 </html>

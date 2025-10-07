@@ -6,8 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="./img/logo fruna.png" type="image/png">
   <link rel="stylesheet" href="css/productos.css">
+  <link rel="stylesheet" href="css/page_loader.css">
 </head>
 <body>
+  <!-- Loader Pages -->
+  <div id="loader-fruna" aria-hidden="true" class="hidden" data-asset-base="/img/dulces/">
+    <div class="lf-backdrop"></div>
+    <div class="lf-stage" aria-label="Cargando… dulces cayendo"></div>
+  </div>
   <!-- *************** HEADER *************** -->
   <header>
     <div class="header-inner">
@@ -97,6 +103,7 @@
     </div>
   </main>
 </body>
+<script src="js/page_loader.js" defer></script>
 <script src="js/cart.js" defer></script>
 <script src="js/one_product.js" defer></script>
 </html>
