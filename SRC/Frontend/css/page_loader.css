@@ -1,0 +1,82 @@
+/* Loader page */
+#loader-fruna {
+  position: fixed; inset: 0; z-index: 2147483000; /* más alto que todo */
+  display: grid; place-items: center;
+  pointer-events: none; /* hasta que esté activo */
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+#loader-fruna.hidden { display: none !important; }
+#loader-fruna.active { pointer-events: auto; display: grid !important; }
+
+#loader-fruna .lf-backdrop {
+  position: absolute; inset: 0;
+  background: linear-gradient(-45deg, #f5f5f5, #ffe4e1, #f8bbd0, #fff9fa);
+  opacity: 0.99;
+}
+
+#loader-fruna .lf-stage {
+  position: relative;
+  width: 100%; /* Hace que la caja ocupe todo el ancho de la pantalla */
+  height: 100vh; /* Ocupa toda la altura de la pantalla */
+  overflow: hidden;
+  border-radius: 0; /* Elimina el borde redondeado */
+}
+
+/* Dulces (regla MÁS específica) */
+#loader-fruna .lf-stage img.lf-candy {
+  position: absolute;
+  left: 0; top: 0;
+  width: clamp(32px, 7vw, 56px);
+  max-width: none !important;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,.15));
+  opacity: 0;
+  transform: translate3d(var(--x, 0px), -40vh, 0) rotate(var(--r, 0deg)) scale(.95);
+  will-change: transform, opacity;
+  animation:
+    lf-fall var(--dur, 800ms) var(--delay, 0ms) linear infinite;
+}
+
+@keyframes lf-fall {
+  0%   { opacity: 0; transform: translate3d(var(--x), -40vh, 0) rotate(var(--r)) scale(.95); }
+  2%   { opacity: 1; }
+  100% { opacity: 1; transform: translate3d(calc(var(--x) + var(--drift, 0px)), 100vh, 0) rotate(calc(var(--r) + 180deg)) scale(1); }
+}
+
+/* Estado FINISHING: apilar rápido a slots */
+#loader-fruna.finishing .lf-stage img.lf-candy {
+  animation: none !important;
+  opacity: 1 !important;
+  transition:
+    transform 280ms cubic-bezier(.22,.9,.26,1.2),
+    filter 200ms ease,
+    opacity 200ms ease;
+  transform:
+    translate3d(var(--slot-x, 0px), var(--slot-y, 0px), 0)
+    rotate(var(--slot-r, 0deg))
+    scale(1);
+}
+
+/* Elimino la montaña */
+#loader-fruna .lf-stage::after {
+  content: none; /* Elimina la montaña visual */
+}
+
+/* Fade-out final */
+#loader-fruna.done { animation: lf-fadeout 180ms ease forwards; }
+@keyframes lf-fadeout { to { opacity: 0; visibility: hidden; } }
+
+/* Respetar la preferencia de reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+  #loader-fruna .lf-stage img.lf-candy {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  #loader-fruna.active .lf-stage img.lf-candy {
+    transform:
+      translate3d(var(--slot-x, 0px), var(--slot-y, 0px), 0)
+      rotate(var(--slot-r, 0deg));
+  }
+}

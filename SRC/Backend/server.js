@@ -36,10 +36,20 @@ app.use(helmet());
 app.use(helmet.contentSecurityPolicy({
   useDefaults: true,
   directives: {
+    "default-src": ["'self'"],
+    // Permite iframes de Google Maps
+    "frame-src": ["'self'", "https://www.google.com", "https://*.google.com"],
+    // Por compatibilidad (Safari viejos)
+    "child-src": ["'self'", "https://www.google.com", "https://*.google.com"],
+
     "style-src": ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
-    "script-src": ["'self'", "'unsafe-inline'"],
+    "script-src": ["'self'", "'unsafe-inline'"], // carga de scripts externos
     "font-src": ["'self'", "https://cdnjs.cloudflare.com", "data:"],
-    "img-src": ["'self'", "https:", "data:"]
+    "img-src": ["'self'", "https:", "data:"],
+    // Si no haces fetch a dominios externos desde la PÁGINA (no desde el iframe), deja 'self'
+    "connect-src": ["'self'"],
+    // Mantén frame-ancestors 'self' para que tu sitio no pueda ser embebido por terceros
+    "frame-ancestors": ["'self'"]
   }
 }));
 

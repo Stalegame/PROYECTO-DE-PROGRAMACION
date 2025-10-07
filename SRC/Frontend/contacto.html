@@ -11,8 +11,15 @@
 
   <!-- Hoja de estilos separada -->
   <link rel="stylesheet" href="css/contacto.css">
+  <link rel="stylesheet" href="css/page_loader.css">
 </head>
 <body>
+  <!-- Loader Pages -->
+  <div id="loader-fruna" aria-hidden="true" class="hidden" data-asset-base="/img/dulces/">
+    <div class="lf-backdrop"></div>
+    <div class="lf-stage" aria-label="Cargando… dulces cayendo"></div>
+  </div>
+
   <!-- HEADER -->
   <header>
     <div class="logo-container">
@@ -87,5 +94,6 @@
   <div class="footer">
     <p>© 2025 Fruna · Creado por Comprimidos Team.</p>
   </div>
+  <script src="js/page_loader.js" defer></script>
 </body>
 </html>
