@@ -7,7 +7,8 @@
     "category": "Helados",
     "description": "Helado de agua sabor cereza y piña.",
     "timestamp": "2025-09-17T22:46:35.472Z",
-    "image": "palo_palito.png"
+    "image": "palo_palito.png",
+    "updatedAt": "2025-10-05T16:36:58.212Z"
   },
   {
     "id": "1758149775878",
@@ -48,7 +49,8 @@
     "description": "alfajor tradicional",
     "image": "alfajores.png",
     "id": "1758571251073",
-    "timestamp": "2025-09-22T20:00:51.073Z"
+    "timestamp": "2025-09-22T20:00:51.073Z",
+    "updatedAt": "2025-10-05T17:45:40.971Z"
   },
   {
     "name": "Alfajor Panchito",
@@ -59,5 +61,16 @@
     "image": "Alfajor_Panchito.jpg",
     "id": "1759101595903",
     "timestamp": "2025-09-28T23:19:55.903Z"
+  },
+  {
+    "name": "Peseta Manjar",
+    "price": 500,
+    "stock": 15,
+    "category": "Chocolate",
+    "description": "Barra sabor chocolate relleno manjar",
+    "image": "https://www.fruna.cl/wp-content/uploads/2020/11/Peseta-Manjar-Fruna-22g.jpg",
+    "id": "1759700734033",
+    "timestamp": "2025-10-05T21:45:34.033Z",
+    "updatedAt": "2025-10-05T21:46:47.220Z"
   }
 ]

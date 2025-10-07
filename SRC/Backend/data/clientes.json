@@ -82,5 +82,27 @@
     "passwordHash": "$2a$10$OnayP6tdoHiL28h1OkkrG.GJ4G5Mgp9L/ioCUCy.B6RedQsHsCH7C",
     "role": "user",
     "activo": true
+  },
+  {
+    "id": "1759700480195",
+    "createdAt": "2025-10-05T21:41:20.195Z",
+    "nombre": "Amira Casanova",
+    "email": "amiracatalinacasanova@gmail.com",
+    "telefono": "+56912345678",
+    "direccion": "Calle falsa",
+    "passwordHash": "$2a$10$hGBAHREwPXnwIpCJeLSSu.AGEoFreDcmVs5eYj1sLYQu.b3sSwuJ.",
+    "role": "user",
+    "activo": true
+  },
+  {
+    "id": "1759711571408",
+    "createdAt": "2025-10-06T00:46:11.408Z",
+    "nombre": "Jesus",
+    "email": "jesus@gmail.com",
+    "telefono": "+56912345678",
+    "direccion": "Casa Jesus",
+    "passwordHash": "$2a$10$kRJQdDdMtkgJacD5VqeAYOr9nkKqsmLKDK9CI89WA0LODzjpT0pwK",
+    "role": "user",
+    "activo": true
   }
 ]

@@ -76,17 +76,20 @@
     <!-- Filtros -->
     <aside class="filtros">
       <h3>Categorías</h3>
-      <ul>
-        <li><a href="#" data-cat="alfajores">Alfajores ($1.290 – $2.990)</a></li>
-        <li><a href="#" data-cat="chocolates">Chocolates ($1.990 – $3.490)</a></li>
-        <li><a href="#" data-cat="snacks">Snacks ($1.000 – $2.490)</a></li>
-        <li><a href="#" data-cat="helados">Helados ($290 – $1.090)</a></li>
-        <li><a href="#" data-cat="bebidas">Bebidas ($1.490 – $2.490)</a></li>
-        <li><a href="#" data-cat="ofertas">Ofertas</a></li>
-        <li><a href="#" data-cat="novedades">Novedades</a></li>
+      <ul class="lista-categorias">
+        <li class="cat-section-title">Productos</li>
+        <li><a href="#" data-cat="Alfajores"><i class="fa-solid fa-cookie-bite"></i>🍪 Alfajores <span class="rango">$1.290 – $2.990</span></a></li>
+        <li><a href="#" data-cat="Chocolate"><i class="fa-solid fa-chocolate-bar"></i> 🍫Chocolates <span class="rango">$1.990 – $3.490</span></a></li>
+        <li><a href="#" data-cat="Snacks"><i class="fa-solid fa-pepper-hot"></i>🍭Snacks <span class="rango">$1.000 – $2.490</span></a></li>
+        <li><a href="#" data-cat="Helados"><i class="fa-solid fa-ice-cream"></i>🍦 Helados <span class="rango">$290 – $1.090</span></a></li>
+        <li><a href="#" data-cat="Bebidas"><i class="fa-solid fa-bottle-water"></i> 🥤Bebidas <span class="rango">$1.490 – $2.490</span></a></li>
+
+        <li class="cat-section-title">Otros</li>
+        <li><a href="#" data-cat="Ofertas"><i class="fa-solid fa-tags"></i> 🏷️Ofertas</a></li>
+        <li><a href="#" data-cat="Novedades"><i class="fa-solid fa-star"></i> 🌟 Novedades</a></li>
+        <li><a href="#" data-cat="Todos"><i class="fa-solid fa-boxes-stacked"></i> 📦 Todas</a></li>
       </ul>
     </aside>
-
     <!-- Grid de productos (lo llena productos.js) -->
     <main class="productos">
       <div id="products-grid"></div>

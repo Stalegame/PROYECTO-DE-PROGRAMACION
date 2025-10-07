@@ -1,12 +1,10 @@
-// Frontend/js/productos.js
 document.addEventListener('DOMContentLoaded', () => {
   // =============== 1) UI de sesión (nombre + logout) ===============
-  const loginLink = document.getElementById('authLoginLink');   // <a href="login_users.html">
-  const nameSpan  = document.getElementById('authName');        // <span id="authName">
-  const logoutBtn = document.getElementById('authLogoutBtn');   // <button id="authLogoutBtn">
-  const authBox   = document.getElementById('authBox');         // contenedor opcional
+  const loginLink = document.getElementById('authLoginLink');
+  const nameSpan  = document.getElementById('authName');
+  const logoutBtn = document.getElementById('authLogoutBtn');
+  const authBox   = document.getElementById('authBox');
 
-  // Lee sesión
   const token  = localStorage.getItem('fruna_token');
   const raw    = localStorage.getItem('fruna_user');
   let user = null;
@@ -37,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =============== 2) Cargar y pintar productos ===============
-  const grid = document.getElementById('products-grid'); // <div id="products-grid"></div>
+  const grid = document.getElementById('products-grid');
   if (!grid) return;
 
   grid.innerHTML = `<div class="loading">Cargando productos…</div>`;
@@ -69,9 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         throw new Error(payload.error || `No se pudo obtener la lista de productos (HTTP ${res.status})`);
       }
 
-      const items = Array.isArray(payload.data) ? payload.data
-                  : (Array.isArray(payload) ? payload : []);
-
+      const items = Array.isArray(payload.data) ? payload.data : (Array.isArray(payload) ? payload : []);
       if (!items.length) {
         grid.innerHTML = `<div class="empty">No hay productos disponibles.</div>`;
         return;
@@ -82,10 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const name  = p.name ?? p.nombre ?? 'Producto';
         const price = p.price ?? p.precio;
         const img   = resolveImage(p.image ?? p.imagen);
-        const stock = p.stock; // si no manejas stock, asume alto
+        const stock = p.stock;
+        const cat   = p.category ?? p.categoria ?? 'otros';
 
         return `
-          <article class="producto" data-id="${escapeHTML(String(id))}">
+          <article class="producto" data-id="${escapeHTML(String(id))}" data-cat="${escapeHTML(cat)}">
             <a class="product-media" href="one_product.html?id=${encodeURIComponent(String(id))}" aria-label="${escapeHTML(name)}">
               <img loading="lazy" src="${escapeHTML(img)}" alt="${escapeHTML(name)}">
             </a>
@@ -112,10 +109,40 @@ document.addEventListener('DOMContentLoaded', () => {
           </article>
         `;
       }).join('');
+
+      activarFiltroCategorias(); // <== activa el filtro después de pintar
+
     } catch (e) {
       grid.innerHTML = `<div class="error">Error: ${escapeHTML(e.message)}</div>`;
     }
   }
 
   loadProducts();
+
+  // =============== 3) Filtro por categoría ===============
+  function activarFiltroCategorias() {
+    const links = document.querySelectorAll('.filtros a'); // los filtros
+
+    links.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const cat = link.dataset.cat;
+        if (!cat) return;
+
+        // Quitar clase activa anterior
+        links.forEach(l => l.classList.remove('active-cat'));
+        link.classList.add('active-cat');
+
+        // 💡 ¡Vuelve a buscar productos en cada click!
+        const productos = document.querySelectorAll('#products-grid .producto');
+
+        productos.forEach(prod => {
+          const catProd = prod.dataset.cat || '';
+          const coincide = cat === 'Todos' || catProd.split(' ').includes(cat);
+          prod.style.display = coincide ? 'flex' : 'none';
+        });
+      });
+    });
+  }
+
 });

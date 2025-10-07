@@ -1,193 +1,306 @@
-// /js/carrito.js
+// =====================================================
+// Carrito FRUNA (sidebar + carrito.html)
+// =====================================================
+document.addEventListener("DOMContentLoaded", () => {
+  const isCarritoPage = location.pathname.endsWith("carrito.html");
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const carritoBtn       = document.querySelector(".btn-shop-bag");
-  const sidebar          = document.querySelector(".sidebar");
-  const cerrarSidebar    = document.querySelector(".cerrar-sidebar");
-  const overlay          = document.querySelector(".sidebar-overlay");
-  const contenedorItems  = document.querySelector(".carrito-items");
-  const totalTexto       = document.querySelector(".carrito-total strong");
-  const contador         = document.getElementById("contadorCarrito") || document.getElementById("contador");
-  const btnFinalizar     = document.querySelector(".btn-buy-bag");
+  const ui = {
+    // Sidebar
+    sidebar: document.querySelector(".sidebar"),
+    overlay: document.querySelector(".sidebar-overlay"),
+    cerrarSidebar: document.querySelector(".cerrar-sidebar"),
+    carritoBtn: document.querySelector(".btn-shop-bag"),
+    contSidebar: document.querySelector(".carrito-items"),
+    totalSidebar: document.querySelector(".carrito-total strong"),
+    contador: document.getElementById("contadorCarrito"),
+
+    // Página carrito.html
+    contPagina: document.querySelector(".carrito-lista"),
+    totalPagina: document.querySelector(".resumen-compra .subtotal strong"),
+    estadoPagina: document.getElementById("estado-carrito"),
+    btnFinalizar: document.querySelector(".btn-buy-bag"),
+  };
 
   let carrito = [];
 
-  async function actualizarCarritoProducto(productId, cantidad) {
-    try {
-      const res = await fetch("/api/cart", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: String(productId), quantity: Number(cantidad) })
-      });
-
-      // Si la ruta no existe, queda clarísimo:
-      if (res.status === 404) {
-        const text = await res.text().catch(() => "");
-        console.warn("[carrito] /api/cart 404 →", text);
-        alert("La ruta /api/cart no está disponible en el backend.");
-        return;
-      }
-
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || data?.success === false) {
-        alert(data?.error || "No se pudo actualizar el carrito");
-        return;
-      }
-
-      await fetchCart();
-      actualizarCarritoUI();
-    } catch (err) {
-      alert("Error de red al actualizar el carrito");
-      console.error(err);
-    }
+  // =====================================================
+  // Utilidad de API
+  // =====================================================
+  async function api(url, options = {}) {
+    const res = await fetch(url, {
+      headers: { "Content-Type": "application/json" },
+      cache: "no-store",
+      ...options,
+    });
+    if (!res.ok) throw new Error(`Error HTTP ${res.status}`);
+    return res.json();
   }
 
+  // =====================================================
+  // Cargar carrito desde backend
+  // =====================================================
   async function fetchCart() {
     try {
-      const res = await fetch("/api/cart", { cache: "no-store" });
-      const data = await res.json().catch(() => ({}));
+      const data = await api("/api/cart");
       carrito = Array.isArray(data?.data) ? data.data : [];
+      render();
     } catch (err) {
-      console.error("Error al cargar carrito:", err.message);
-      carrito = [];
+      console.error("[cart] Error al obtener carrito:", err);
+      if (isCarritoPage && ui.estadoPagina)
+        ui.estadoPagina.textContent = "No se pudo cargar el carrito 😞";
     }
   }
 
-  function actualizarCarritoUI() {
-    if (!contenedorItems || !totalTexto || !contador) return;
+  // =====================================================
+  // Render dinámico
+  // =====================================================
+  function render() {
+    const cont = isCarritoPage ? ui.contPagina : ui.contSidebar;
+    const totalEl = isCarritoPage ? ui.totalPagina : ui.totalSidebar;
+    if (!cont) return;
 
-    contenedorItems.innerHTML = "";
+    cont.innerHTML = "";
 
     if (!carrito.length) {
-      contenedorItems.innerHTML = `<p class="mensaje-vacio">Tu carrito está vacío 😞...</p>`;
-      totalTexto.textContent = "$0";
-      contador.textContent = "0";
+      cont.innerHTML = `<p class="mensaje-vacio">Tu carrito está vacío 😞...</p>`;
+      if (totalEl) totalEl.textContent = "$0";
+      if (ui.contador) ui.contador.textContent = "0";
       return;
     }
 
     let total = 0;
-
-    carrito.forEach(item => {
-      const p         = item.product || {};
-      const nombre    = p.name || p.nombre || "Producto eliminado";
-      const precio    = Number(p.price ?? p.precio ?? 0);
-      const imagen    = p.image || p.imagen || "placeholder.png";
-      const cantidad  = Number(item.quantity || 1);
-      const subtotal  = precio * cantidad;
+    carrito.forEach(({ productId, quantity, product = {} }) => {
+      const nombre = product.name || "Producto sin nombre";
+      const precio = Number(product.price || 0);
+      const cantidad = Number(quantity || 1);
+      const imagen = product.image?.startsWith("http")
+        ? product.image
+        : `/img/products/${product.image}`;
+      const subtotal = precio * cantidad;
       total += subtotal;
 
-      const esAbsoluta = /^https?:\/\//i.test(imagen);
-      const src = esAbsoluta ? imagen : `/img/products/${imagen}`;
-
-      const div = document.createElement("div");
-      div.className = "carrito-item";
-      div.innerHTML = `
-        <img class="item-img" src="${src}" alt="${nombre}" />
-        <div class="item-info">
-          <p class="item-nombre">${nombre}</p>
-          <p class="item-detalle">$${subtotal.toLocaleString()}</p>
-          <div class="item-cantidad">
-            <button class="cantidad-btn btn-restar" data-id="${item.productId}">−</button>
-            <span class="cantidad-texto">${cantidad}</span>
-            <button class="cantidad-btn btn-sumar" data-id="${item.productId}">+</button>
+      cont.insertAdjacentHTML(
+        "beforeend",
+        `
+        <div class="carrito-item" data-id="${productId}">
+          <img src="${imagen}" alt="${nombre}" class="item-img"/>
+          <div class="item-info">
+            <p class="item-nombre">${nombre}</p>
+            <p class="item-detalle">$${precio.toLocaleString()} c/u</p>
+            <div class="item-cantidad">
+              <button class="cantidad-btn" data-act="restar" data-id="${productId}">−</button>
+              <span class="cantidad-texto">${cantidad}</span>
+              <button class="cantidad-btn" data-act="sumar" data-id="${productId}">+</button>
+            </div>
           </div>
-        </div>
-        <button class="btn-eliminar" data-id="${item.productId}">✖</button>
-      `;
-      contenedorItems.appendChild(div);
+          <p class="subtotal-item">$${subtotal.toLocaleString()}</p>
+          <button class="btn-eliminar" data-act="eliminar" data-id="${productId}">✖</button>
+        </div>`
+      );
     });
 
-    totalTexto.textContent = `$${total.toLocaleString()}`;
-    contador.textContent = carrito.reduce((acc, p) => acc + (Number(p.quantity) || 0), 0);
-
-    // Listeners dinámicos (elementos recién pintados)
-    contenedorItems.querySelectorAll(".btn-eliminar").forEach(btn => {
-      btn.onclick = async () => {
-        const id = btn.dataset.id;
-        await fetch(`/api/cart/${encodeURIComponent(id)}`, { method: "DELETE" });
-        await fetchCart();
-        actualizarCarritoUI();
-      };
-    });
-
-    contenedorItems.querySelectorAll(".btn-sumar").forEach(btn => {
-      btn.onclick = () => {
-        const id = btn.dataset.id;
-        actualizarCarritoProducto(id, 1);
-      };
-    });
-
-    contenedorItems.querySelectorAll(".btn-restar").forEach(btn => {
-      btn.onclick = () => {
-        const id = btn.dataset.id;
-        const item = carrito.find(p => p.productId === id);
-        if (item && item.quantity > 1) {
-          actualizarCarritoProducto(id, -1);
-        }
-      };
-    });
+    totalEl.textContent = `$${total.toLocaleString()}`;
+    if (ui.contador)
+      ui.contador.textContent = carrito.reduce(
+        (acc, i) => acc + (Number(i.quantity) || 0),
+        0
+      );
   }
 
-  // ================== Delegación para "Añadir al carrito" ==================
-  // En lugar de capturar NodeList al cargar (que no incluye productos renderizados después),
-  // usamos delegación para que funcione con tarjetas futuras.
-  document.body.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-add-to-cart], .btn-comprar");
+  // =====================================================
+  // Delegación de eventos (global)
+  // =====================================================
+  document.body.addEventListener("click", async (e) => {
+    const btn = e.target.closest(".cantidad-btn, .btn-eliminar, .btn-comprar");
     if (!btn) return;
 
-    // Evita que un <a> padre interrumpa el flujo
-    e.preventDefault();
-    e.stopPropagation();
-
-    const card = btn.closest(".producto");
-    const id = btn.dataset.productId || card?.dataset?.id;
-    if (!id) {
-      console.warn("[carrito] No se encontró productId en el botón/tarjeta");
-      return;
-    }
-
-    actualizarCarritoProducto(String(id), 1);
-    // Abrir sidebar para feedback
-    sidebar?.classList.add("active");
-    overlay?.classList.add("active");
-  });
-
-  // ================== Abrir/cerrar sidebar ==================
-  carritoBtn?.addEventListener("click", () => {
-    sidebar?.classList.add("active");
-    overlay?.classList.add("active");
-    fetchCart().then(actualizarCarritoUI);
-  });
-
-  cerrarSidebar?.addEventListener("click", () => {
-    sidebar?.classList.remove("active");
-    overlay?.classList.remove("active");
-  });
-
-  overlay?.addEventListener("click", () => {
-    sidebar?.classList.remove("active");
-    overlay?.classList.remove("active");
-  });
-
-  // ================== Finalizar compra ==================
-  btnFinalizar?.addEventListener("click", async () => {
-    if (!carrito.length) {
-      alert("Tu carrito está vacío.");
-      return;
-    }
-
     try {
-      const res = await fetch("/api/cart/checkout", { method: "POST" });
-      if (!res.ok) throw new Error("Error al finalizar compra");
+      // --- Agregar desde index o productos ---
+      if (btn.classList.contains("btn-comprar")) {
+        const card = btn.closest(".producto");
+        const pid = card?.dataset?.id; 
+
+        if (!pid) {
+          console.warn("[carrito] No se encontró ID del producto");
+          alert("No se pudo identificar el producto.");
+          return;
+        }
+
+        try {
+          const res = await fetch("/api/cart", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ productId: pid, quantity: 1 }),
+          });
+
+          const data = await res.json().catch(() => ({}));
+          console.log("[carrito] POST /api/cart →", res.status, data);
+
+          if (!res.ok) {
+            if (res.status === 409 || data.error?.toLowerCase().includes("stock")) {
+              alert("No hay suficiente stock disponible.");
+            } else {
+              alert(data.error || "Error al agregar el producto.");
+            }
+            return;
+          }
+
+          // Feedback visual (✔ añadido)
+          const original = btn.textContent;
+          btn.textContent = "Añadido ✓";
+          btn.disabled = true;
+          btn.style.background = "linear-gradient(135deg,#43A047,#2E7D32)";
+          setTimeout(() => {
+            btn.textContent = original;
+            btn.disabled = false;
+            btn.style.background = "";
+          }, 1200);
+
+          await fetchCart();
+          if (ui.sidebar) ui.sidebar.classList.add("active");
+          if (ui.overlay) ui.overlay.classList.add("active");
+        } catch (err) {
+          console.error("[carrito] Error al agregar:", err);
+          alert("No se pudo conectar con el carrito.");
+        }
+
+        return;
+      }
+
+
+      // --- Sumar/restar/eliminar dentro del carrito ---
+      const id = btn.dataset.id;
+      const act = btn.dataset.act;
+      const item = carrito.find((p) => p.productId === id);
+
+      if (!item) {
+        console.warn("[carrito] Producto no encontrado en carrito:", id);
+        return;
+      }
+
+      const stock = Number(item?.product?.stock ?? 0);
+      const cantidad = Number(item?.quantity ?? 0);
+
+      if (act === "sumar") {
+        // Validación: no permitir más que el stock
+        if (stock && cantidad >= stock) {
+          const notif = document.getElementById("notif");
+          if (notif) {
+            notif.textContent = `Solo hay ${stock} unidades disponibles.`;
+            notif.classList.add("show");
+            setTimeout(() => notif.classList.remove("show"), 2500);
+          } else {
+            alert(`No puedes agregar más de ${stock} unidades. Stock máximo alcanzado.`);
+          }
+          return;
+        }
+
+        await api("/api/cart", {
+          method: "POST",
+          body: JSON.stringify({ productId: id, quantity: 1 }),
+        });
+      } else if (act === "restar") {
+        await api("/api/cart", {
+          method: "POST",
+          body: JSON.stringify({ productId: id, quantity: -1 }),
+        });
+      } else if (act === "eliminar") {
+        await api(`/api/cart/${id}`, { method: "DELETE" });
+      }
+
+      await fetchCart();
+    } catch (err) {
+      console.error("Error al actualizar carrito:", err);
+      alert("Error al actualizar carrito.");
+    }
+  });
+
+  // =====================================================
+  // Sidebar control
+  // =====================================================
+  if (ui.carritoBtn && ui.sidebar) {
+    const toggleSidebar = (show) => {
+      ui.sidebar.classList.toggle("active", show);
+      ui.overlay?.classList.toggle("active", show);
+    };
+    ui.carritoBtn.addEventListener("click", async () => {
+      toggleSidebar(true);
+      await fetchCart();
+    });
+    ui.cerrarSidebar?.addEventListener("click", () => toggleSidebar(false));
+    ui.overlay?.addEventListener("click", () => toggleSidebar(false));
+  }
+
+  // =====================================================
+  // Finalizar compra (redirige o procesa según contexto)
+  // =====================================================
+  ui.btnFinalizar?.addEventListener("click", async () => {
+    if (!carrito.length) return alert("Tu carrito está vacío.");
+
+    // Si no estamos en carrito.html, animar y redirigir
+    if (!isCarritoPage) {
+      if (ui.sidebar) {
+        ui.sidebar.style.transition = "transform 0.4s ease, opacity 0.4s ease";
+        ui.sidebar.style.transform = "translateX(-40px)";
+        ui.sidebar.style.opacity = "0";
+      }
+      if (ui.overlay) {
+        ui.overlay.style.transition = "opacity 0.4s ease";
+        ui.overlay.style.opacity = "0";
+      }
+
+      setTimeout(() => {
+        window.location.href = "carrito.html";
+      }, 400);
+      return;
+    }
+
+    // Si ya estamos en carrito.html → procesar compra real
+    try {
+      await api("/api/cart/checkout", { method: "POST" });
       alert("¡Gracias por tu compra!");
       await fetchCart();
-      actualizarCarritoUI();
     } catch (err) {
-      alert("Error al procesar compra: " + err.message);
+      alert("Error al finalizar la compra.");
+      console.error(err);
     }
   });
 
-  // ================== Carga inicial ==================
-  await fetchCart();
-  actualizarCarritoUI();
+  // =====================================================
+  // Simulador de envío dinámico (solo en carrito.html)
+  // =====================================================
+  if (isCarritoPage) {
+    const envioSelect = document.getElementById("envioSelect");
+    const subtotalEl = document.getElementById("subtotal");
+    const totalEl = document.getElementById("total");
+
+    // Función para calcular total con envío
+    const actualizarTotal = () => {
+      if (!subtotalEl || !totalEl || !envioSelect) return;
+      const subtotal = carrito.reduce((acc, item) => {
+        const price = Number(item.product?.price || 0);
+        const qty = Number(item.quantity || 0);
+        return acc + price * qty;
+      }, 0);
+
+      const envio = Number(envioSelect.value || 0);
+      subtotalEl.textContent = `$${subtotal.toLocaleString()}`;
+      totalEl.textContent = `$${(subtotal + envio).toLocaleString()}`;
+    };
+
+    // Actualizar al cambiar opción
+    envioSelect?.addEventListener("change", actualizarTotal);
+
+    // Actualizar después de renderizar el carrito
+    const originalRender = render;
+    render = function () {
+      originalRender();
+      actualizarTotal();
+    };
+  }
+
+  // =====================================================
+  // Carga inicial
+  // =====================================================
+  fetchCart();
 });

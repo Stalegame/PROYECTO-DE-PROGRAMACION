@@ -11,17 +11,26 @@ require('dotenv').config(); // Lee las "instrucciones secretas" del archivo .env
 const PersistenceFactory = require('./PersistenceFactory');
 
 // Nuestro mensajero de WhatsApp
-const ws = require('./whatsappService');
-// Acepta diferentes formas de exportar (por si cambiamos algo)
-const enviarWhatsApp =
-  (ws && (ws.enviarWhatsApp || ws.default || ws));
-const enviarConfirmacionPedido =
-  (ws && (ws.enviarConfirmacionPedido || ws.enviarConfirmacionPedidoDefault));
+let enviarWhatsApp = async () => {
+  console.log('[whatsappService] deshabilitado (stub).');
+  return { ok: false, disabled: true };
+};
+let enviarConfirmacionPedido = async () => ({ ok: false, disabled: true });
 
-// Verificamos que el mensajero esté listo para trabajar
-if (typeof enviarWhatsApp !== 'function') {
-  console.error('[whatsappService] Lo que recibimos:', ws);
-  throw new Error('El mensajero de WhatsApp no está funcionando correctamente');
+try {
+  const ws = require('./whatsappService'); // si existe, se usará
+  enviarWhatsApp =
+    ws.enviarWhatsApp || ws.default || ws.sendWhatsApp || enviarWhatsApp;
+  enviarConfirmacionPedido =
+    ws.enviarConfirmacionPedido || ws.enviarConfirmacionPedidoDefault || enviarConfirmacionPedido;
+
+  if (typeof enviarWhatsApp === 'function') {
+    console.log('[whatsappService] cargado correctamente');
+  } else {
+    console.warn('[whatsappService] módulo sin función válida; uso stub.');
+  }
+} catch {
+  console.warn('[whatsappService] no encontrado. Continúo sin WhatsApp.');
 }
 
 // Configuración básica 
@@ -200,6 +209,7 @@ try {
   const clientsRouter  = require('./routes/clientsRouter');
   const chatbotRouter  = require('./routes/chatbotRouter');
   const adminRouter    = require('./routes/adminRouter');
+  const cartRouter     = require('./routes/cartRouter');
 
   // Areas sensibles con seguridad extra
   app.use('/api/clients/login', strictLimiter);
@@ -212,6 +222,7 @@ try {
   app.use('/api/products', productsRouter);
   app.use('/api/clients',  clientsRouter);
   app.use('/api/chatbot',  chatbotRouter);
+  app.use('/api/cart',     cartRouter); 
 
   console.log('✅ Todos los mostradores de atención están listos');
 } catch (error) {
@@ -266,6 +277,7 @@ app.use((err, _req, res, _next) => {
       console.log('❤️  Chequeo de salud:', base + '/health');
       console.log('🧩 Mostrador de productos:', base + '/api/products');
       console.log('👥 Mostrador de clientes:', base + '/api/clients');
+      console.log('🛒 Mostrador de carrito:', base + '/api/cart');
       console.log('🤖 Mostrador del chatbot:', base + '/api/chatbot');
       console.log('📲 Probador de WhatsApp:', base + '/api/test-whatsapp');
       if (FRONTEND_DIR) {

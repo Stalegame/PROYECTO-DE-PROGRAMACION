@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carrito de Compras - FRUNA Chile</title>
+  <link rel="icon" href="./img/logo fruna.png" type="image/png" />
+  <link rel="stylesheet" href="css/carrito.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <!-- ========== HEADER ========== -->
+  <header class="carrito-header">
+    <div class="header-inner">
+      <!-- Botón Inicio -->
+      <a href="index.html" class="btn-volver">🏠 Inicio</a>
+
+      <!-- Logo -->
+      <div class="logo-container">
+        <img src="./img/logo fruna.png" alt="FRUNA Chile" />
+      </div>
+
+      <div id="authBox">
+        <!-- Botón login -->
+        <a id="authLoginLink" href="login_users.html">
+          <img src="./img/user_login.png" alt="Iniciar sesión" class="icon-user" />
+          Iniciar Sesión
+        </a>
+
+        <!-- Nombre del usuario -->
+        <span id="authName" style="display: none;">
+          <img src="./img/user_login.png" alt="Usuario" class="icon-user" />
+          Hola, Usuario
+        </span>
+
+        <!-- Botón logout -->
+        <button id="authLogoutBtn" style="display: none;">
+          <img src="./img/user_login.png" alt="Salir" class="icon-user" />
+          Salir
+        </button>
+      </div>
+  </header>
+
+  <!-- ========== MAIN ========== -->
+  <main class="carrito-main">
+    <div class="carrito-contenido">
+      <!-- Lista de Productos -->
+      <section class="carrito-lista">
+        <p class="mensaje-vacio" id="estado-carrito">Cargando tu carrito...</p>
+      </section>
+
+      <!-- Resumen Compra -->
+      <aside class="resumen-compra">
+        <h2>Resumen de tu pedido</h2>
+
+        <div class="resumen-linea">
+          <span>Subtotal:</span>
+          <strong id="subtotal">$0</strong>
+        </div>
+
+        <div class="resumen-linea">
+          <label for="envioSelect">Tipo de envío:</label>
+          <select id="envioSelect">
+            <option value="0">Retiro en tienda (Gratis)</option>
+            <option value="1990">Envío estándar - $1.990</option>
+            <option value="4990">Envío express - $4.990</option>
+          </select>
+        </div>
+
+        <div class="resumen-linea total">
+          <span>Total:</span>
+          <strong id="total">$0</strong>
+        </div>
+
+        <button class="btn-buy-bag">Finalizar Compra</button>
+      </aside>
+    </div>
+  </main>
+
+<footer>
+  <div class="footer-content">
+    <div class="footer-section">
+      <h4>Fruna Chile</h4>
+      <p>Av. Providencia 1234, Santiago</p>
+      <p>Email: contacto@fruna.cl</p>
+    </div>
+
+    <div class="footer-section">
+      <h4>Enlaces</h4>
+      <a href="index.html">Inicio</a><br>
+      <a href="productos.html">Productos</a><br>
+      <a href="carrito.html">Carrito</a>
+    </div>
+
+    <div class="footer-section">
+      <h4>Legal</h4>
+      <a href="#">Política de Privacidad</a><br>
+      <a href="#">Términos de uso</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    © 2025 Fruna · Creado por Comprimidos Team.
+  </div>
+</footer>
+
+  <!-- ========== JS ========== -->
+  <script src="js/index.js" defer></script>
+  <script src="js/cart.js" defer></script>
+</body>
+</html>
