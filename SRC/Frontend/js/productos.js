@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const stock = p.stock; // si no manejas stock, asume alto
 
         return `
-          <article class="producto" data-id="${escapeHTML(String(id))}">
+          <article class="producto">
             <a class="product-media" href="one_product.html?id=${encodeURIComponent(String(id))}" aria-label="${escapeHTML(name)}">
               <img loading="lazy" src="${escapeHTML(img)}" alt="${escapeHTML(name)}">
             </a>
