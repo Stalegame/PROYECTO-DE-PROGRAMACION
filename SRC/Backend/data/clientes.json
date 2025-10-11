@@ -93,5 +93,27 @@
     "passwordHash": "$2a$10$BbMKwBrGzJDVNbtlXNueX.Gl0jlzRQdJJIPO5jxvwCzpMnN9qU8OO",
     "role": "user",
     "activo": true
+  },
+  {
+    "id": "1760211973969",
+    "createdAt": "2025-10-11T19:46:13.969Z",
+    "nombre": "Amira Casanova",
+    "email": "amiracatalinacasanova@gmail.com",
+    "telefono": "+56912345678",
+    "direccion": "casa amira 123",
+    "passwordHash": "$2a$10$QD.qCdLgSY5qmE4VgkX0q.vnVyqsrpz/uAvL5kJKadVBIbu5W0ZJy",
+    "role": "user",
+    "activo": true
+  },
+  {
+    "id": "1760212151989",
+    "createdAt": "2025-10-11T19:49:11.989Z",
+    "nombre": "Juan Pérez",
+    "email": "amira@gmail.com",
+    "telefono": "+56912345678",
+    "direccion": "calle faslsa",
+    "passwordHash": "$2a$10$blyavx/3v4clTPhRdAlNNepC4d/jbE3dlletjR.t/tsgeNmnf2yY.",
+    "role": "user",
+    "activo": true
   }
 ]

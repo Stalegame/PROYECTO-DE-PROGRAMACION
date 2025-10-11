@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - FRUNA Chile</title>
+    <link rel="icon" href="./img/logo fruna.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/mi_perfil.css">
+</head>
+
+<body>
+    <!-- ======= HEADER ======= -->
+    <header>
+        <div class="header-inner">
+        <!-- Logo -->
+        <div class="logo-container">
+            <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
+        </div>
+
+        <!-- AuthBox -->
+        <div id="authBox">
+            <a id="authLoginLink" href="login_users.html" class="btn-login" aria-label="Iniciar sesión">
+            <img src="./img/user_login.png" alt="Iniciar sesión" class="icono-btn">
+            Iniciar Sesión
+            </a>
+            <span id="authName" style="display:none;"></span>
+            <button id="authLogoutBtn" class="btn" style="display:none;">
+            <img src="./img/user_login.png" alt="Cerrar sesión" class="icono-btn">
+            Cerrar Sesión
+            </button>
+        </div>
+</div>
+    </header>
+
+    <!-- *************** NAV *************** -->
+    <nav class="main-nav" aria-label="Navegación principal">
+        <a href="index.html" class="nav-pill">Inicio</a>
+        <a href="productos.html" class="nav-pill">Productos</a>
+        <a href="contacto.html" class="nav-pill">Contacto</a>
+    </nav>
+
+    <!-- ======= MAIN CONTENT ======= -->
+    <div class="main-container">
+        <!-- LATERAL MENU (Sidebar) -->
+        <aside class="sidebar">
+            <div class="header-logo">
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <!-- Mi Cuenta -->
+                    <li class="section-title"><i class="fas fa-user"></i> Mi Cuenta</li>
+                    <li><a href="#miPerfilSection" class="menu-item"><i class="fas fa-id-card"></i> Mi Perfil</a></li>
+                    <li><a href="#misDireccionesSection" class="menu-item"><i class="fas fa-map-marker-alt"></i> Mis Direcciones</a></li>
+                    <li class="divider"></li>
+
+                    <li class="section-title"><i class="fas fa-box"></i> Mis pedidos</li>
+                    <li><a href="#misComprasSection" class="menu-item"><i class="fas fa-box-open"></i> Mis compras </a></li>
+                    <li class="divider"></li>
+
+                    <!-- Asistencia -->
+                    <li class="section-title"><i class="fas fa-headset"></i> Asistencia</li>
+                    <li><a href="#centroAyudaSection" class="menu-item"><i class="fas fa-headset"></i> Centro de Ayuda</a></li>
+                    <li class="divider"></li>
+
+                    <!-- Cerrar sesión -->
+                    <li>
+                    <a href="#" id="cerrarSesionLink" class="menu-item">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                    </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="content-area">
+            <!-- SECCIÓN Mi Perfil -->
+            <section id="miPerfilSection" class="content-section active">
+                <h2><i class="fas fa-user-circle"></i> Mi Perfil</h2>
+
+                <form id="formPerfil">
+                    <!-- Grupo: Datos personales -->
+                    <fieldset>
+                    <legend>Datos Personales</legend>
+
+                    <div class="input-group">
+                        <label for="nombre">Nombre completo</label>
+                        <input type="text" id="nombre" name="nombre" value="" placeholder="Nombre del usuario" required>
+                    </div>
+
+                    <!-- RUT (opcional) -->
+                    <div class="input-group">
+                    <label for="rut">RUT (opcional)</label>
+                    <input type="text" id="rut" name="rut" placeholder="Ej: 12345678-9">
+                    </div>
+
+                    <!-- Fecha de nacimiento (opcional) -->
+                    <div class="input-group">
+                    <label for="fechaNacimiento">Fecha de Nacimiento (opcional)</label>
+                    <input type="date" id="fechaNacimiento" name="fechaNacimiento">
+                    </div>
+                    </fieldset>
+
+                    <!-- Grupo: Contacto -->
+                    <fieldset>
+                    <legend>Contacto</legend>
+
+                    <div class="input-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="tel" id="telefono" name="telefono" value="" placeholder="+569..." required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="direccion">Dirección</label>
+                        <textarea id="direccion" name="direccion" rows="3" required></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="email">Correo Electrónico</label>
+                        <input type="email" id="email" name="email" value="" required>
+                    </div>
+                    </fieldset>
+
+                    <!-- Grupo: Promociones -->
+                    <fieldset>
+                    <legend>Promociones</legend>
+                    <div class="input-group input-checkbox">
+                        <input type="checkbox" id="aceptoOfertas" name="aceptoOfertas">
+                        <label for="aceptoOfertas">Deseo recibir ofertas y promociones</label>
+                    </div>
+                    </fieldset>
+
+                    <!-- Grupo: Seguridad -->
+                    <fieldset>
+                    <legend>Seguridad</legend>
+
+                    <div class="input-group">
+                        <label for="password">
+                        Contraseña Actual <span style="color: red">*</span>
+                        </label>
+                        <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Ingresa tu clave actual para guardar cambios"
+                        required
+                        >
+                    </div>
+                    </fieldset>
+
+
+                    <!-- Acciones -->
+                    <div class="acciones">
+                    <button type="submit" class="btn-submit">Guardar Cambios</button>
+                    <button type="button" class="btn-editar" id="btnCambiarClave">Cambiar Clave</button>
+                    </div>
+                </form>
+                </section>
+
+
+ <!-- SECCIÓN MIS COMPRAS -->
+<section id="misComprasSection" class="content-section active">
+  <h2><i class="fa-solid fa-cart-shopping"></i> Mis Compras</h2>
+
+  <div class="historial-container">
+
+    <!-- 🧾 TARJETA DE PEDIDO -->
+    <div class="historial-card">
+      <div class="historial-resumen">
+        <h3>Pedido #000345</h3>
+        <p><strong>Fecha:</strong> 10 de Octubre, 2025</p>
+        <p><strong>Total:</strong> $4.980</p>
+        <p><strong>Estado:</strong> 
+          <span class="estado-pedido entregado">Entregado</span>
+        </p>
+
+        <!-- Botones a los extremos -->
+        <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 1rem;">
+          <button class="btn-ver-detalles"><i class="fa-solid fa-eye"></i> Ver Detalles</button>
+          <button class="btn-repetir"><i class="fa-solid fa-rotate-right"></i> Repetir Pedido</button>
+        </div>
+      </div>
+
+      <!-- Detalles colapsables -->
+      <div class="historial-detalles oculto">
+        <h4>Productos:</h4>
+        <ul>
+          <li>2x Alfajor Fruna Clásico</li>
+          <li>1x Bebida de Piña 500ml</li>
+          <li>1x Galletas Mini Choc</li>
+        </ul>
+        <p><strong>Dirección de envío:</strong> Av. Providencia 1234, Santiago</p>
+        <p><strong>Método de pago:</strong> Tarjeta de crédito (**** 1234)</p>
+      </div>
+    </div>
+
+    <!-- 🔁 DUPLICA ESTA TARJETA PARA MÁS PEDIDOS -->
+
+        <!-- OTRA TARJETA -->
+    <div class="historial-card">
+    <div class="historial-resumen">
+        <h3>Pedido #000346</h3>
+        <p><strong>Fecha:</strong> 5 de Octubre, 2025</p>
+        <p><strong>Total:</strong> $2.980</p>
+        <p><strong>Estado:</strong> 
+        <span class="estado-pedido cancelado">Cancelado</span>
+        </p>
+        <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 1rem;">
+        <button class="btn-ver-detalles"><i class="fa-solid fa-eye"></i> Ver Detalles</button>
+        <button class="btn-repetir"><i class="fa-solid fa-rotate-right"></i> Repetir Pedido</button>
+        </div>
+    </div>
+    <div class="historial-detalles oculto">
+        <h4>Productos:</h4>
+        <ul>
+        <li>1x Galleta Vainilla</li>
+        <li>1x Jugo de Naranja</li>
+        </ul>
+        <p><strong>Dirección de envío:</strong> Av. Matta 321, Santiago</p>
+        <p><strong>Método de pago:</strong> Débito (**** 9876)</p>
+    </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SECCIÓN MIS DIRECCIONES -->
+<section id="misDireccionesSection" class="content-section">
+  <h2><i class="fas fa-map-marker-alt"></i> Mis Direcciones</h2>
+
+  <!-- Tarjeta con dirección actual -->
+  <div class="card-direccion">
+    <div class="icono-direccion">
+      <i class="fas fa-location-dot"></i>
+    </div>
+    <div class="info-direccion">
+      <p class="etiqueta">Dirección actual:</p>
+      <p class="valor" id="direccionActual">Cargando...</p>
+    </div>
+  </div>
+
+  <!-- Texto para editar dirección -->
+  <p class="nota-edicion">
+    Para modificar tu dirección, ve a la sección 
+    <span class="enlace-a-perfil" id="irAMiPerfil">Mi Perfil</span>.
+  </p>
+</section>
+        <!-- ====== SECCIÓN CENTRO DE AYUDA ====== -->
+        <section id="centroAyudaSection" class="content-section">
+        <h2>Centro de Ayuda</h2>
+
+            <div class="ayuda-contenido">
+
+            <!-- Preguntas Frecuentes -->
+            <section id="faq1" class="faq">
+                <h3>Preguntas Frecuentes</h3>
+                <p><strong>¿Cómo puedo realizar un pedido?</strong></p>
+                <p>Para realizar un pedido, simplemente elige el producto que deseas y agrégalo al carrito. Luego, sigue los pasos de compra para finalizar tu pedido.</p>
+
+                <p><strong>¿Puedo modificar o cancelar mi pedido?</strong></p>
+                <p>Una vez que tu pedido ha sido confirmado, no es posible modificarlo. Sin embargo, si necesitas realizar cambios, por favor contacta con nuestro centro de ayuda lo antes posible.</p>
+            </section>
+
+            <!-- Políticas de privacidad -->
+            <section id="politicas" class="politicas">
+                <h3>Políticas de Privacidad</h3>
+                <p>Tu privacidad es importante para nosotros. Asegúrate de revisar nuestras políticas de privacidad para entender cómo tratamos tus datos personales.</p>
+            </section>
+
+            <!-- Envíos y Entregas -->
+            <section id="envios" class="envios">
+                <h3>Envíos y Entregas</h3>
+                <p>Realizamos envíos a todo el país. Los tiempos de entrega dependen de tu ubicación, pero generalmente se realizan en un plazo de 3 a 5 días hábiles.</p>
+            </section>
+
+            <!-- Contacto -->
+            <section id="contacto" class="contacto-ayuda">
+                <h3>Contacto</h3>
+                <div class="contact-info">
+                <p><strong>📞 Teléfono:</strong> +56 9 1234 5678</p>
+                <p><strong>✉️ Email:</strong> <a href="mailto:contacto@fruna.cl">contacto@fruna.cl</a></p>
+                <p><strong>📍 Dirección:</strong> Av. Providencia 1234, Santiago</p>
+                </div>
+            </section>
+
+            </div>
+        </div>
+</section>
+        </div>
+
+
+        </main>
+    </div>
+    
+        <div id="modalCambiarClave" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" class="close">&times;</span>
+            <h2>Cambiar Contraseña</h2>
+            <form id="formCambioContraseña">
+            <div class="input-group">
+                <label for="nuevaContraseña">Nueva Contraseña:</label>
+                <input type="password" id="nuevaContraseña" name="nuevaContraseña" required>
+            </div>
+            <div class="input-group">
+                <label for="confirmarContraseña">Confirmar Contraseña:</label>
+                <input type="password" id="confirmarContraseña" name="confirmarContraseña" required>
+            </div>
+            <button type="submit" class="btn-submit">Actualizar Contraseña</button>
+            </form>
+        </div>
+        </div>
+
+    <!-- *************** FOOTER *************** -->
+    <footer>
+        <p>📍 Av. Providencia 1234, Santiago</p>
+        <p>© 2025 Fruna · Creado por Comprimidos Team.</p>
+    </footer>
+
+    <script src="js/mi_perfil.js" defer></script>
+</body>
+
+</html>

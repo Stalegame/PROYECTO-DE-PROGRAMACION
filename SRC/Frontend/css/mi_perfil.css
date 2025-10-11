@@ -1,0 +1,1033 @@
+:root {
+    --rosa: #E91E63;
+    --rosaOsc: #C2185B;
+    --rosaClaro: #FFEBEE;
+    --bg: #FFF9FA;
+    --amarillo: #FFC107;
+    --text: #333;
+    --grisSuave: #F5F5F5;
+    --grisClaro: #f7f7f7;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --shadowHover: rgba(0, 0, 0, 0.2);
+    --borderColor: #ddd;
+}
+
+/* ====== BASE STYLES ====== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: var(--grisSuave);
+    color: var(--text);
+}
+
+/* ====== HEADER GENERAL ====== */
+header {
+  background: linear-gradient(135deg, var(--rosa) 0%, var(--rosaOsc) 100%);
+  padding: 20px 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* ====== CONTENEDOR INTERIOR HEADER ====== */
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between; /* Logo izquierda, Auth derecha */
+  align-items: center;
+  padding: 0 20px;
+  flex-wrap: wrap; /* Para que no se rompa en móviles */
+  gap: 16px;
+}
+
+/* ====== LOGO SITE ====== */
+.site-logo {
+  width: 150px;
+  height: auto;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}  
+
+#authBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--amarillo);
+  color: #333;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 30px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  transition: background 0.3s ease;
+}
+
+/* Enlaces y botones dentro del AuthBox */
+#authBox a,
+#authBox button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+#authBox a:hover,
+#authBox button:hover {
+  color: var(--rosaOsc);
+}
+
+/* Icono de usuario */
+.icono-btn {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+@media (max-width: 600px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #authBox {
+    width: 100%;
+    justify-content: space-between;
+    padding: 10px 16px;
+    margin-top: 8px;
+  }
+}
+
+
+/* ====== NAVIGATION ====== */
+.main-nav {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 12px 16px;
+    background: var(--rosaClaro);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.nav-pill {
+    display: inline-block;
+    padding: 12px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    color: var(--rosa);
+    background: var(--rosaClaro);
+    transition: all 0.3s ease;
+}
+
+.nav-pill:hover,
+.nav-pill:focus {
+    background: var(--rosaOsc);
+    color: #fff;
+}
+
+.nav-pill.is-active {
+    background: var(--rosaOsc);
+    color: #fff;
+}
+
+/* ====== SIDEBAR ====== */
+.sidebar {
+    width: 250px;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    position: relative;
+    top: 20px;
+    z-index: 100;
+    transition: box-shadow 0.3s ease;
+}
+
+/* Hover para la sidebar, agregando sombra más profunda */
+.sidebar:hover {
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilo para la navegación dentro de la sidebar */
+.sidebar-nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    width: 100%;
+}
+
+/* Títulos de las secciones dentro de la sidebar */
+.section-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--amarillo);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--amarillo);
+    padding-left: 5px;
+}
+
+/* Estilo para los enlaces dentro de la sidebar */
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    background: #fff;
+    color: var(--text);
+    text-align: left;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Estilo de los iconos en el menú */
+.menu-item i {
+    margin-right: 15px;
+    font-size: 18px;
+    color: var(--rosa);
+}
+
+/* Hover para los enlaces */
+.menu-item:hover {
+    background-color: var(--rosaOsc);
+    color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Elemento activo en el menú */
+.menu-item.active {
+    background-color: var(--rosaOsc);
+    color: #fff;
+    border-left: 4px solid var(--amarillo);
+    font-weight: bold;
+    box-shadow: inset 4px 0 6px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item {
+    background-color: #fff !important;
+    color: var(--text) !important;
+}
+
+/* 🔓 Solo se ve iluminado si tiene .active */
+.menu-item.active {
+    background-color: var(--rosaOsc) !important;
+    color: #fff !important;
+}
+/* Divider entre secciones */
+.divider {
+    height: 1px;
+    background: var(--borderColor);
+    margin: 20px 0;
+}
+
+/* ====== MAIN CONTENT AREA ====== */
+.main-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Estilo para el área de contenido principal */
+.content-area {
+    flex: 1;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.3s ease;
+}
+
+/* Hover para el área de contenido, agregando sombra más profunda */
+.content-area:hover {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.content-section {
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+}
+
+/* Estilo para los títulos de las secciones del contenido */
+.content-section h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--rosaOsc);
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--rosaOsc);
+    padding-bottom: 10px;
+}
+
+/* Estilo para los grupos de entrada (input-group) */
+.input-group {
+    margin-bottom: 20px;
+}
+
+/* Estilo para las etiquetas de los campos */
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--rosa);
+}
+
+/* Estilo de los campos de entrada y texto */
+input,
+textarea {
+    width: 100%;
+    padding: 16px;
+    font-size: 16px;
+    border: 2px solid var(--borderColor);
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+/* Focus en los campos de entrada y texto */
+input:focus,
+textarea:focus {
+    border-color: var(--rosaOsc);
+    outline: none;
+}
+
+/* Estilo para el texto del botón */
+button {
+    background: var(--rosa);
+    color: white;
+    padding: 16px 30px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Hover en los botones */
+button:hover {
+    background: var(--rosaOsc);
+}
+
+/* ====== SECCIÓN MIS COMPRAS ====== */
+#misComprasSection {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+}
+
+#misComprasSection h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--rosaOsc);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--rosaOsc);
+    padding-bottom: 10px;
+}
+
+/* Contenedor de las compras */
+.compras-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Estilo para cada tarjeta de compra */
+.compra-card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover en las tarjetas */
+.compra-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilo de la información de la compra */
+.compra-info h3 {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--rosaOsc);
+    margin-bottom: 15px;
+}
+
+.compra-info p {
+    font-size: 1rem;
+    color: var(--text);
+    margin: 8px 0;
+}
+
+/* Estado de la compra (Enviado, Cancelado, etc.) */
+.estado-pedido {
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: capitalize;
+}
+
+/* Estilo para el estado "Enviado" */
+.estado-pedido.enviado {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Estilo de las acciones (botones) */
+.compra-acciones {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-ver, .btn-cancelar {
+    background-color: var(--rosa);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    width: 48%;
+}
+
+/* Hover en los botones */
+.btn-ver:hover {
+    background-color: var(--rosaOsc);
+}
+
+.btn-cancelar:hover {
+    background-color: #FF5722; /* Color de cancelación más fuerte */
+}
+/* Mejorar el diseño de las tarjetas de pago */
+.tarjeta-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease;
+}
+
+/* Hover para las tarjetas de pago */
+.tarjeta-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Estilo para las tarjetas de pago */
+.tarjeta-info p {
+    font-size: 1rem;
+    color: #555;
+    margin: 10px 0;
+}
+
+.tarjeta-info strong {
+    font-weight: bold;
+}
+
+/* Estilo para los botones de acción de las tarjetas */
+.tarjeta-acciones {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Botones de acción */
+.btn-editar,
+.btn-eliminar {
+    background: linear-gradient(135deg, #E91E63 0%, #C2185B 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+}
+
+/* Hover para los botones de acción */
+.btn-editar:hover,
+.btn-eliminar:hover {
+    background: linear-gradient(135deg, #C2185B 0%, #E91E63 100%);
+}
+
+/* Botón para agregar nueva tarjeta */
+.btn-agregar {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* Hover en el botón de agregar tarjeta */
+.btn-agregar:hover {
+    background-color: #388E3C;
+}
+/* Estilos para el balance de cuenta */
+.balance-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.balance-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.balance-card h3 {
+    font-size: 1.5rem;
+    color: var(--rosaOsc);
+    margin-bottom: 10px;
+}
+
+.balance-card p {
+    font-size: 1.5rem;
+    color: var(--text);
+}
+
+/* Barra de progreso de puntos */
+.barra-progreso {
+    margin-top: 20px;
+    background-color: #f1f1f1;
+    border-radius: 25px;
+    width: 100%;
+    height: 15px;
+    overflow: hidden;
+}
+
+.barra-progreso .progreso {
+    background-color: #E91E63;
+    height: 100%;
+    border-radius: 25px;
+    transition: width 0.3s ease;
+}
+
+/* Botón de canje de puntos */
+.btn-canje-puntos {
+    margin-top: 30px;
+    background-color: #FFC107;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.btn-canje-puntos:hover {
+    background-color: #FFB300;
+}
+
+/* ==== PERFIL */
+
+#miPerfilSection {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.3s ease;
+}
+
+#miPerfilSection h2 {
+    font-size: 2rem;
+    color: var(--rosaOsc);
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Fieldset / Legend */
+fieldset {
+    border: none;
+    margin-bottom: 35px;
+    padding: 0;
+}
+
+legend {
+    font-size: 1.2rem;
+    color: var(--rosa);
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-left: 5px;
+    border-left: 4px solid var(--rosaOsc);
+}
+
+/* Inputs */
+.input-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1.8px solid var(--borderColor);
+    transition: border-color 0.3s ease;
+    background: #fff;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    border-color: var(--rosaOsc);
+    outline: none;
+}
+
+/* Estilo checkbox */
+.input-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.input-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--rosa);
+    cursor: pointer;
+}
+
+.input-checkbox label {
+    font-size: 0.95rem;
+    color: var(--text);
+    margin: 0;
+}
+
+/* Botones */
+.acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.btn-submit,
+.btn-editar {
+    background: linear-gradient(135deg, var(--rosa), var(--rosaOsc));
+    color: #fff;
+    padding: 14px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+    flex: 1 1 auto;
+    max-width: 240px;
+}
+
+.btn-submit:hover,
+.btn-editar:hover {
+    background: linear-gradient(135deg, var(--rosaOsc), var(--rosa));
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    #miPerfilSection {
+        padding: 20px;
+    }
+
+    .acciones {
+        flex-direction: column;
+    }
+
+    .btn-submit,
+    .btn-editar {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* Estilos para el Modal */
+.modal {
+    display: none;  /* Oculto por defecto */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Fondo oscuro */
+    padding-top: 60px;
+    text-align: center;
+}
+
+/* Contenido del Modal */
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Botón de cerrar (X) */
+.close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 25px;
+}
+
+/* Estilo para el botón de cerrar */
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+/* ====== SECCIÓN CENTRO DE AYUDA ====== */
+#centroAyudaSection {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+}
+
+#centroAyudaSection h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--rosaOsc);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--rosaOsc);
+    padding-bottom: 10px;
+}
+
+/* Contenedor de la sección */
+.ayuda-container {
+    display: flex;
+    gap: 40px;
+    justify-content: space-between;
+}
+
+/* Estilo de las categorías */
+.ayuda-categorias {
+    flex: 1;
+    background: #F9F9F9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ayuda-categorias h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--rosaOsc);
+    margin-bottom: 15px;
+}
+
+/* Estilo para los enlaces de las categorías */
+.help-link {
+    display: block;
+    font-size: 1rem;
+    color: var(--rosaOsc);
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+
+.help-link:hover {
+    text-decoration: underline;
+}
+
+/* Estilo del contenido de ayuda */
+.ayuda-contenido {
+    flex: 2;
+}
+
+/* Sección de preguntas frecuentes */
+.faq p {
+    font-size: 1rem;
+    color: var(--text);
+    margin-bottom: 10px;
+}
+
+.faq h3 {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--rosaOsc);
+    margin-bottom: 15px;
+}
+
+
+/* Estilo para las políticas de privacidad y envíos */
+.politicas, .envios {
+    background: #F9F9F9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+}
+
+.politicas h3, .envios h3 {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--rosaOsc);
+    margin-bottom: 15px;
+}
+
+.politicas p, .envios p {
+    font-size: 1rem;
+    color: var(--text);
+    margin-bottom: 10px;
+}
+.contacto-ayuda {
+  background: #F9F9F9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+}
+
+.contacto-ayuda h3 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--rosaOsc);
+  margin-bottom: 15px;
+}
+
+.contact-info p {
+  font-size: 1rem;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.contact-info a {
+  color: var(--rosaOsc);
+  text-decoration: underline;
+}
+
+.contact-info a:hover {
+  text-decoration: none;
+}
+
+/* Botón para ir a contacto */
+.btn-contacto {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 12px 24px;
+  background-color: var(--rosa);
+  color: #fff;
+  font-weight: bold;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-contacto:hover {
+  background-color: var(--rosaOsc);
+}
+/* Estilo para direccion */
+.card-direccion {
+  background-color: #f9f9f9;
+  border-left: 4px solid var(--rosaOsc);
+  padding: 1rem 1.5rem;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.icono-direccion {
+  font-size: 1.8rem;
+  color: var(--rosaOsc);
+  margin-right: 1rem;
+}
+
+.info-direccion {
+  display: flex;
+  flex-direction: column;
+}
+
+.etiqueta {
+  margin: 0;
+  font-weight: 600;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.valor {
+  font-size: 1.1rem;
+  color: #222;
+  margin: 0.2rem 0 0;
+}
+
+.nota-edicion {
+  margin-top: 1.5rem;
+  color: #777;
+  font-size: 0.95rem;
+}
+
+.enlace-a-perfil {
+  color: #000000;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.enlace-a-perfil:hover {
+  text-decoration: none;
+}
+/* ---- Pedidos historial--- */
+.historial-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.historial-card {
+  border: 1px solid var(--amarillo);
+  border-left: 6px solid var(--rosa);
+  padding: 1.2rem 1.5rem;
+  border-radius: 8px;
+  background-color: var(--bg); /* suave rosado */
+  box-shadow: 0 2px 6px var(--shadow);
+  transition: all 0.3s ease;
+}
+
+.historial-resumen h3 {
+  margin-bottom: 0.5rem;
+  color: var(--rosaOsc);
+}
+
+.historial-resumen p {
+  margin: 0.25rem 0;
+  color: var(--text);
+}
+
+.estado-pedido {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+}
+
+/* Estados adaptados */
+.estado-pedido.entregado {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.estado-pedido.cancelado {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.btn-ver-detalles,
+.btn-repetir {
+  margin-top: 0.8rem;
+  background-color: var(--rosa);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-ver-detalles:hover,
+.btn-repetir:hover {
+  background-color: var(--rosaOsc);
+}
+
+.historial-detalles {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--borderColor);
+  color: var(--text);
+}
+
+.historial-detalles ul {
+  list-style: disc inside;
+  margin: 0.5rem 0 1rem 0;
+  padding-left: 0.5rem;
+}
+
+.oculto {
+  display: none;
+}
+
+/* ====== FOOTER ====== */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+/*  DESENFOQUE DEL FONDO AL ABRIR MODAL */
+.blur-background .main-container,
+.blur-background header,
+.blur-background footer,
+.blur-background .main-nav {
+    filter: blur(4px);
+    pointer-events: none; /* evita interacción */
+    user-select: none;
+}
