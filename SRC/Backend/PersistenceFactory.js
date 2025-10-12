@@ -1,66 +1,80 @@
 // SRC/Backend/PersistenceFactory.js
 const path = require('path');
-// Importamos todos nuestros "asistentes de datos"
+
+// Cargar variables (.env) del Backend (PERSISTENCE, JWT, etc.)
+require('dotenv').config({ path: path.resolve(__dirname, '.env') });
+
+// DAOs JSON existentes
 const JsonProductosDAO = require(path.join(__dirname, 'json', 'JsonProductosDAO'));
 const JsonClientesDAO  = require(path.join(__dirname, 'json', 'JsonClientesDAO'));
 const JsonChatbotDAO   = require(path.join(__dirname, 'json', 'JsonChatbotDAO'));
 const JsonCartDAO      = require(path.join(__dirname, 'json', 'JsonCartDAO'));
 
-console.log('[PersistenceFactory] Cargado en:', __filename);
+// Modo de persistencia (json | postgres | prisma)
+const use = (process.env.PERSISTENCE || 'postgres').toLowerCase();
+
+// --- Adaptadores para uniformar interfaz entre JSON y Prisma ---
+function adaptProducts(repo) {
+  // Devuelve un objeto con la interfaz "vieja" que esperan tus routers
+  return {
+    getAll:  (...a) => (repo.list ? repo.list(...a) : repo.getAll(...a)),
+    getById: (...a) => repo.getById(...a),
+    save:    (...a) => (repo.create ? repo.create(...a) : repo.save(...a)),
+    update:  (...a) => repo.update(...a),
+    delete:  (...a) => (repo.remove ? repo.remove(...a) : repo.delete(...a)),
+    translateError: repo.translateError?.bind(repo),
+  };
+}
+
+function adaptClients(repo) {
+  return {
+    getAll:     (...a) => (repo.getAll ? repo.getAll(...a) : repo.list(...a)),
+    getById:    (...a) => repo.getById(...a),
+    getByEmail: (...a) => repo.getByEmail ? repo.getByEmail(...a) : undefined,
+    save:       (...a) => (repo.save ? repo.save(...a) : repo.create(...a)),
+    update:     (...a) => repo.update(...a),
+    delete:     (...a) => (repo.delete ? repo.delete(...a) : repo.remove(...a)),
+    translateError: repo.translateError?.bind(repo),
+  };
+}
 
 class PersistenceFactory {
-  // Este método es como un "director"(pq dirigexd) que te da el asistente correcto
   static getDAO(tipo) {
-    // Limpiamos y estandarizamos el tipo que nos piden
-    const tipoLimpio = String(tipo || '').toLowerCase().trim();
-    console.log('[PersistenceFactory] Nos pidieron:', JSON.stringify(tipo), 'convertido a:', JSON.stringify(tipoLimpio));
+    const t = String(tipo || '').toLowerCase().trim();
+    const isPrisma = (use === 'postgres' || use === 'prisma');
 
-    // Dependiendo de lo que necesiten, damos el asistente correcto
-    switch (tipoLimpio) {
-      case 'productos':
-      case 'products':
-        console.log('[PersistenceFactory] ✅ Dando el asistente de productos');
-        return new JsonProductosDAO();
-
-      case 'clientes':
-      case 'clients':
-        console.log('[PersistenceFactory] ✅ Dando el asistente de clientes');
-        return new JsonClientesDAO();
-
-      case 'chatbot':
-        console.log('[PersistenceFactory] ✅ Dando el asistente del chatbot');
-        return new JsonChatbotDAO();
-
-      case 'cart':
-        console.log('[PersistenceFactory] ✅ Dando el asistente del carrito');
-        return new JsonCartDAO();
-
-      default:
-        // Si nos piden algo que no conocemos, avisamos
-        console.error('[PersistenceFactory] ❌ No conocemos este tipo:', JSON.stringify(tipo), '(convertido:', JSON.stringify(tipoLimpio), ')');
-        throw new Error(`No tenemos un asistente para: ${tipo}`);
+    if (isPrisma) {
+      if (t === 'productos' || t === 'products') {
+        // Repositorio Prisma de productos
+        const repo = require('./repositories/productRepo.prisma');
+        return adaptProducts(repo);
+      }
+      if (t === 'clientes' || t === 'clients') {
+        // Repositorio Prisma de clientes
+        const repo = require('./repositories/clientRepo.prisma');
+        return adaptClients(repo);
+      }
+      if (t === 'chatbot') return new JsonChatbotDAO(); // aún JSON
+      if (t === 'cart')    return new JsonCartDAO();    // aún JSON
     }
+
+    // Fallback JSON (o cuando PERSISTENCE=json)
+    if (t === 'productos' || t === 'products') return new JsonProductosDAO();
+    if (t === 'clientes'  || t === 'clients')  return new JsonClientesDAO();
+    if (t === 'chatbot')  return new JsonChatbotDAO();
+    if (t === 'cart')     return new JsonCartDAO();
+
+    throw new Error(`DAO desconocido: ${tipo}`);
   }
 
-  // Este método prepara todos los asistentes cuando arranca la aplicación
   static async initialize() {
-    console.log('🔧 Preparando todos nuestros asistentes de datos...');
-    try {
-      // Pedimos todos los asistentes que tenemos disponibles
-      const asistentes = [
-        this.getDAO('productos'),  // Asistente de productos
-        this.getDAO('clientes'),   // Asistente de clientes  
-        this.getDAO('chatbot'),    // Asistente del chatbot
-        this.getDAO('cart'),       // Asistente del carrito
-      ];
-      
-      console.log('✅ ¡Todos los asistentes están listos para trabajar!');
-      return asistentes;
-    } catch (error) {
-      console.error('❌ Hubo un problema al preparar los asistentes:', error.message);
-      throw error;
-    }
+    // Opcional: “calienta” la fábrica y muestra errores temprano
+    this.getDAO('productos');
+    this.getDAO('clientes');
+    this.getDAO('chatbot');
+    this.getDAO('cart');
+    return true;
   }
 }
-// Exportamos la fábrica para que otros puedan usarla
+
 module.exports = PersistenceFactory;
