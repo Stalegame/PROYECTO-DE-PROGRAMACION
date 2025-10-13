@@ -17,15 +17,8 @@ const pickAllowedFields = (obj = {}, allowed = []) =>
   allowed.reduce((acc, k) => (obj[k] !== undefined ? (acc[k] = obj[k], acc) : acc), {});
 
 //  Nuestro "asistente de productos" 
-let productosDAO;
-try {
-  // Intentamos usar el sistema principal
-  productosDAO = PersistenceFactory.getDAO('productos');
-} catch (e) {
-  // Si falla, usamos el de respaldo directo
-  const JsonProductosDAO = require(path.join(__dirname, '..', 'json', 'JsonProductosDAO'));
-  productosDAO = new JsonProductosDAO();
-}
+// Ahora depende 100% de la PersistenceFactory
+const productosDAO = PersistenceFactory.getDAO('productos');
 
 //seguridad para modificar productos (es como un guardia)
 let auth, adminAuth;
@@ -270,9 +263,9 @@ router.put('/:id',
         data: productoActualizado 
       });
     } catch (error) {
-      const mapped = translateProductError(error);
+      const mapped = productosDAO.translateError ? productosDAO.translateError(error) : null; 
       if (mapped) {
-        return res.status(mapped.status).json({
+        return res.status(mapped.status || 400).json({
           success: false,
           error: mapped.msg,
           code: error.code,

@@ -268,6 +268,8 @@ app.use((err, _req, res, _next) => {
       console.log('👥 Mostrador de clientes:', base + '/api/clients');
       console.log('🤖 Mostrador del chatbot:', base + '/api/chatbot');
       console.log('📲 Probador de WhatsApp:', base + '/api/test-whatsapp');
+      console.log('🛒 Mostrador de carrito:', base + '/api/cart');
+      
       if (FRONTEND_DIR) {
         console.log('🗂️  Carpeta de páginas:', FRONTEND_DIR);
         console.log('🌐 Páginas disponibles: /  /login  /admin  /contacto  /productos');

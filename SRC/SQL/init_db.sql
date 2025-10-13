@@ -50,7 +50,7 @@ CREATE INDEX IF NOT EXISTS idx_clients_activo ON clients (activo);
 CREATE TABLE IF NOT EXISTS products (
   id          TEXT PRIMARY KEY,                       -- conservamos tus IDs string
   name        TEXT NOT NULL UNIQUE,
-  price       NUMERIC(12,2) NOT NULL CHECK (price >= 0),
+  price       INTEGER NOT NULL CHECK (price >= 0),
   stock       INTEGER     NOT NULL DEFAULT 0 CHECK (stock >= 0),
   category    TEXT        NOT NULL,
   description TEXT,

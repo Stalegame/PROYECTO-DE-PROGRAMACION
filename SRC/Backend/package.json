@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Backend para Supermercado FRUNA",
   "main": "server.js",
-  "prisma": { "schema": "./db/prisma/schema.prisma" },
+  "prisma": {
+    "schema": "./db/prisma/schema.prisma"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
@@ -12,16 +14,17 @@
     "setup": "npm install && npm run seed",
     "fill-data": "npm run seed",
     "prisma:validate": "dotenv -e ./.env -- prisma validate",
-    "prisma:pull":     "dotenv -e ./.env -- prisma db pull",
+    "prisma:pull": "dotenv -e ./.env -- prisma db pull",
     "prisma:generate": "dotenv -e ./.env -- prisma generate",
-    "prisma:studio":   "dotenv -e ./.env -- prisma studio"
+    "prisma:studio": "dotenv -e ./.env -- prisma studio"
   },
   "dependencies": {
+    "@prisma/client": "^6.17.1",
     "axios": "^1.11.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
-    "express": "^4.18.2",
+    "express": "^4.21.2",
     "express-rate-limit": "^8.1.0",
     "express-validator": "^7.2.1",
     "helmet": "^8.1.0",
@@ -30,7 +33,9 @@
     "morgan": "^1.10.1"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "dotenv-cli": "^10.0.0",
+    "nodemon": "^3.1.10",
+    "prisma": "^6.17.1"
   },
   "keywords": [
     "fruna",

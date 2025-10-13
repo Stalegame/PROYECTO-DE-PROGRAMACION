@@ -3,21 +3,14 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
-const path = require('path');
+
+const PersistenceFactory = require('../PersistenceFactory');
 
 const router = express.Router();
 
 // ===== Nuestro "libro de clientes" =====
-let clientesDAO;
-try {
-  // Intentamos usar el sistema principal
-  const PersistenceFactory = require('../PersistenceFactory');
-  clientesDAO = PersistenceFactory.getDAO('clientes');
-} catch {
-  // Si falla, usamos el de respaldo directo
-  const JsonClientesDAO = require(path.join(__dirname, '..', 'json', 'JsonClientesDAO'));
-  clientesDAO = new JsonClientesDAO();
-}
+// Ahora depende 100% de la PersistenceFactory
+const clientesDAO = PersistenceFactory.getDAO('clientes');
 
 // ===== Ayudantes para validaciones =====
 // Esta función revisa si hubo errores en las validaciones

@@ -1,13 +1,6 @@
 // SRC/Backend/repositories/productRepo.prisma.js
 const prisma = require('../db');
 
-// Convierte params.id a número si tu columna id es INTEGER
-function parseId(id) {
-  const n = Number(id);
-  if (!Number.isInteger(n)) throw Object.assign(new Error('ID inválido'), { code: 'BAD_ID' });
-  return n;
-}
-
 // Mapea errores de Prisma a tus códigos/mensajes
 function translateError(e) {
   if (!e) return null;
@@ -33,7 +26,11 @@ module.exports = {
   // GET /api/products/:id
   async getById(id) {
     return prisma.products.findUnique({
-      where: { id: parseId(id) },
+      where: { id },
+      select: {
+        id: true, name: true, price: true, stock: true, category: true, description: true, image: true,
+        createdAt: true, updatedAt: true,
+      }
     });
   },
 
@@ -45,9 +42,10 @@ module.exports = {
     // created_at, updated_at (manejados por la BD)
     return prisma.products.create({
       data: {
+        id: Date.now().toString(), // Si tu id es string, o usa otro generador
         name: String(input.name),
-        price: Number(input.price),
-        stock: Number.isInteger(input.stock) ? input.stock : Number(input.stock),
+        price: Number(input.price) || 1,
+        stock: Number(input.stock) || 0,
         category: input.category ?? null,
         description: input.description ?? null,
         image: input.image ?? null,
@@ -59,24 +57,23 @@ module.exports = {
   async update(id, changes = {}) {
     const data = {};
     if (changes.name !== undefined)        data.name = String(changes.name);
-    if (changes.price !== undefined)       data.price = Number(changes.price);
-    if (changes.stock !== undefined)       data.stock = Number.isInteger(changes.stock) ? changes.stock : Number(changes.stock);
+    if (changes.price !== undefined)       data.price = Number(changes.price) || 1;
+    if (changes.stock !== undefined)       data.stock = Number(changes.stock) || 0;
     if (changes.category !== undefined)    data.category = changes.category ?? null;
     if (changes.description !== undefined) data.description = changes.description ?? null;
     if (changes.image !== undefined)       data.image = changes.image ?? null;
 
     return prisma.products.update({
-      where: { id: parseId(id) },
+      where: { id: String(id) },
       data,
     });
   },
 
   // DELETE /api/products/:id
   async delete(id) {
-    await prisma.products.delete({ where: { id: parseId(id) } });
+    await prisma.products.delete({ where: { id: String(id) } });
     return true;
   },
 
   translateError,
 };
-

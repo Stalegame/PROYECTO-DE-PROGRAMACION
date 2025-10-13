@@ -5,7 +5,7 @@
 node_modules/
 
 # Archivos generados por npm (Consultar al profe)
-#package-lock.json
+package-lock.json
 #npm-debug.log
 
 # Archivos específicos de VSCode
@@ -17,3 +17,6 @@ Desktop.ini
 
 # Archivos de logs
 *.log
+
+# Archivos de Prisma
+/generated/prisma

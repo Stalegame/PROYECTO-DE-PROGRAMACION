@@ -27,12 +27,26 @@ module.exports = {
 
   // Buscar por id
   async getById(id) {
-    return prisma.clients.findUnique({ where: { id: parseId(id) } });
+    return prisma.clients.findUnique({
+      where: { id },
+      select: {
+        id: true, email: true, nombre: true, role: true, activo: true, telefono: true, direccion: true,
+        createdAt: true, updatedAt: true,
+        // No incluir passwordHash aquí
+      }
+    });
   },
 
   // Buscar por email (para login)
   async getByEmail(email) {
-    return prisma.clients.findUnique({ where: { email: normalizeEmail(email) } });
+    return prisma.clients.findUnique({
+      where: { email: normalizeEmail(email) },
+      select: {
+        id: true, nombre: true, email: true, telefono: true, direccion: true,
+        role: true, activo: true, createdAt: true, updatedAt: true,
+        passwordHash: true, // Necesario para login
+      }
+    });
   },
 
   // Crear cliente
@@ -42,6 +56,7 @@ module.exports = {
     // direccion (text|null), passwordHash (text|null), role (text, default 'user'),
     // activo (boolean, default true), created_at, updated_at
     const data = {
+      id:        Date.now().toString(), // Si tu id es string, o usa otro generador
       nombre:    String(input.nombre).trim(),
       email:     normalizeEmail(input.email),
       telefono:  String(input.telefono ?? '').trim(),
@@ -53,10 +68,6 @@ module.exports = {
     // Si viene password plano, lo hasheamos
     if (input.password) {
       data.passwordHash = await bcrypt.hash(String(input.password), 10);
-    }
-    // Si vino ya hasheada desde otra capa (migraciones), respétala
-    if (input.passwordHash) {
-      data.passwordHash = String(input.passwordHash);
     }
 
     return prisma.clients.create({ data });

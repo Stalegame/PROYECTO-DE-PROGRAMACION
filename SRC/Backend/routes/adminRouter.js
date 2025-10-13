@@ -3,8 +3,38 @@ const express = require('express');
 const router = express.Router();
 const PersistenceFactory = require('../PersistenceFactory');
 
-// Traemos el "libro" de clientes por decirlo asi para poder leer y modificar clientes
+// Traemos el DAO de clientes (Prisma/JSON, etc., según tu factory)
 const clientesDAO = PersistenceFactory.getDAO('clientes');
+
+/** 
+ * Sanear/normalizar un cliente para respuesta pública:
+ * - quita passwordHash/password_hash
+ * - normaliza createdAt/updatedAt
+ */
+function toPublicClient(c) {
+  if (!c) return c;
+
+  // Extrae y descarta variantes de contraseña
+  const {
+    passwordHash,      // camel
+    password_hash,     // snake
+    ...rest
+  } = c;
+
+  // Normaliza fechas (si vienen en snake_case)
+  const createdAt = rest.createdAt ?? rest.created_at ?? null;
+  const updatedAt = rest.updatedAt ?? rest.updated_at ?? null;
+
+  // Elimina las keys snake duplicadas para no confundir al frontend
+  delete rest.created_at;
+  delete rest.updated_at;
+
+  return {
+    ...rest,
+    ...(createdAt ? { createdAt } : {}),
+    ...(updatedAt ? { updatedAt } : {}),
+  };
+}
 
 // ==================== RUTAS DEL ADMINISTRADOR ====================
 
@@ -13,21 +43,23 @@ router.get('/dashboard', (req, res) => {
   res.json({
     success: true,
     message: '¡Hola administrador! Bienvenido a tu panel de control',
-    user: req.user // Aquí viene la información del usuario que hizo login
+    user: req.user
   });
 });
 
-// Esta ruta muestra todos los clientes registrados
+// Listar todos los clientes (sin contraseñas)
 router.get('/clientes', async (req, res) => {
   try {
-    // Pedimos la lista completa de clientes
-    const clientes = await clientesDAO.getAll(); 
-    
-    // IMPORTANTE: getAll ya nos devuelve los clientes SIN sus contraseñas :D
+    // Pedimos todos los clientes al DAO
+    const clientes = await clientesDAO.getAll();
+
+    // Convertimos a versión pública y normalizamos campos
+    const data = Array.isArray(clientes) ? clientes.map(toPublicClient) : [];
+
     res.json({ 
       success: true, 
-      data: clientes,
-      message: `Encontrados ${clientes.length} clientes` 
+      data,
+      message: `Encontrados ${data.length} clientes`
     });
   } catch (error) {
     console.error('Error al obtener clientes:', error);
@@ -41,24 +73,25 @@ router.get('/clientes', async (req, res) => {
 // Esta ruta permite desactivar un cliente (sin eliminarlo)
 router.patch('/clientes/:id/desactivar', async (req, res) => {
   try {
-    const id = req.params.id; // El ID del cliente que queremos desactivar
-    
-    // Actualizamos el cliente, poniendo "activo: false"
-    const cliente = await clientesDAO.update(id, { activo: false });
-    
-    // Si no encontramos el cliente, avisamos
-    if (!cliente) {
+    const id = req.params.id;
+
+    // Importante: solo tocamos "activo". No editamos contraseña aquí.
+    const actualizado = await clientesDAO.update(id, { activo: false });
+
+    if (!actualizado) { 
       return res.status(404).json({ 
         success: false, 
         error: 'No encontramos este usuario' 
       });
     }
 
-    // Todo salió bien, confirmamos la desactivación
+    // Devolvemos versión pública
+    const data = toPublicClient(actualizado);
+
     res.json({ 
       success: true, 
       message: 'El usuario ha sido desactivado',
-      data: cliente 
+      data
     });
   } catch (error) {
     console.error('Error al desactivar cliente:', error);
