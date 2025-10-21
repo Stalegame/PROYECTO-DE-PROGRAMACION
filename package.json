@@ -2,12 +2,15 @@
   "name": "fruna-backend",
   "version": "2.1.0",
   "description": "Backend para Supermercado FRUNA",
+  "prisma": {
+    "schema": "src/backend/db/prisma/schema.prisma"
+  },
   "scripts": {
     "dev": "nodemon src/backend/server.js",
     "seed": "node src/backend/scripts/seed.js",
-    "prisma:generate": "prisma generate --schema=src/backend/db/prisma/schema.prisma",
-    "init_server": "npm install && npx prisma generate --schema=src/backend/db/prisma/schema.prisma && npx prisma db push --schema=src/backend/db/prisma/schema.prisma && node src/backend/scripts/seed.js",
-    "init_server_ci": "npm ci && npx prisma generate --schema=src/backend/db/prisma/schema.prisma && npx prisma db push --schema=src/backend/db/prisma/schema.prisma && node src/backend/scripts/seed.js"
+    "prisma:generate": "dotenv -e ./.env -- prisma generate",
+    "init_server": "npm install && npx prisma generate && npx prisma db push && node src/backend/scripts/seed.js",
+    "init_server_ci": "npm ci && npx prisma generate && npx prisma db push && node src/backend/scripts/seed.js"
   },
   "dependencies": {
     "@prisma/client": "^6.17.1",

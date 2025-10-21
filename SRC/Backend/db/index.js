@@ -1,9 +1,6 @@
 // SRC/Backend/db/index.js
 const path = require('path');
-require('dotenv').config({
-  // Sube una carpeta desde /db hasta /Backend
-  path: path.resolve(__dirname, '../.env'),
-});
+require('dotenv').config();
 
 const { PrismaClient } = require('@prisma/client');
 

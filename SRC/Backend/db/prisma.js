@@ -1,6 +1,6 @@
 // Carga de variables de entorno (.env)
 import dotenv from 'dotenv';
-dotenv.config({ path: 'SRC/Backend/.env' }); // Asegúrate de que el archivo .env esté en SRC/
+dotenv.config(); // Asegúrate de que el archivo .env este en la raiz
 
 // Importa Prisma Client
 import { PrismaClient } from '@prisma/client';
