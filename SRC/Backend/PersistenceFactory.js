@@ -4,7 +4,6 @@ const path = require('path');
 // DAOs JSON existentes
 const JsonProductosDAO = require(path.join(__dirname, 'json', 'JsonProductosDAO'));
 const JsonClientesDAO  = require(path.join(__dirname, 'json', 'JsonClientesDAO'));
-const JsonChatbotDAO   = require(path.join(__dirname, 'json', 'JsonChatbotDAO'));
 const JsonCartDAO      = require(path.join(__dirname, 'json', 'JsonCartDAO'));
 
 // Modo de persistencia (json | postgres | prisma)
@@ -51,14 +50,12 @@ class PersistenceFactory {
         const repo = require('./repositories/clientRepo.prisma');
         return adaptClients(repo);
       }
-      if (t === 'chatbot') return new JsonChatbotDAO(); // aún JSON
       if (t === 'cart')    return new JsonCartDAO();    // aún JSON
     }
 
     // Fallback JSON (o cuando PERSISTENCE=json)
     if (t === 'productos' || t === 'products') return new JsonProductosDAO();
     if (t === 'clientes'  || t === 'clients')  return new JsonClientesDAO();
-    if (t === 'chatbot')  return new JsonChatbotDAO();
     if (t === 'cart')     return new JsonCartDAO();
 
     throw new Error(`DAO desconocido: ${tipo}`);
@@ -68,7 +65,6 @@ class PersistenceFactory {
     // Opcional: “calienta” la fábrica y muestra errores temprano
     this.getDAO('productos');
     this.getDAO('clientes');
-    this.getDAO('chatbot');
     this.getDAO('cart');
     return true;
   }

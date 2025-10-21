@@ -191,7 +191,6 @@ try {
   // Nuestros encargados de ciertas areas 
   const productsRouter = require('./routes/productsRouter');
   const clientsRouter  = require('./routes/clientsRouter');
-  const chatbotRouter  = require('./routes/chatbotRouter');
   const adminRouter    = require('./routes/adminRouter');
   const cartRouter     = require('./routes/cartRouter');
 
@@ -205,7 +204,6 @@ try {
   // Los demás mostradores de atención
   app.use('/api/products', productsRouter);
   app.use('/api/clients',  clientsRouter);
-  app.use('/api/chatbot',  chatbotRouter);
   app.use('/api/cart',     cartRouter);
 
   console.log('✅ Todos los mostradores de atención están listos');
@@ -264,7 +262,6 @@ app.use((err, _req, res, _next) => {
       console.log('❤️  Chequeo de salud:', base + '/health');
       console.log('🧩 Mostrador de productos:', base + '/api/products');
       console.log('👥 Mostrador de clientes:', base + '/api/clients');
-      console.log('🤖 Mostrador del chatbot:', base + '/api/chatbot');
       console.log('📲 Probador de WhatsApp:', base + '/api/test-whatsapp');
       console.log('🛒 Mostrador de carrito:', base + '/api/cart');
       

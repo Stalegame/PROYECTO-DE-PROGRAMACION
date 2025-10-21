@@ -2,6 +2,17 @@
 const prisma = require('../db');
 const bcrypt = require('bcryptjs');
 
+// helper para agregar "+569"
+function formatTelefono(telefono) {
+  const t = String(telefono ?? '').trim();
+
+  // si está vacío, devuelve null o el valor por defecto
+  if (!t) return null;
+
+  // caso normal: el usuario solo ingresa los 8 dígitos
+  return `+569${t}`;
+}
+
 function parseId(id) {
   const n = Number(id);
   if (!Number.isInteger(n)) throw Object.assign(new Error('ID inválido'), { code: 'BAD_ID' });
@@ -59,7 +70,7 @@ module.exports = {
       id:        Date.now().toString(), // Si tu id es string, o usa otro generador
       nombre:    String(input.nombre).trim(),
       email:     normalizeEmail(input.email),
-      telefono:  String(input.telefono ?? '').trim(),
+      telefono:  formatTelefono(input.telefono),
       direccion: input.direccion ?? null,
       role:      input.role ?? 'user',
       activo:    input.activo ?? true,
@@ -72,6 +83,7 @@ module.exports = {
 
     return prisma.clients.create({ data });
   },
+  
 
   // Actualizar cliente
   async update(id, changes = {}) {
