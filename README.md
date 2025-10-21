@@ -39,85 +39,25 @@ Esta API contará con un **chatbot interactivo**, permitiendo a los usuarios rea
 
 ---
 
-## 📊 API Endpoints
+## ✨ Inicio Rapido del Servidor
 
-### 🔐 Autenticación
-- `POST /api/clients/login` – Inicio de sesión  
-- `POST /api/clients/register` – Registro de usuarios  
+Teniendo en cuenta que ya estan configuradas las variables de entorno en el .env.
 
-### 🛒 Carrito de Compras
-- `GET /api/cart` – Obtener carrito  
-- `POST /api/cart` – Agregar producto  
-- `DELETE /api/cart/:id` – Eliminar producto  
-- `POST /api/cart/checkout` – Finalizar compra  
+Y se ha leido de antemano el [init_server.md](https://github.com/Stalegame/PROYECTO-DE-PROGRAMACION/blob/main/docs/init_server.md) con toda la informacion necesaria.
 
-### 📦 Productos
-- `GET /api/products` – Listar productos  
-- `GET /api/products/:id` – Detalle de producto  
-- `POST /api/products` – Crear producto (Admin)  
-- `PUT /api/products/:id` – Actualizar producto (Admin)  
+Comandos a ejecutar para la instalacion del server 
 
-### 👥 Administración
-- `GET /api/admin/dashboard` – Panel de control  
-- `GET /api/admin/clientes` – Gestión de usuarios  
-- `PATCH /api/admin/clientes/:id/desactivar` – Desactivar usuario  
+```bash
+npm run init_server
+```
 
----
+Posteriormente, para inicializar el servidor
 
-## 🎨 Paleta de Colores FRUNA
+```bash
+npm run dev
+```
 
-### 🎯 Colores Primarios
-
-| Nombre | Código | Uso |
-|--------|---------|-----|
-| **Rojo FRUNA** | `#E31837` | Botones principales, precios, elementos importantes |
-| **Amarillo FRUNA** | `#FFD100` | Acentos, highlights, llamadas a la acción |
-| **Marrón Chocolate** | `#8B4513` | — |
-
----
-
-### 🔄 Colores Secundarios
-
-| Nombre | Código | Uso |
-|--------|---------|-----|
-| **Rojo Oscuro** | `#C1122D` | Hover states, botones activos |
-| **Amarillo Claro** | `#FFE34D` | Fondos claros, highlights suaves |
-| **Marrón Claro** | `#A0522D` | — |
-
----
-
-### ⚫️ Colores Neutros
-
-| Nombre | Código | Uso |
-|--------|---------|-----|
-| **Blanco** | `#FFFFFF` | Fondos, textos sobre colores oscuros |
-| **Negro** | `#000000` | Textos principales, títulos |
-| **Gris Claro** | `#F5F5F5` | Fondos secundarios |
-| **Gris Medio** | `#666666` | Textos secundarios |
-| **Gris Oscuro** | `#333333` | Textos sobre fondos claros |
-
----
-
-### 🏷️ Colores por Categoría de Productos
-
-| Categoría | Código | Uso |
-|------------|---------|-----|
-| **Alfajores** | `#FFD700` | Etiquetas, badges de categoría |
-| **Chocolate** | `#8B4513` | Productos de chocolate |
-| **Snacks** | `#FF8C00` | Snacks y aperitivos |
-| **Helados** | `#87CEEB` | Productos congelados |
-| **Bebidas** | `#32CD32` | Bebidas y líquidos |
-| **Ofertas** | `#FF0000` | Promociones y descuentos |
-| **Novedades** | `#9370DB` | Productos nuevos |
-
----
-
-### 🌈 Gradientes
-
-| Tipo | Descripción |
-|------|--------------|
-| **Gradiente Principal** | `linear-gradient(135deg, #E31837 0%, #FFD100 100%)` |
-| **Gradiente Botones** | `linear-gradient(45deg, #E31837, #C1122D)` |
+Luego, comprobar que todo funciona correctamente.
 
 ---
 
@@ -131,9 +71,6 @@ Esta API contará con un **chatbot interactivo**, permitiendo a los usuarios rea
 
 - **⚙️ Angela Muñoz** – [@MeruAngel](https://github.com/MeruAngel)  
   *Backend → QA & Documentación*
-
-- **📝 Amira Casanova** – [@amiracasanova](https://github.com/amiracasanova)  
-  *QA & Documentación → Frontend*
 
 ---
 
