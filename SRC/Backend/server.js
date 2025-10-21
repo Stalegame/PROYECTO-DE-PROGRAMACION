@@ -4,8 +4,6 @@ const express = require('express'); // El "motor" que hace funcionar todo
 const cors = require('cors'); // El que controla quién puede entrar, es como un portero
 const helmet = require('helmet'); // seguridad contra hackers
 const rateLimit = require('express-rate-limit');
-const bcrypt = require('bcryptjs'); // Es como un candado para contraseñas
-const jwt = require('jsonwebtoken'); // El "carnet de identidad digital"
 require('dotenv').config(); // Lee las "instrucciones secretas" del archivo .env (importante tener todo lo necesario del .env sino no sirve de nada)
 
 const PersistenceFactory = require('./PersistenceFactory');
@@ -188,7 +186,7 @@ app.get('/healthcheck', (_req, res) => {
 // Nuestras APIs 
 try {
   // Los "guardias de seguridad"
-  const { auth, onlyAdminEmail } = require('./middlewares/auth');
+  const { auth, adminAuth, onlyAdminEmail } = require('./middlewares/auth');
   
   // Nuestros encargados de ciertas areas 
   const productsRouter = require('./routes/productsRouter');
@@ -202,7 +200,7 @@ try {
   app.use('/api/clients/register', strictLimiter);
 
   // Area de administración - solo para jefes
-  app.use('/api/admin', auth, onlyAdminEmail('admin@fruna.cl'), adminRouter);
+  app.use('/api/admin', auth, adminAuth, adminRouter);
 
   // Los demás mostradores de atención
   app.use('/api/products', productsRouter);

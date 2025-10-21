@@ -1,9 +1,6 @@
 // SRC/Backend/PersistenceFactory.js
 const path = require('path');
 
-// Cargar variables (.env) del Backend (PERSISTENCE, JWT, etc.)
-require('dotenv').config({ path: path.resolve(__dirname, '.env') });
-
 // DAOs JSON existentes
 const JsonProductosDAO = require(path.join(__dirname, 'json', 'JsonProductosDAO'));
 const JsonClientesDAO  = require(path.join(__dirname, 'json', 'JsonClientesDAO'));

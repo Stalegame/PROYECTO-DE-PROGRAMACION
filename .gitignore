@@ -4,9 +4,8 @@
 # Dependencias de Node.js
 node_modules/
 
-# Archivos generados por npm (Consultar al profe)
+# Archivos generados por npm
 package-lock.json
-#npm-debug.log
 
 # Archivos específicos de VSCode
 .vscode/
