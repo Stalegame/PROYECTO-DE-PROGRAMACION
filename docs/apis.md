@@ -100,10 +100,19 @@ Ejemplo de uso// SRC/Backend/middlewares/auth.js
 const jwt = require('jsonwebtoken');
 // ...
 payload = jwt.verify(token, secret); // { id, email, role, iat, exp }
-II.2 — bcryptjsUso: Hasheo criptográfico de contraseñas.Librería: bcryptjs (Terceros).Funcionalidad: Garantiza que las contraseñas se almacenen de forma segura.Endpoints clave (Función save)Hashear ContraseñaJavaScript// En registro de cliente
+II.2 — bcryptjsUso: Hasheo criptográfico de contraseñas.
+Librería: bcryptjs (Terceros).
+Funcionalidad: Garantiza que las contraseñas se almacenen de forma segura.Endpoints clave (Función save)Hashear ContraseñaJavaScript// En registro de cliente
 passwordHash: bcrypt.hashSync(input.password, 10) // 10 es el factor de coste (salt)
 Ejemplo de uso // SRC/Backend/json/JsonClientesDAO.js
 const bcrypt = require('bcryptjs');
 // ...
 passwordHash: bcrypt.hashSync(input.password, 10),
-III. APIs de la Aplicación (Express.js Routes)Estas son las rutas principales que se exponen a través del framework Express.FuncionalidadMétodoURL/EndpointFragmento de Código (Ej.)LoginPOST/api/clients/login`app.use('/api/clients/login', strictLimiter);`RegistroPOST/api/clients/register`app.use('/api/clients/register', strictLimiter);`ProductosGET/api/products`app.use('/api/products', productsRouter);`Carrito (Agregar)POST/api/cart`await fetch("/api/cart", { method: "POST", ... });` (Frontend)Carrito (Checkout)POST/api/cart/checkout`await fetch("/api/cart/checkout", { method: "POST" });` (Frontend)AdministraciónGET/POST/.../api/admin/...`app.use('/api/admin', auth, onlyAdminEmail(...), adminRouter);`D) Integración en Fruna:Nutrición : USDA FDC — guardar fdcId en productos.nutricion_ref y mostrar calorías/macros.Pagos : Flow o Webpay Plus; usar urlConfirmation/return_url y registrar pedido al confirmar.Notificaciones : EmailJS (formulario de contacto) o Twilio (SMS/WhatsApp) para avisos de compra.
+
+Funcionalidad,Método,URL/Endpoint,Fragmento de Código (Ej.)
+Login,POST,/api/clients/login,"`app.use('/api/clients/login', strictLimiter);`"
+Registro,POST,/api/clients/register,"`app.use('/api/clients/register', strictLimiter);`"
+Productos,GET,/api/products,"`app.use('/api/products', productsRouter);`"
+Carrito (Agregar),POST,/api/cart,"`await fetch(""/api/cart"", { method: ""POST"", ... });` (Frontend)"
+Carrito (Checkout),POST,/api/cart/checkout,"`await fetch(""/api/cart/checkout"", { method: ""POST"" });` (Frontend)"
+Administración,GET/POST/...,/api/admin/...,"`app.use('/api/admin', auth, onlyAdminEmail(...), adminRouter);`"
