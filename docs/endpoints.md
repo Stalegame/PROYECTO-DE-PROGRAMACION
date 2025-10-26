@@ -13,14 +13,14 @@
 ### 📦 Productos
 - `GET /api/products` – Listar productos  
 - `GET /api/products/:id` – Detalle de producto  
-- `POST /api/products` – Crear producto (Admin)  
-- `PUT /api/products/:id` – Actualizar producto (Admin)  
 
-### 👥 Administración
+### 👥 Admin 
 - `GET /api/admin/dashboard` – Panel de control  
 - `GET /api/admin/clientes` – Gestión de usuarios  
 - `PATCH /api/admin/clientes/:id/desactivar` – Desactivar usuario  
-
+- `POST /api/products` – Crear producto  
+- `PUT /api/products/:id` – Actualizar producto  
+- `DELETE /api/products/:id ` - Borrar producto 
 ---
 # Documentación de Endpoints
 
@@ -41,9 +41,6 @@
 |--------|------------------------------|------------------------------------------------------|-----------------------------------------------------------|---------------------------------------------------|
 | GET    | /api/products                | Obtener todos los productos disponibles.             | Ninguna                                                   | `{"data": [{id: 1, name: "Manzana"}, {...}]}`     |
 | GET    | /api/products/:id            | Obtener el detalle de un producto por ID.            | Ninguna                                                   | `{"data": {id: 1, name: "Manzana", price: 4990}}` |
-| POST   | /api/products                | Crear un nuevo producto.                              | Requiere auth (Rol: admin)                               | `{"data": {id: 10, name: "Nuevo Producto", ...}}`  |
-| PUT    | /api/products/:id            | Actualizar campos de un producto existente.          | Requiere auth (Rol: admin)                               | `{"data": {id: 1, price: 5990}}`                  |
-| DELETE | /api/products/:id            | Eliminar un producto por ID.                          | Requiere auth (Rol: admin)                               | `{"success": true}`                                |
 
 ## 3. Endpoints de Carrito (/api/cart)
 
@@ -64,10 +61,12 @@
 
 ## 5. Endpoints de Administración (/api/admin)
 
-**Todas estas rutas requieren los privilegios más altos: auth y onlyAdminEmail (admin@fruna.cl).**
+**Todas estas rutas requieren los privilegios más altos: auth y admin auth.**
 
 | Método | Endpoint                     | Funcionalidad                                         | Ejemplo de Respuesta Exitosa                             |
 |--------|------------------------------|------------------------------------------------------|----------------------------------------------------------|
 | GET    | /api/admin/clientes          | Obtener la lista completa de clientes (sin hash de contraseña). | `{"data": [{id: "C-123", email: "..."}]}`               |
-| POST   | /api/admin/config/faqs       | Guardar/Actualizar las preguntas frecuentes (FAQs) del chatbot. | `{"success": true}`                                     |
 | GET    | /api/admin/dashboard          | Obtener estadísticas y métricas del dashboard.      | `{"metrics": {total_sales: 150, ...}}`                  |
+| POST   | /api/products                | Crear un nuevo producto.                              | Requiere auth (Rol: admin)                               | `{"data": {id: 10, name: "Nuevo Producto", ...}}`  |
+| PUT    | /api/products/:id            | Actualizar campos de un producto existente.          | Requiere auth (Rol: admin)                               | `{"data": {id: 1, price: 5990}}`                  |
+| DELETE | /api/products/:id            | Eliminar un producto por ID.                          | Requiere auth (Rol: admin)                               | `{"success": true}`    |    
