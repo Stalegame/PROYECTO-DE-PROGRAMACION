@@ -6,14 +6,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatInput = document.getElementById('chat-input');
     const chatArea = document.getElementById('chat-area');
 
-    // Función para abrir/cerrar el modal
+    // Cerrar carrito si está abierto cuando se abre el chatbot
     function toggleChatbot() {
+        const carritoSidebar = document.getElementById('carritoSidebar');
+        const sidebarOverlay = document.querySelector('.sidebar-overlay');
+        
+        // Cerrar carrito si está abierto
+        if (carritoSidebar && carritoSidebar.classList.contains('active')) {
+            carritoSidebar.classList.remove('active');
+            if (sidebarOverlay) {
+                sidebarOverlay.style.opacity = '0';
+                sidebarOverlay.style.pointerEvents = 'none';
+            }
+        }
+        
         modal.classList.toggle('visible');
+        if (modal.classList.contains('visible')) {
+            chatInput.focus();
+        }
     }
 
     // --- Listeners de Interfaz ---
     togglerBtn.addEventListener('click', toggleChatbot);
-    closeBtn.addEventListener('click', toggleChatbot);
+    closeBtn.addEventListener('click', () => {
+        modal.classList.remove('visible');
+    });
+
+    // Cerrar modal al hacer clic fuera
+    document.addEventListener('click', (e) => {
+        if (modal.classList.contains('visible') && 
+            !modal.contains(e.target) && 
+            !togglerBtn.contains(e.target)) {
+            modal.classList.remove('visible');
+        }
+    });
 
     // Enviar mensaje al presionar el botón o Enter
     sendBtn.addEventListener('click', handleChat);
@@ -31,10 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 1. Mostrar mensaje del usuario
         appendMessage(userMessage, 'outgoing');
-        chatInput.value = ''; // Limpiar input
+        chatInput.value = '';
 
-        // 2. Mostrar "Escribiendo..." (simulado)
-        const thinkingIndicator = appendMessage('Escribiendo...', 'incoming');
+        // 2. Mostrar "Escribiendo..." (mejorado)
+        const thinkingIndicator = appendMessage('Escribiendo...', 'incoming typing');
         
         // 3. Llamar al API de tu backend
         try {
@@ -42,29 +68,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json' 
-                    // No se necesita Auth por el momento según tu router
                 },
-                body: JSON.stringify({ message: userMessage, userId: getUserId() }) 
+                body: JSON.stringify({ 
+                    message: userMessage, 
+                    userId: getUserId() 
+                }) 
             });
 
             const data = await res.json();
 
             // 4. Eliminar indicador de "Escribiendo..."
-            chatArea.removeChild(thinkingIndicator);
+            if (thinkingIndicator.parentNode) {
+                chatArea.removeChild(thinkingIndicator);
+            }
             
-            // Usamos data.reply porque tu backend responde con "reply"
+            // 5. Mostrar respuesta del bot
             if (res.ok && data.reply) { 
-                // 5. Mostrar respuesta del bot
                 appendMessage(data.reply, 'incoming');
             } else {
-                appendMessage(`Error (${res.status}): No pude obtener una respuesta de la API.`, 'incoming');
+                appendMessage('Lo siento, hubo un error al procesar tu mensaje. Por favor intenta nuevamente.', 'incoming');
             }
 
         } catch (error) {
-            if (chatArea.contains(thinkingIndicator)) { 
-                 chatArea.removeChild(thinkingIndicator); 
+            // Eliminar indicador en caso de error
+            if (thinkingIndicator.parentNode) { 
+                chatArea.removeChild(thinkingIndicator); 
             }
-            appendMessage('Error de conexión con el servidor de chat.', 'incoming');
+            appendMessage('Error de conexión. Por favor verifica tu internet e intenta nuevamente.', 'incoming');
             console.error('Error en API Chatbot:', error);
         }
     }
@@ -86,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return messageDiv; 
     }
     
-    // Función para obtener el ID de usuario desde tu localStorage
+    // Función para obtener el ID de usuario
     function getUserId() {
         const userStr = localStorage.getItem('fruna_user');
         try {

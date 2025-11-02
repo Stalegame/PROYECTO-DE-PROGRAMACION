@@ -1,3 +1,4 @@
+/* ====== CHATBOT FRUNA STYLES ====== */
 /* --- Toggler Flotante --- */
 .chatbot-toggler {
     position: fixed;
@@ -6,18 +7,22 @@
     height: 60px;
     width: 60px;
     color: white;
-    background: #007bff; /* Usamos azul para diferenciar un poco del rosa principal y que destaque */
+    background: linear-gradient(135deg, var(--rosa) 0%, var(--rosaOsc) 100%);
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    font-size: 2em;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 1000; 
-    transition: all 0.3s;
+    font-size: 1.8em;
+    box-shadow: 0 4px 20px rgba(233, 30, 99, 0.3);
+    z-index: 10000; /* MÁS ALTO que el carrito */
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .chatbot-toggler:hover {
-    background: #0056b3;
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(233, 30, 99, 0.4);
 }
 
 /* --- Modal Principal --- */
@@ -25,70 +30,119 @@
     position: fixed;
     bottom: 100px;
     right: 30px;
-    width: 350px;
-    height: 450px;
+    width: 380px;
+    height: 500px;
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    z-index: 1000;
-    transform: scale(0.5); /* Oculto y escalado */
+    z-index: 10001; /* MÁS ALTO que el toggler y carrito */
+    border: 2px solid var(--rosa);
     opacity: 0;
     pointer-events: none;
-    transition: all 0.3s ease-in-out;
+    transform: translateY(20px) scale(0.95);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .chatbot-modal.visible {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0) scale(1);
     pointer-events: auto;
 }
 
-/* --- Estilos internos (header, mensajes, input) --- */
+/* --- Header --- */
 .chatbot-header {
-    padding: 15px;
-    background: #007bff;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, var(--rosa) 0%, var(--rosaOsc) 100%);
     color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 2px solid var(--amarillo);
 }
 
 .chatbot-header h2 {
     margin: 0;
-    font-size: 1.1em;
+    font-size: 1.2em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .chatbot-header .close-btn {
     background: none;
     border: none;
     color: white;
-    font-size: 1.2em;
+    font-size: 1.3em;
     cursor: pointer;
-    opacity: 0.8;
+    padding: 5px;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
 }
 
+.chatbot-header .close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+/* --- Área de Chat --- */
 .chat-area {
     flex-grow: 1;
-    padding: 20px 15px;
+    padding: 20px;
     overflow-y: auto;
-    background-color: #f7f7f7;
-    border-bottom: 1px solid #eee;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
+.chat-area::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-area::-webkit-scrollbar-thumb {
+    background: var(--rosaAlt);
+    border-radius: 4px;
+}
+
+.chat-area::-webkit-scrollbar-track {
+    background: var(--rosaClaro);
+}
+
+/* --- Mensajes --- */
 .message {
     display: flex;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
+    animation: messageSlide 0.3s ease;
+}
+
+@keyframes messageSlide {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .message p {
-    max-width: 75%;
-    padding: 10px 15px;
+    max-width: 80%;
+    padding: 12px 16px;
     border-radius: 18px;
     margin: 0;
-    font-size: 0.9em;
+    font-size: 0.95em;
+    line-height: 1.4;
+    word-wrap: break-word;
 }
 
 .message.incoming {
@@ -96,42 +150,132 @@
 }
 
 .message.incoming p {
-    background: #e9e9eb;
-    border-bottom-left-radius: 4px;
+    background: white;
+    border: 1px solid var(--rosaAlt);
+    color: var(--text);
+    border-bottom-left-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .message.outgoing {
     justify-content: flex-end;
 }
 
-/* Usamos el color principal de Fruna para el usuario */
 .message.outgoing p {
-    background: #E91E63; 
+    background: linear-gradient(135deg, var(--rosa) 0%, var(--rosaOsc) 100%);
     color: white;
-    border-bottom-right-radius: 4px;
+    border-bottom-right-radius: 5px;
+    box-shadow: 0 2px 8px rgba(233, 30, 99, 0.3);
 }
 
+/* --- Área de Input --- */
 .chat-input-area {
     display: flex;
-    padding: 10px;
-    border-top: 1px solid #ddd;
+    padding: 16px;
+    border-top: 1px solid var(--rosaClaro);
+    background: white;
+    gap: 10px;
+    align-items: center;
 }
 
 .chat-input-area input {
     flex-grow: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    margin-right: 10px;
-    font-size: 0.9em;
+    padding: 12px 16px;
+    border: 1px solid var(--rosaAlt);
+    border-radius: 25px;
+    font-size: 0.95em;
+    outline: none;
+    transition: all 0.3s ease;
+    background: var(--grisSuave);
+}
+
+.chat-input-area input:focus {
+    border-color: var(--rosa);
+    box-shadow: 0 0 0 2px rgba(233, 30, 99, 0.1);
+    background: white;
 }
 
 .chat-input-area button {
-    background: #28a745; /* Verde para el botón de enviar */
+    background: linear-gradient(135deg, var(--rosa) 0%, var(--rosaOsc) 100%);
     color: white;
     border: none;
-    border-radius: 20px;
-    padding: 8px 15px;
+    border-radius: 25px;
+    padding: 12px 20px;
     cursor: pointer;
     font-weight: bold;
+    font-size: 0.95em;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.chat-input-area button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+}
+
+/* --- Mensaje "Escribiendo..." --- */
+.message.typing p {
+    font-style: italic;
+    color: var(--rosa);
+    background: var(--rosaClaro) !important;
+    border: 1px dashed var(--rosaAlt) !important;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .chatbot-modal {
+        width: 90vw;
+        height: 70vh;
+        right: 5vw;
+        bottom: 80px;
+    }
+    
+    .chatbot-toggler {
+        bottom: 20px;
+        right: 20px;
+        width: 55px;
+        height: 55px;
+        font-size: 1.6em;
+    }
+    
+    .message p {
+        max-width: 85%;
+    }
+}
+
+@media (max-width: 480px) {
+    .chatbot-modal {
+        width: 95vw;
+        height: 75vh;
+        right: 2.5vw;
+        bottom: 70px;
+    }
+    
+    .chat-input-area {
+        padding: 12px;
+    }
+    
+    .chat-input-area input {
+        padding: 10px 14px;
+    }
+    
+    .chat-input-area button {
+        padding: 10px 16px;
+    }
+}
+
+.sidebar {
+    z-index: 9999; /* Carrito */
+}
+
+.sidebar-overlay {
+    z-index: 9998; /* Overlay del carrito */
+}
+
+.chatbot-toggler {
+    z-index: 10000; /* Botón del chatbot */
+}
+
+.chatbot-modal {
+    z-index: 10001; /* Modal del chatbot */
 }
