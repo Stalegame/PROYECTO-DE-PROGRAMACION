@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 3. Llamar al API de tu backend
         try {
-            const res = await fetch('/api/chatbot', {
+            const res = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json' 
