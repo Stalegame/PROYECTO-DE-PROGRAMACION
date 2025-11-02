@@ -19,3 +19,6 @@ Desktop.ini
 
 # Archivos de Prisma
 /generated/prisma
+
+# Linter
+eslint.config.mjs

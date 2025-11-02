@@ -98,9 +98,6 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true }));
 
-//llamada a la ruta del chatbot
-app.use("/api/chat", chatRouter);
-
 // El secretario que apunta todo lo que pasa
 app.use((req, _res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
@@ -211,6 +208,9 @@ try {
   app.use('/api/products', productsRouter);
   app.use('/api/clients',  clientsRouter);
   app.use('/api/cart',     cartRouter);
+
+  //llamada a la ruta del chatbot
+  app.use("/api/chat", chatRouter);
 
   console.log('✅ Todos los mostradores de atención están listos');
 } catch (error) {
