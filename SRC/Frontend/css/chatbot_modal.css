@@ -1,0 +1,137 @@
+/* --- Toggler Flotante --- */
+.chatbot-toggler {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    height: 60px;
+    width: 60px;
+    color: white;
+    background: #007bff; /* Usamos azul para diferenciar un poco del rosa principal y que destaque */
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 2em;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000; 
+    transition: all 0.3s;
+}
+
+.chatbot-toggler:hover {
+    background: #0056b3;
+}
+
+/* --- Modal Principal --- */
+.chatbot-modal {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 350px;
+    height: 450px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transform: scale(0.5); /* Oculto y escalado */
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.chatbot-modal.visible {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+/* --- Estilos internos (header, mensajes, input) --- */
+.chatbot-header {
+    padding: 15px;
+    background: #007bff;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chatbot-header h2 {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.chatbot-header .close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2em;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.chat-area {
+    flex-grow: 1;
+    padding: 20px 15px;
+    overflow-y: auto;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #eee;
+}
+
+.message {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.message p {
+    max-width: 75%;
+    padding: 10px 15px;
+    border-radius: 18px;
+    margin: 0;
+    font-size: 0.9em;
+}
+
+.message.incoming {
+    justify-content: flex-start;
+}
+
+.message.incoming p {
+    background: #e9e9eb;
+    border-bottom-left-radius: 4px;
+}
+
+.message.outgoing {
+    justify-content: flex-end;
+}
+
+/* Usamos el color principal de Fruna para el usuario */
+.message.outgoing p {
+    background: #E91E63; 
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.chat-input-area {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.chat-input-area input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    margin-right: 10px;
+    font-size: 0.9em;
+}
+
+.chat-input-area button {
+    background: #28a745; /* Verde para el botón de enviar */
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-weight: bold;
+}
