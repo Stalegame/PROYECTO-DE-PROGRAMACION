@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>FrunaBot (DeepSeek)</title>
+  <style>
+    body { font-family: Arial; margin: 20px; }
+    #chat { border: 1px solid #ccc; padding: 10px; height: 250px; overflow-y: auto; margin-bottom: 10px; }
+    p { margin: 5px 0; }
+    input { padding: 5px; width: 300px; }
+    button { padding: 6px 10px; }
+  </style>
+</head>
+<body>
+  <h2>FrunaBot (DeepSeek)</h2>
+  <div id="chat"></div>
+
+  <input id="msg" placeholder="¿En qué puedo ayudarte?" />
+  <button id="sendBtn">Enviar</button>
+
+  <script>
+    async function sendMsg() {
+      const input = document.getElementById("msg");
+      const message = input.value.trim();
+      if (!message) return;
+
+      document.getElementById("chat").innerHTML += `<p><b>Tú:</b> ${message}</p>`;
+      input.value = "";
+
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message }),
+        });
+
+        const data = await res.json();
+        document.getElementById("chat").innerHTML += `<p><b>FrunaBot:</b> ${data.reply || "(sin respuesta)"}</p>`;
+      } catch (err) {
+        document.getElementById("chat").innerHTML += `<p style="color:red;"><b>Error:</b> ${err.message}</p>`;
+      }
+    }
+
+    // ✅ Evita el error CSP agregando el listener aquí:
+    document.getElementById("sendBtn").addEventListener("click", sendMsg);
+  </script>
+</body>
+</html>

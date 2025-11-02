@@ -6,6 +6,9 @@ const helmet = require('helmet'); // seguridad contra hackers
 const rateLimit = require('express-rate-limit');
 require('dotenv').config(); // Lee las "instrucciones secretas" del archivo .env (importante tener todo lo necesario del .env sino no sirve de nada)
 
+// NUEVA RUTA: Chatbot (DeepSeek/OpenRouter)
+const chatRouter = require('./routes/chatRouter');
+
 const PersistenceFactory = require('./PersistenceFactory');
 
 // Nuestro mensajero de WhatsApp //BLOQUEADO POR AHORA
@@ -94,6 +97,9 @@ app.use(
   })
 );
 app.use(express.urlencoded({ extended: true }));
+
+//llamada a la ruta del chatbot
+app.use("/api/chat", chatRouter);
 
 // El secretario que apunta todo lo que pasa
 app.use((req, _res, next) => {
@@ -264,7 +270,8 @@ app.use((err, _req, res, _next) => {
       console.log('👥 Mostrador de clientes:', base + '/api/clients');
       console.log('📲 Probador de WhatsApp:', base + '/api/test-whatsapp');
       console.log('🛒 Mostrador de carrito:', base + '/api/cart');
-      
+      console.log("🔑 OPENROUTER_API_KEY cargada:", process.env.OPENROUTER_API_KEY ? "✅ Sí" : "❌ No");
+
       if (FRONTEND_DIR) {
         console.log('🗂️  Carpeta de páginas:', FRONTEND_DIR);
         console.log('🌐 Páginas disponibles: /  /login  /admin  /contacto  /productos');

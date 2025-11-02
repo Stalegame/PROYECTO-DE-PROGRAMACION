@@ -22,7 +22,8 @@
     "express-validator": "^7.2.1",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
-    "morgan": "^1.10.1"
+    "morgan": "^1.10.1",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "dotenv-cli": "^10.0.0",
