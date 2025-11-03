@@ -1,156 +1,157 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRUNA Chile - Dulces Tradicionales</title>
-    <link rel="icon" href="./img/logo fruna.png" type="image/png">
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/page_loader.css">
-    
-    <link rel="stylesheet" href="css/chatbot_modal.css"> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRUNA Chile - Dulces Tradicionales</title>
+    <link rel="icon" href="./img/logo fruna.png" type="image/png">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/page_loader.css">
+    <link rel="stylesheet" href="css/chatbot_modal.css">
 </head>
 
 <body>
-        <div id="loader-fruna" aria-hidden="true" class="hidden" data-asset-base="/img/dulces/">
-        <div class="lf-backdrop"></div>
-        <div class="lf-stage" aria-label="Cargando… dulces cayendo"></div>
-    </div>
-      <header>
-    <div class="header-inner">
-            <button class="btn-shop-bag" aria-label="Abrir carrito" id="open-cart">
-        <img src="./img/shop_white.png" alt="Carrito" class="icono-btn2">
-        <span class="contador-carrito" id="contadorCarrito">0</span>
-      </button>
+    <div id="loader-fruna" aria-hidden="true" class="hidden" data-asset-base="/img/dulces/">
+        <div class="lf-backdrop"></div>
+        <div class="lf-stage" aria-label="Cargando… dulces cayendo"></div>
+    </div>
+    
+    <header>
+        <div class="header-inner">
+            <button class="btn-shop-bag" aria-label="Abrir carrito" id="open-cart">
+                <img src="./img/shop_white.png" alt="Carrito" class="icono-btn2">
+                <span class="contador-carrito" id="contadorCarrito">0</span>
+            </button>
 
-            <div class="logo-container">
-        <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
-      </div>
+            <div class="logo-container">
+                <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
+            </div>
 
-            <div id="authBox">
-        <a id="authLoginLink" href="login_users.html" class="btn-login" aria-label="Iniciar sesión">
-          <img src="./img/user_login.png" alt="" class="icono-btn">
-          Iniciar Sesión
-        </a>
-        <span id="authName" style="display:none;"></span>
-        <button id="authLogoutBtn" class="btn" style="display:none;">
-          <img src="./img/user_login.png" alt="" class="icono-btn">
-          Cerrar Sesión
-        </button>
-      </div>
-    </div>
-  </header>
+            <div id="authBox">
+                <a id="authLoginLink" href="login_users.html" class="btn-login" aria-label="Iniciar sesión">
+                    <img src="./img/user_login.png" alt="" class="icono-btn">
+                    Iniciar Sesión
+                </a>
+                <span id="authName" style="display:none;"></span>
+                <button id="authLogoutBtn" class="btn" style="display:none;">
+                    <img src="./img/user_login.png" alt="" class="icono-btn">
+                    Cerrar Sesión
+                </button>   
+            </div>
+        </div>
+    </header>
 
-        <div class="banner">
-        🎉 OFERTA ESPECIAL: 2x1 en Alfajores - Solo por hoy!
-    </div>
+    <div class="banner">
+        🎉 OFERTA ESPECIAL: 2x1 en Alfajores - Solo por hoy!
+    </div>
 
-        <nav class="main-nav" aria-label="Navegación principal">
-        <a href="index.html" class="nav-pill">Inicio</a>
-        <a href="productos.html" class="nav-pill">Productos</a>
-        <a href="contacto.html" class="nav-pill">Contacto</a>
-    </nav>
+    <nav class="main-nav" aria-label="Navegación principal">
+        <a href="index.html" class="nav-pill">Inicio</a>
+        <a href="productos.html" class="nav-pill">Productos</a>
+        <a href="contacto.html" class="nav-pill">Contacto</a>
+    </nav>
 
-        <div class="sidebar" id="carritoSidebar">
-                <div class="sidebar-header">
-        <h2 class="titulo-carrito">🛒 Tu Carrito</h2>
-        <button class="cerrar-sidebar" id="cerrarSidebar">✖</button>
-        </div>
+    <div class="sidebar" id="carritoSidebar">
+        <div class="sidebar-header">
+            <h2 class="titulo-carrito">🛒 Tu Carrito</h2>
+            <button class="cerrar-sidebar" id="cerrarSidebar">✖</button>
+        </div>
 
-                <div class="carrito-items">
-        <p class="mensaje-vacio">Tu carrito está vacío 😞...</p>
-        </div>
+        <div class="carrito-items">
+            <p class="mensaje-vacio">Tu carrito está vacío 😞...</p>
+        </div>
 
-                <div class="carrito-total">
-        <p>Total: <strong>$0</strong></p>
-        <button class="btn-buy-bag">Finalizar Compra</button>
-        </div>
-    </div>
+        <div class="carrito-total">
+            <p>Total: <strong>$0</strong></p>
+            <button class="btn-buy-bag">Finalizar Compra</button>
+        </div>
+    </div>
 
-        <div class="sidebar-overlay"></div>
+    <div class="sidebar-overlay"></div>
 
-        <div class="notif" id="notif" aria-live="polite"></div>
-    
-        <section class="categorias">
-        <h2>Nuestras Categorías</h2>
-        
-        <div class="categoria">
-            <img src="./img/products/alfajores.png" alt="Alfajores">
-            <p>Alfajores</p>
-        </div>
-        
-        <div class="categoria">
-            <img src="./img/products/tabletones.png" alt="Chocolates">
-            <p>Chocolates</p>
-        </div>
+    <div class="notif" id="notif" aria-live="polite"></div>
+    
+    <section class="categorias">
+        <h2>Nuestras Categorías</h2>
+        <div class="categorias-container">
+            <div class="categoria">
+                <img src="./img/products/alfajores.png" alt="Alfajores">
+                <p>Alfajores</p>
+            </div>
+            
+            <div class="categoria">
+                <img src="./img/products/tabletones.png" alt="Chocolates">
+                <p>Chocolates</p>
+            </div>
 
-        <div class="categoria">
-            <img src="./img/products/Sufle_Chanfle_Mani.jpg" alt="Snacks">
-            <p>Snacks</p>
-        </div>
+            <div class="categoria">
+                <img src="./img/products/Sufle_Chanfle_Mani.jpg" alt="Snacks">
+                <p>Snacks</p>
+            </div>
 
-        <div class="categoria">
-            <img src="./img/products/palo_palito.png" alt="Helados">
-            <p>Helados</p>
-        </div>
+            <div class="categoria">
+                <img src="./img/products/palo_palito.png" alt="Helados">
+                <p>Helados</p>
+            </div>
 
-        <div class="categoria">
-            <img src="./img/products/cola_cola_fruna.jpg" alt="Bebidas">
-            <p>Bebidas</p>
-        </div>
+            <div class="categoria">
+                <img src="./img/products/cola_cola_fruna.jpg" alt="Bebidas">
+                <p>Bebidas</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="destacados">
+        <h2>Productos Destacados</h2>
+        <div class="productos-container">
+            <div class="producto" data-id="1758571251073">
+                <img src="./img/products/alfajores.png" alt="Alfajor Clásico">
+                <h3>Alfajor Clásico</h3>
+                <p>$1.290</p>
+                <button class="btn-comprar">Comprar</button>
+            </div>
+            
+            <div class="producto" data-id="1758489700270">
+                <img src="./img/products/tabletones.png" alt="Tableton Maní">
+                <h3>Tableton Maní</h3>
+                <p>$2.490</p>
+                <button class="btn-comprar">Comprar</button>
+            </div>
 
-    </section>
-    
-        <section class="destacados">
-        <h2>Productos Destacados</h2>
-        
-        <div class="producto" data-id="1758571251073">
-            <img src="./img/products/alfajores.png" alt="Alfajor Clásico">
-            <h3>Alfajor Clásico</h3>
-            <p>$1.290</p>
-            <button class="btn-comprar">Comprar</button>
-        </div>
-        
-        <div class="producto" data-id="1758489700270">
-            <img src="./img/products/tabletones.png" alt="Tableton Maní">
-            <h3>Tableton Maní</h3>
-            <p>$2.490</p>
-            <button class="btn-comprar">Comprar</button>
-        </div>
+            <div class="producto" data-id="1758149775878">
+                <img src="./img/products/cola_cola_fruna.jpg" alt="Cola cola">
+                <h3>Cola Cola Clásica</h3>
+                <p>$1.490</p>
+                <button class="btn-comprar">Comprar</button>
+            </div>
 
-        <div class="producto" data-id="1758149775878">
-            <img src="./img/products/cola_cola_fruna.jpg" alt="Cola cola">
-            <h3>Cola Cola Clásica</h3>
-            <p>$1.490</p>
-            <button class="btn-comprar">Comprar</button>
-        </div>
+            <div class="producto" data-id="1759101595903">
+                <img src="./img/products/Alfajor_Panchito.jpg" alt="Alfajor Panchito">
+                <h3>Alfajor Panchito</h3>
+                <p>$490</p>
+                <button class="btn-comprar">Comprar</button>
+            </div>
 
-        <div class="producto" data-id="1759101595903">
-            <img src="./img/products/Alfajor_Panchito.jpg" alt="Alfajor Panchito">
-            <h3>Alfajor Panchito</h3>
-            <p>$490</p>
-            <button class="btn-comprar">Comprar</button>
-        </div>
+            <div class="producto" data-id="1758149867672">
+                <img src="./img/products/Sufle_Chanfle_Mani.jpg" alt="Sufle Maní">
+                <h3>Sufle Mani</h3>
+                <p>$990</p>
+                <button class="btn-comprar">Comprar</button>
+            </div>
 
-        <div class="producto" data-id="1758149867672">
-            <img src="./img/products/Sufle_Chanfle_Mani.jpg" alt="Sufle Maní">
-            <h3>Sufle Mani</h3>
-            <p>$990</p>
-            <button class="btn-comprar">Comprar</button>
-        </div>
-
-        <div class="producto" data-id="1758149195472">
-            <img src="./img/products/palo_palito.png" alt="Palo Palito">
-            <h3>Palo Palito</h3>
-            <p>$290</p>
-            <button class="btn-comprar">Comprar</button>
-        </div>
-    </section>
-    
-        <footer>
-        <p>📍 Av. Providencia 1234, Santiago</p>
-        <p>© 2025 Fruna · Creado por Comprimidos Team.</p>
-    </footer>
+            <div class="producto" data-id="1758149195472">
+                <img src="./img/products/palo_palito.png" alt="Palo Palito">
+                <h3>Palo Palito</h3>
+                <p>$290</p>
+                <button class="btn-comprar">Comprar</button>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <p>📍 Av. Providencia 1234, Santiago</p>
+        <p>© 2025 Fruna · Creado por Comprimidos Team.</p>
+    </footer>
 
     <button class="chatbot-toggler" id="chatbot-toggler-btn" title="Abrir Chatbot">
         💬
@@ -181,6 +182,5 @@
 <script src="js/page_loader.js" defer></script>
 <script src="js/cart.js" defer></script>
 <script src="js/index.js" defer></script>
-
 <script src="js/chatbot.js" defer></script>
 </html>

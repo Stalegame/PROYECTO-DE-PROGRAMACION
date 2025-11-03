@@ -1,4 +1,3 @@
-// Frontend/js/productos.js
 document.addEventListener('DOMContentLoaded', () => {
   // =============== 1) UI de sesión (nombre + logout) ===============
   const loginLink = document.getElementById('authLoginLink');   // <a href="login_users.html">

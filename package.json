@@ -1,6 +1,6 @@
 {
   "name": "fruna-backend",
-  "version": "2.1.0",
+  "version": "2.2.1",
   "description": "Backend para Supermercado FRUNA",
   "prisma": {
     "schema": "src/backend/db/prisma/schema.prisma"
@@ -24,8 +24,7 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.1",
-    "node-fetch": "^3.3.2",
-    "pg": "^8.16.3"
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "dotenv-cli": "^10.0.0",

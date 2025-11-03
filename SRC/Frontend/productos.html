@@ -1,121 +1,119 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Catálogo FRUNA | La dulcería de Chile</title>
-  <link rel="icon" href="./img/logo fruna.png" type="image/png">
-  <link rel="stylesheet" href="css/productos.css">
-  <link rel="stylesheet" href="css/page_loader.css">
-    
-    <link rel="stylesheet" href="css/chatbot_modal.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Catálogo FRUNA | La dulcería de Chile</title>
+  <link rel="icon" href="./img/logo fruna.png" type="image/png">
+  <link rel="stylesheet" href="css/productos.css">
+  <link rel="stylesheet" href="css/page_loader.css">
+  <link rel="stylesheet" href="css/chatbot_modal.css">
 </head>
 
 <body>
-    <div id="loader-fruna" aria-hidden="true" class="hidden" data-asset-base="/img/dulces/">
-    <div class="lf-backdrop"></div>
-    <div class="lf-stage" aria-label="Cargando… dulces cayendo"></div>
-  </div>
-    <header>
-    <div class="header-inner">
-            <button class="btn-shop-bag" aria-label="Abrir carrito" id="open-cart">
-        <img src="./img/shop_white.png" alt="Carrito" class="icono-btn2">
-        <span class="contador-carrito" id="contadorCarrito">0</span>
-      </button>
+    <div id="loader-fruna" aria-hidden="true" class="hidden" data-asset-base="/img/dulces/">
+    <div class="lf-backdrop"></div>
+    <div class="lf-stage" aria-label="Cargando… dulces cayendo"></div>
+  </div>
+  
+  <header>
+    <div class="header-inner">
+      <button class="btn-shop-bag" aria-label="Abrir carrito" id="open-cart">
+        <img src="./img/shop_white.png" alt="Carrito" class="icono-btn2">
+        <span class="contador-carrito" id="contadorCarrito">0</span>
+      </button>
 
-            <div class="logo-container">
-        <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
-      </div>
+      <div class="logo-container">
+        <img src="./img/logo fruna.png" alt="FRUNA Chile" class="site-logo">
+      </div>
 
-            <div id="authBox">
-        <a id="authLoginLink" href="login_users.html" class="btn-login" aria-label="Iniciar sesión">
-          <img src="./img/user_login.png" alt="" class="icono-btn">
-          Iniciar Sesión
-        </a>
-        <span id="authName" style="display:none;"></span>
-        <button id="authLogoutBtn" class="btn" style="display:none;">
-          <img src="./img/user_login.png" alt="" class="icono-btn">
-          Cerrar Sesión
-        </button>
-      </div>
-    </div>
-  </header>
+      <div id="authBox">
+        <a id="authLoginLink" href="login_users.html" class="btn-login" aria-label="Iniciar sesión">
+          <img src="./img/user_login.png" alt="" class="icono-btn">
+          Iniciar Sesión
+        </a>
+        <span id="authName" style="display:none;"></span>
+        <button id="authLogoutBtn" class="btn" style="display:none;">
+          <img src="./img/user_login.png" alt="" class="icono-btn">
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </header>
 
-    <nav class="main-nav" aria-label="Navegación principal">
-    <a href="index.html" class="nav-pill">Inicio</a>
-    <a href="productos.html" class="nav-pill is-active">Productos</a>
-    <a href="contacto.html" class="nav-pill">Contacto</a>
-  </nav>
+  <nav class="main-nav" aria-label="Navegación principal">
+    <a href="index.html" class="nav-pill">Inicio</a>
+    <a href="productos.html" class="nav-pill is-active">Productos</a>
+    <a href="contacto.html" class="nav-pill">Contacto</a>
+  </nav>
 
-    <div class="sidebar" id="carritoSidebar">
-        <div class="sidebar-header">
-    <h2 class="titulo-carrito">🛒 Tu Carrito</h2>
-    <button class="cerrar-sidebar" id="cerrarSidebar">✖</button>
-    </div>
-
-        <div class="carrito-items">
-    <p class="mensaje-vacio">Tu carrito está vacío 😞...</p>
-    </div>
-
-        <div class="carrito-total">
-    <p>Total: <strong>$0</strong></p>
-    <button class="btn-buy-bag">Finalizar Compra</button>
-    </div>
-  </div>
-
-    <div class="sidebar-overlay"></div>
-
-    <div class="notif" id="notif" aria-live="polite"></div>
-
-    <div class="contenedor">
-        <aside class="filtros">
-      <h3>Categorías</h3>
-      <ul>
-        <li><a href="#" data-cat="alfajores">Alfajores ($1.290 – $2.990)</a></li>
-        <li><a href="#" data-cat="chocolates">Chocolates ($1.990 – $3.490)</a></li>
-        <li><a href="#" data-cat="snacks">Snacks ($1.000 – $2.490)</a></li>
-        <li><a href="#" data-cat="helados">Helados ($290 – $1.090)</a></li>
-        <li><a href="#" data-cat="bebidas">Bebidas ($1.490 – $2.490)</a></li>
-        <li><a href="#" data-cat="ofertas">Ofertas</a></li>
-        <li><a href="#" data-cat="novedades">Novedades</a></li>
-      </ul>
-    </aside>
-
-        <main class="productos">
-      <div id="products-grid"></div>
-    </main>
-  </div>
-    
-    <button class="chatbot-toggler" id="chatbot-toggler-btn" title="Abrir Chatbot">
-        💬
-    </button>
-
-    <div class="chatbot-modal" id="chatbot-modal">
-        <header class="chatbot-header">
-            <h2>Asistente Fruna 🤖</h2>
-            <button class="close-btn" id="chatbot-close-btn">✖</button>
-        </header>
-        <div class="chat-area" id="chat-area">
-            <div class="message incoming">
-                <p>Hola, soy tu asistente de Fruna. ¿Cómo puedo ayudarte hoy?</p>
-            </div>
-        </div>
-        <div class="chat-input-area">
-            <input 
-                type="text" 
-                id="chat-input" 
-                placeholder="Escribe tu mensaje aquí..." 
-                required
-            />
-            <button id="chat-send-btn">Enviar</button>
-        </div>
+  <div class="sidebar" id="carritoSidebar">
+    <div class="sidebar-header">
+      <h2 class="titulo-carrito">🛒 Tu Carrito</h2>
+      <button class="cerrar-sidebar" id="cerrarSidebar">✖</button>
     </div>
 
+    <div class="carrito-items">
+      <p class="mensaje-vacio">Tu carrito está vacío 😞...</p>
+    </div>
 
-    <script src="js/page_loader.js" defer></script>
-  <script src="js/cart.js" defer></script>
-  <script src="js/productos.js" defer></script>
-    
-    <script src="js/chatbot.js" defer></script>
+    <div class="carrito-total">
+      <p>Total: <strong>$0</strong></p>
+      <button class="btn-buy-bag">Finalizar Compra</button>
+    </div>
+  </div>
+
+  <div class="sidebar-overlay"></div>
+
+  <div class="notif" id="notif" aria-live="polite"></div>
+
+  <div class="contenedor">
+    <aside class="filtros">
+      <h3>Categorías</h3>
+      <ul>
+        <li><a href="#" data-cat="alfajores">Alfajores ($1.290 – $2.990)</a></li>
+        <li><a href="#" data-cat="chocolates">Chocolates ($1.990 – $3.490)</a></li>
+        <li><a href="#" data-cat="snacks">Snacks ($1.000 – $2.490)</a></li>
+        <li><a href="#" data-cat="helados">Helados ($290 – $1.090)</a></li>
+        <li><a href="#" data-cat="bebidas">Bebidas ($1.490 – $2.490)</a></li>
+        <li><a href="#" data-cat="ofertas">Ofertas</a></li>
+        <li><a href="#" data-cat="novedades">Novedades</a></li>
+      </ul>
+    </aside>
+
+    <main class="productos">
+      <div id="products-grid"></div>
+    </main>
+  </div>
+
+  <button class="chatbot-toggler" id="chatbot-toggler-btn" title="Abrir Chatbot">
+    💬
+  </button>
+
+  <div class="chatbot-modal" id="chatbot-modal">
+    <header class="chatbot-header">
+      <h2>Asistente Fruna 🤖</h2>
+      <button class="close-btn" id="chatbot-close-btn">✖</button>
+    </header>
+    <div class="chat-area" id="chat-area">
+      <div class="message incoming">
+        <p>Hola, soy tu asistente de Fruna. ¿Cómo puedo ayudarte hoy?</p>
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <input 
+        type="text" 
+        id="chat-input" 
+        placeholder="Escribe tu mensaje aquí..." 
+        required
+      />
+      <button id="chat-send-btn">Enviar</button>
+    </div>
+  </div>
+
+  <script src="js/page_loader.js" defer></script>
+  <script src="js/cart.js" defer></script>
+  <script src="js/productos.js" defer></script>
+  <script src="js/chatbot.js" defer></script>
 </body>
 </html>
