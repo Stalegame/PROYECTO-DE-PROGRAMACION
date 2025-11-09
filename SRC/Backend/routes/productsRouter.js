@@ -137,7 +137,7 @@ const handleValidationErrors = (req, res, next) => {
 router.get('/', async (_req, res) => {
   try {
     const productos = await productosDAO.getAll();
-    res.json({ 
+    res.status(200).json({ 
       success: true, 
       count: productos.length, 
       data: productos,
@@ -162,7 +162,7 @@ router.get('/:id', validateProductId, handleValidationErrors, async (req, res) =
         error: 'No encontramos este producto' 
       });
     }
-    res.json({ 
+    res.status(200).json({ 
       success: true, 
       data: producto,
       message: 'Producto encontrado' 
@@ -209,6 +209,7 @@ router.post(
         'NAME_REQUIRED':  { status: 400, msg: 'El nombre es obligatorio' },
         'PRICE_REQUIRED': { status: 400, msg: 'El precio es obligatorio' },
         'STOCK_REQUIRED': { status: 400, msg: 'El stock es obligatorio' },
+        'CATEGORI_REQUIRED': { status: 400, msg: 'La categoria es obligatoria'},
 
         // Reglas de negocio
         'PRICE_INVALID':  { status: 400, msg: 'El precio debe ser un entero entre 1 y 1.000.000' },
@@ -256,8 +257,8 @@ router.put('/:id',
           error: 'No encontramos el producto para actualizar' 
         });
       }
-      
-      res.json({ 
+
+      res.status(200).json({ 
         success: true, 
         message: 'Producto actualizado correctamente', 
         data: productoActualizado 
@@ -294,7 +295,7 @@ router.delete(
           error: 'No encontramos el producto para eliminar' 
         });
       }
-      res.json({ 
+      res.status(200).json({ 
         success: true, 
         message: 'Producto eliminado correctamente' 
       });

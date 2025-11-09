@@ -1,5 +1,6 @@
 # Archivos sensibles
 *.env
+*.env.test
 
 # Dependencias de Node.js
 node_modules/

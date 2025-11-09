@@ -144,7 +144,7 @@ router.post('/login', validateLogin, handleValidationErrors, async (req, res) =>
     // Quitamos la información sensible antes de devolver el usuario
     const { passwordHash: _omit, password: _omitOld, ...usuarioPublico } = user;
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: '¡Bienvenido! Has iniciado sesión correctamente',
       user: usuarioPublico,
