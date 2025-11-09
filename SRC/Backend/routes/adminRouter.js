@@ -40,7 +40,7 @@ function toPublicClient(c) {
 
 // Esta ruta es como el "tablero de control" del administrador
 router.get('/dashboard', (req, res) => {
-  res.json({
+  res.status(200).json({
     success: true,
     message: '¡Hola administrador! Bienvenido a tu panel de control',
     user: req.user
@@ -56,7 +56,7 @@ router.get('/clientes', async (req, res) => {
     // Convertimos a versión pública y normalizamos campos
     const data = Array.isArray(clientes) ? clientes.map(toPublicClient) : [];
 
-    res.json({ 
+    res.status(200).json({ 
       success: true, 
       data,
       message: `Encontrados ${data.length} clientes`
@@ -88,7 +88,7 @@ router.patch('/clientes/:id/desactivar', async (req, res) => {
     // Devolvemos versión pública
     const data = toPublicClient(actualizado);
 
-    res.json({ 
+    res.status(200).json({ 
       success: true, 
       message: 'El usuario ha sido desactivado',
       data
@@ -101,5 +101,6 @@ router.patch('/clientes/:id/desactivar', async (req, res) => {
     });
   }
 });
+
 // Exportamos el router para usarlo en el servidor principal
 module.exports = router;

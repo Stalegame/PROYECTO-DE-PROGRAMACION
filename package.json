@@ -8,9 +8,12 @@
   "scripts": {
     "dev": "nodemon src/backend/server.js",
     "seed": "node src/backend/scripts/seed.js",
+    "seed:test": "cross-env NODE_ENV=test node src/backend/scripts/seed.js",
     "prisma:generate": "dotenv -e ./.env -- prisma generate",
     "init_server": "npm install && npx prisma generate && npx prisma db push && node src/backend/scripts/seed.js",
-    "init_server_ci": "npm ci && npx prisma generate && npx prisma db push && node src/backend/scripts/seed.js"
+    "init_server_ci": "npm ci && npx prisma generate && npx prisma db push && node src/backend/scripts/seed.js",
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles --runInBand",
+    "db:push:test": "dotenv -e .env.test -- prisma db push --schema=src/backend/db/prisma/schema.prisma"
   },
   "dependencies": {
     "@prisma/client": "^6.17.1",
@@ -27,9 +30,12 @@
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "dotenv-cli": "^10.0.0",
+    "jest": "^30.2.0",
     "nodemon": "^3.1.10",
-    "prisma": "^6.17.1"
+    "prisma": "^6.17.1",
+    "supertest": "^7.1.4"
   },
   "keywords": [
     "fruna",

@@ -1,10 +1,14 @@
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
+/**
+ * 
+ */
+import bcrypt from 'bcryptjs';
+import prisma from '../db/index.js';
 
-const prisma = new PrismaClient();
+console.log("NODE_ENV =", process.env.NODE_ENV);
+console.log("DATABASE_URL =", process.env.DATABASE_URL);
 
 async function main() {
-  // CLIENTS
+  // CLIENTES 
   const clients = [
     {
       id: '1758128875560',
@@ -50,14 +54,18 @@ async function main() {
 
   for (const c of clients) {
     const hash = await bcrypt.hash(c.password, 10);
+    const { password, ...rest } = c; // quitar password
     await prisma.clients.upsert({
       where: { id: c.id },
       update: {},
-      create: { ...c, passwordHash: hash }
+      create: {
+        ...rest,
+        passwordHash: hash
+      }
     });
   }
 
-  // PRODUCTS
+  // ===== PRODUCTOS =====
   const products = [
     {
       id: '1758149195472',
@@ -74,7 +82,7 @@ async function main() {
       price: 1490,
       stock: 10,
       category: 'Bebidas',
-      description: 'Refresca tus momentos con el sabor clásico y burbujeante de siempre. Ideal para compartir en familia o con amigos.',
+      description: 'Refresca tus momentos con el sabor clásico y burbujeante de siempre. Ideal para compartir.',
       image: 'cola_cola_fruna.jpg'
     },
     {
@@ -83,41 +91,15 @@ async function main() {
       price: 990,
       stock: 20,
       category: 'Snacks',
-      description: 'Snack crocante de maní con el sabor clásico de siempre. Perfecto para compartir y disfrutar en cualquier ocasión.',
+      description: 'Snack crocante de maní con el sabor clásico de siempre.',
       image: 'Sufle_Chanfle_Mani.jpg'
-    },
-    {
-      id: '1758489700270',
-      name: 'Tabletones Chocolate',
-      price: 2290,
-      stock: 1,
-      category: 'Chocolate',
-      description: 'Tabletones de galleta bañados en chocolate.',
-      image: 'tabletones.png'
-    },
-    {
-      id: '1758571251073',
-      name: 'Alfajor Clásico',
-      price: 1290,
-      stock: 20,
-      category: 'Alfajores',
-      description: 'Alfajor tradicional',
-      image: 'alfajores.png'
-    },
-    {
-      id: '1759101595903',
-      name: 'Alfajor Panchito',
-      price: 490,
-      stock: 45,
-      category: 'Alfajores',
-      description: 'Alfajor recubierto de chocolate y relleno de manjar.',
-      image: 'Alfajor_Panchito.jpg'
     }
+    // Agrega más productos si quieres
   ];
 
   for (const p of products) {
     await prisma.products.upsert({
-      where: { id: p.id },
+      where: { id: p.id }, // ⚠️ usar id para evitar conflictos
       update: {},
       create: p
     });
