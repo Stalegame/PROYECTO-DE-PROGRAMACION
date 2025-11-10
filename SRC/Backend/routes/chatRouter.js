@@ -105,7 +105,12 @@ router.post("/", async (req, res) => {
       }),
     });
 
-    const data = await response.json();
+    // timeout de 30 segundos
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Tiempo de espera agotado al contactar el modelo.")), 30000)
+    );
+
+    const data = await Promise.race([response.json(), timeout]);
     let reply = data.choices?.[0]?.message?.content || "No se obtuvo respuesta del modelo.";
 
     // Limpiar tokens especiales del modelo si aparecen

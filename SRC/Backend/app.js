@@ -59,11 +59,15 @@ app.use('/api/', apiLimiter);
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Logger simple de requests (con hora local)
-app.use((req, _res, next) => {
-  const now = new Date();
-  const localTime = now.toLocaleString('es-CL', { timeZone: 'America/Santiago' });
-  console.log(`[${localTime}] ${req.method} ${req.url}`);
+// Logger compacto: hora local y tiempo de respuesta (ms)
+app.use((req, res, next) => {
+  const start = process.hrtime();
+  res.on('finish', () => {
+    const diff = process.hrtime(start);
+    const ms = Math.round(diff[0] * 1e3 + diff[1] / 1e6);
+    const localTime = new Date().toLocaleString('es-CL', { timeZone: 'America/Santiago' });
+    console.log(`[${localTime}] ${req.method} ${req.originalUrl} - Status: ${res.statusCode} - ${ms}ms`);
+  });
   next();
 });
 
