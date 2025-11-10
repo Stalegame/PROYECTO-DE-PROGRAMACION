@@ -6,8 +6,7 @@ const {
   estaDisponible,
   listarProductosPorCategoria,
   listarProductosPorPrecio,
-  buscarProductos,
-  resumenProducto
+  buscarProductos
 } = require("../db/dbFunctions");
 
 router.post("/", async (req, res) => {

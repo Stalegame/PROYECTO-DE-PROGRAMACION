@@ -1,54 +1,54 @@
 // /js/carrito.js
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const carritoBtn       = document.querySelector(".btn-shop-bag");
-  const sidebar          = document.querySelector(".sidebar");
-  const cerrarSidebar    = document.querySelector(".cerrar-sidebar");
-  const overlay          = document.querySelector(".sidebar-overlay");
-  const contenedorItems  = document.querySelector(".carrito-items");
-  const totalTexto       = document.querySelector(".carrito-total strong");
-  const contador         = document.getElementById("contadorCarrito") || document.getElementById("contador");
-  const btnFinalizar     = document.querySelector(".btn-buy-bag");
+document.addEventListener('DOMContentLoaded', async () => {
+  const carritoBtn       = document.querySelector('.btn-shop-bag');
+  const sidebar          = document.querySelector('.sidebar');
+  const cerrarSidebar    = document.querySelector('.cerrar-sidebar');
+  const overlay          = document.querySelector('.sidebar-overlay');
+  const contenedorItems  = document.querySelector('.carrito-items');
+  const totalTexto       = document.querySelector('.carrito-total strong');
+  const contador         = document.getElementById('contadorCarrito') || document.getElementById('contador');
+  const btnFinalizar     = document.querySelector('.btn-buy-bag');
 
   let carrito = [];
 
   async function actualizarCarritoProducto(productId, cantidad) {
     try {
-      const res = await fetch("/api/cart", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productId: String(productId), quantity: Number(cantidad) })
       });
 
       // Si la ruta no existe, queda clarísimo:
       if (res.status === 404) {
-        const text = await res.text().catch(() => "");
-        console.warn("[carrito] /api/cart 404 →", text);
-        alert("La ruta /api/cart no está disponible en el backend.");
+        const text = await res.text().catch(() => '');
+        console.warn('[carrito] /api/cart 404 →', text);
+        alert('La ruta /api/cart no está disponible en el backend.');
         return;
       }
 
       const data = await res.json().catch(() => ({}));
       if (!res.ok || data?.success === false) {
-        alert(data?.error || "No se pudo actualizar el carrito");
+        alert(data?.error || 'No se pudo actualizar el carrito');
         return;
       }
 
       await fetchCart();
       actualizarCarritoUI();
     } catch (err) {
-      alert("Error de red al actualizar el carrito");
+      alert('Error de red al actualizar el carrito');
       console.error(err);
     }
   }
 
   async function fetchCart() {
     try {
-      const res = await fetch("/api/cart", { cache: "no-store" });
+      const res = await fetch('/api/cart', { cache: 'no-store' });
       const data = await res.json().catch(() => ({}));
       carrito = Array.isArray(data?.data) ? data.data : [];
     } catch (err) {
-      console.error("Error al cargar carrito:", err.message);
+      console.error('Error al cargar carrito:', err.message);
       carrito = [];
     }
   }
@@ -56,12 +56,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   function actualizarCarritoUI() {
     if (!contenedorItems || !totalTexto || !contador) return;
 
-    contenedorItems.innerHTML = "";
+    contenedorItems.innerHTML = '';
 
     if (!carrito.length) {
-      contenedorItems.innerHTML = `<p class="mensaje-vacio">Tu carrito está vacío 😞...</p>`;
-      totalTexto.textContent = "$0";
-      contador.textContent = "0";
+      contenedorItems.innerHTML = '<p class="mensaje-vacio">Tu carrito está vacío 😞...</p>';
+      totalTexto.textContent = '$0';
+      contador.textContent = '0';
       return;
     }
 
@@ -69,9 +69,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     carrito.forEach(item => {
       const p         = item.product || {};
-      const nombre    = p.name || p.nombre || "Producto eliminado";
+      const nombre    = p.name || p.nombre || 'Producto eliminado';
       const precio    = Number(p.price ?? p.precio ?? 0);
-      const imagen    = p.image || p.imagen || "placeholder.png";
+      const imagen    = p.image || p.imagen || 'placeholder.png';
       const cantidad  = Number(item.quantity || 1);
       const subtotal  = precio * cantidad;
       total += subtotal;
@@ -79,8 +79,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       const esAbsoluta = /^https?:\/\//i.test(imagen);
       const src = esAbsoluta ? imagen : `/img/products/${imagen}`;
 
-      const div = document.createElement("div");
-      div.className = "carrito-item";
+      const div = document.createElement('div');
+      div.className = 'carrito-item';
       div.innerHTML = `
         <img class="item-img" src="${src}" alt="${nombre}" />
         <div class="item-info">
@@ -101,23 +101,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     contador.textContent = carrito.reduce((acc, p) => acc + (Number(p.quantity) || 0), 0);
 
     // Listeners dinámicos (elementos recién pintados)
-    contenedorItems.querySelectorAll(".btn-eliminar").forEach(btn => {
+    contenedorItems.querySelectorAll('.btn-eliminar').forEach(btn => {
       btn.onclick = async () => {
         const id = btn.dataset.id;
-        await fetch(`/api/cart/${encodeURIComponent(id)}`, { method: "DELETE" });
+        await fetch(`/api/cart/${encodeURIComponent(id)}`, { method: 'DELETE' });
         await fetchCart();
         actualizarCarritoUI();
       };
     });
 
-    contenedorItems.querySelectorAll(".btn-sumar").forEach(btn => {
+    contenedorItems.querySelectorAll('.btn-sumar').forEach(btn => {
       btn.onclick = () => {
         const id = btn.dataset.id;
         actualizarCarritoProducto(id, 1);
       };
     });
 
-    contenedorItems.querySelectorAll(".btn-restar").forEach(btn => {
+    contenedorItems.querySelectorAll('.btn-restar').forEach(btn => {
       btn.onclick = () => {
         const id = btn.dataset.id;
         const item = carrito.find(p => p.productId === id);
@@ -131,59 +131,59 @@ document.addEventListener("DOMContentLoaded", async () => {
   // ================== Delegación para "Añadir al carrito" ==================
   // En lugar de capturar NodeList al cargar (que no incluye productos renderizados después),
   // usamos delegación para que funcione con tarjetas futuras.
-  document.body.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-add-to-cart], .btn-comprar");
+  document.body.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-add-to-cart], .btn-comprar');
     if (!btn) return;
 
     // Evita que un <a> padre interrumpa el flujo
     e.preventDefault();
     e.stopPropagation();
 
-    const card = btn.closest(".producto");
+    const card = btn.closest('.producto');
     const id = btn.dataset.productId || card?.dataset?.id;
     if (!id) {
-      console.warn("[carrito] No se encontró productId en el botón/tarjeta");
+      console.warn('[carrito] No se encontró productId en el botón/tarjeta');
       return;
     }
 
     actualizarCarritoProducto(String(id), 1);
     // Abrir sidebar para feedback
-    sidebar?.classList.add("active");
-    overlay?.classList.add("active");
+    sidebar?.classList.add('active');
+    overlay?.classList.add('active');
   });
 
   // ================== Abrir/cerrar sidebar ==================
-  carritoBtn?.addEventListener("click", () => {
-    sidebar?.classList.add("active");
-    overlay?.classList.add("active");
+  carritoBtn?.addEventListener('click', () => {
+    sidebar?.classList.add('active');
+    overlay?.classList.add('active');
     fetchCart().then(actualizarCarritoUI);
   });
 
-  cerrarSidebar?.addEventListener("click", () => {
-    sidebar?.classList.remove("active");
-    overlay?.classList.remove("active");
+  cerrarSidebar?.addEventListener('click', () => {
+    sidebar?.classList.remove('active');
+    overlay?.classList.remove('active');
   });
 
-  overlay?.addEventListener("click", () => {
-    sidebar?.classList.remove("active");
-    overlay?.classList.remove("active");
+  overlay?.addEventListener('click', () => {
+    sidebar?.classList.remove('active');
+    overlay?.classList.remove('active');
   });
 
   // ================== Finalizar compra ==================
-  btnFinalizar?.addEventListener("click", async () => {
+  btnFinalizar?.addEventListener('click', async () => {
     if (!carrito.length) {
-      alert("Tu carrito está vacío.");
+      alert('Tu carrito está vacío.');
       return;
     }
 
     try {
-      const res = await fetch("/api/cart/checkout", { method: "POST" });
-      if (!res.ok) throw new Error("Error al finalizar compra");
-      alert("¡Gracias por tu compra!");
+      const res = await fetch('/api/cart/checkout', { method: 'POST' });
+      if (!res.ok) throw new Error('Error al finalizar compra');
+      alert('¡Gracias por tu compra!');
       await fetchCart();
       actualizarCarritoUI();
     } catch (err) {
-      alert("Error al procesar compra: " + err.message);
+      alert('Error al procesar compra: ' + err.message);
     }
   });
 

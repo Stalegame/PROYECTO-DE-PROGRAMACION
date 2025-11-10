@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
     const loginLink = document.getElementById('authLoginLink');
     const nameSpan  = document.getElementById('authName');
     const logoutBtn = document.getElementById('authLogoutBtn');
