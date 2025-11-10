@@ -53,11 +53,39 @@
 
 ## 4. Endpoints de Chatbot (/api/chatbot)
 
-**En construcción. API Externa no implementada**
+**En construcción. API Externa implementada**
 
 | Método | Endpoint                     | Funcionalidad                                         | Autenticación (Middleware)                                  | Ejemplo de Respuesta Exitosa                      |
 |--------|------------------------------|------------------------------------------------------|-----------------------------------------------------------|---------------------------------------------------|
-| ? | ??  | ???  | Ninguna                                                   | ???? |
+| POST | /api/chat | Obtener y entregar informacion acerca de productos  | Ninguna                                                   | Texto  `{"El stock es: ... }` |
+
+**Usabilidad ejemplo**
+
+    import OpenAI from 'openai';
+    const openai = new OpenAI({
+     baseURL: "https://openrouter.ai/api/v1",
+     apiKey: "<OPENROUTER_API_KEY>",
+    defaultHeaders: {
+        "HTTP-Referer": "<YOUR_SITE_URL>", // Optional. Site URL for rankings on openrouter.ai.
+        "X-Title": "<YOUR_SITE_NAME>", // Optional. Site title for rankings on openrouter.ai.
+    },
+    });
+    async function main() {
+    const completion = await openai.chat.completions.create({
+        model: "deepseek/deepseek-chat-v3.1:free",
+        messages: [
+        {
+            "role": "user",
+            "content": "What is the meaning of life?"
+        }
+        ],
+        
+    });
+
+    console.log(completion.choices[0].message);
+    }
+
+    main();
 
 ## 5. Endpoints de Administración (/api/admin)
 
