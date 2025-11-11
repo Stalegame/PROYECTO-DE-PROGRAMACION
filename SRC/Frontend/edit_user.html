@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Perfil - FRUNA</title>
+  <link rel="stylesheet" href="css/edit_user.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">FRUNA</div>
+      <div class="tagline">La dulcería de Chile</div>
+    </div>
+
+    <h1>Mi Perfil</h1>
+    <div class="loading" id="loading">Cargando datos...</div>
+
+    <form id="profile-form" style="display: none;">
+      <div class="form-group">
+        <label for="email">Correo Electrónico</label>
+        <input type="email" id="email" name="email" disabled />
+      </div>
+
+      <div class="form-group">
+        <label for="nombre">Nombre Completo</label>
+        <input type="text" id="nombre" name="nombre" required />
+      </div>
+
+      <div class="form-group">
+        <label for="telefono">Teléfono</label>
+        <input type="tel" id="telefono" name="telefono" required pattern="\d{8,9}" placeholder="8 o 9 dígitos" />
+      </div>
+
+      <div class="form-group">
+        <label for="direccion">Dirección</label>
+        <input type="text" id="direccion" name="direccion" />
+      </div>
+
+      <div class="message error" id="form-message"></div>
+      <div class="message success" id="form-success"></div>
+
+      <button type="submit" class="btn-guardar" id="btn-save">Guardar Cambios</button>
+    </form>
+
+    <div class="danger-zone">
+      <h3>⚠️ Zona de Peligro</h3>
+      <p>Eliminará tu cuenta y todos tus datos permanentemente.</p>
+      <button class="btn-eliminar-cuenta" id="btn-eliminar-cuenta">🗑️ Eliminar Mi Cuenta</button>
+    </div>
+
+    <div class="footer-links">
+      <a href="productos.html">Volver al Catálogo</a>
+      <a href="mis_pedidos.html">Mis Pedidos</a>
+    </div>
+
+    <div class="copyright">
+      © 2025 FRUNA Chile - Todos los derechos reservados
+    </div>
+  </div>
+
+  <div class="modal" id="modal-eliminar">
+    <div class="modal-content">
+      <h3>🗑️ Confirmar Eliminación</h3>
+      <p>Ingresa tu contraseña para confirmar:</p>
+      <div class="form-group">
+        <input type="password" id="password-confirm" placeholder="Contraseña" />
+        <div class="checkbox-cont">
+          <input type="checkbox" id="showPasswordConfirm" />
+          <label for="showPasswordConfirm">Mostrar contraseña</label>
+        </div>
+      </div>
+
+      <div class="message warning" id="modal-message"></div>
+      <div class="modal-buttons">
+        <button class="btn-cancelar" id="btn-cancelar-eliminar">Cancelar</button>
+        <button class="btn-confirmar-eliminar" id="btn-confirmar-eliminar" disabled>Eliminar Cuenta</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/edit_user.js"></script>
+</body>
+</html>

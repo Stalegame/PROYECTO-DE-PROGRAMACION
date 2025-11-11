@@ -1,0 +1,54 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #fafafa;
+  color: #222;
+}
+
+.container {
+  max-width: 700px;
+  margin: 40px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #e63946;
+}
+
+.producto {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.total {
+  font-weight: bold;
+  text-align: right;
+  margin-top: 20px;
+  font-size: 1.2em;
+}
+
+.btn-confirmar {
+  display: block;
+  width: 100%;
+  background: #e63946;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.btn-confirmar:hover {
+  background: #c92a3b;
+}
+
+.footer-links {
+  text-align: center;
+  margin-top: 20px;
+}
