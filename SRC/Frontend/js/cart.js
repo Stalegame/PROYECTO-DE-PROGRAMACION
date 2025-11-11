@@ -20,14 +20,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         body: JSON.stringify({ productId: String(productId), quantity: Number(cantidad) })
       });
 
-      // Si la ruta no existe, queda clarísimo:
-      if (res.status === 404) {
-        const text = await res.text().catch(() => "");
-        console.warn("[carrito] /api/cart 404 →", text);
-        alert("La ruta /api/cart no está disponible en el backend.");
-        return;
-      }
-
       const data = await res.json().catch(() => ({}));
       if (!res.ok || data?.success === false) {
         alert(data?.error || "No se pudo actualizar el carrito");
@@ -175,16 +167,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       alert("Tu carrito está vacío.");
       return;
     }
-
-    try {
-      const res = await fetch("/api/cart/checkout", { method: "POST" });
-      if (!res.ok) throw new Error("Error al finalizar compra");
-      alert("¡Gracias por tu compra!");
-      await fetchCart();
-      actualizarCarritoUI();
-    } catch (err) {
-      alert("Error al procesar compra: " + err.message);
-    }
+    // redirigir a confirmar_compra.html
+    window.location.href = "/confirmar_compra.html";
   });
 
   // ================== Carga inicial ==================

@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // =============== 2) UI de sesión (nombre + logout) ===============
   const loginLink = document.getElementById('authLoginLink');
   const nameSpan  = document.getElementById('authName');
-  const logoutBtn = document.getElementById('authLogoutBtn');
+  const editBoton = document.getElementById('editUserBtn');
   const authBox   = document.getElementById('authBox');
 
   const token  = localStorage.getItem('fruna_token');
@@ -19,9 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
       (user.email ? String(user.email).split('@')[0] : 'Usuario');
 
     if (nameSpan) { nameSpan.textContent = `Hola, ${nombreMostrar}`; nameSpan.style.display = ''; }
-    if (logoutBtn) {
-      logoutBtn.style.display = '';
-      logoutBtn.onclick = () => {
+    if (editBoton) {
+      editBoton.style.display = '';
+      editBoton.onclick = () => {
         localStorage.removeItem('fruna_token');
         localStorage.removeItem('fruna_user');
         window.location.replace('/index.html');
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (authBox)   authBox.dataset.logged = 'true';
   } else {
     if (nameSpan)  { nameSpan.textContent = ''; nameSpan.style.display = 'none'; }
-    if (logoutBtn) { logoutBtn.style.display = 'none'; logoutBtn.onclick = null; }
+    if (editBoton) { editBoton.style.display = 'none'; editBoton.onclick = null; }
     if (loginLink) loginLink.style.display = '';
     if (authBox)   authBox.dataset.logged = 'false';
   }
@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
       $('p-category').textContent = p.category ?? p.categoria ?? '';
       $('p-desc').textContent = p.description ?? p.descripcion ?? '';
       $('p-stock').textContent = p.stock ?? '';
+      $('btn-comprar').dataset.productId = String(p.id ?? p._id ?? '');
 
       const stock = p.stock;
       const stockElement = document.getElementById("p-stock");
@@ -98,13 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
       img.src = src;
       img.alt = p.name ?? p.nombre ?? 'Producto';
 
-      // Acción de carrito (placeholder)
-      const addBtn = document.getElementById('btn-comprar');
-      if (addBtn) {
-        addBtn.onclick = () => {
-          
-        };
-      }
     } catch (e) {
       alert('Error cargando el producto');
       location.replace('/productos.html');

@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const loginLink = document.getElementById('authLoginLink');
     const nameSpan  = document.getElementById('authName');
-    const logoutBtn = document.getElementById('authLogoutBtn');
+    const editBoton = document.getElementById('editUserBtn');
     const authBox   = document.getElementById('authBox');
 
     // Leer sesión
@@ -19,21 +19,18 @@ document.addEventListener("DOMContentLoaded", () => {
             nameSpan.textContent = `Hola, ${nombreMostrar}`;
             nameSpan.style.display = '';
         }
-        if (logoutBtn) {
-            logoutBtn.style.display = '';
+        if (editBoton) {
+            editBoton.style.display = '';
             // Evita registrar múltiples listeners si recargas módulos
-            logoutBtn.onclick = () => {
-                localStorage.removeItem('fruna_token');
-                localStorage.removeItem('fruna_user');
-                // Redirige donde prefieras tras salir:
-                window.location.replace('/index.html');
+            editBoton.onclick = () => {
+                window.location.replace('/edit_user.html');
             };
         }
         if (loginLink) loginLink.style.display = 'none';
         if (authBox)   authBox.dataset.logged = 'true';
     } else {
         if (nameSpan)  { nameSpan.textContent = ''; nameSpan.style.display = 'none'; }
-        if (logoutBtn) { logoutBtn.style.display = 'none'; logoutBtn.onclick = null; }
+        if (editBoton) { editBoton.style.display = 'none'; editBoton.onclick = null; }
         if (loginLink) loginLink.style.display = '';
         if (authBox)   authBox.dataset.logged = 'false';
     }
