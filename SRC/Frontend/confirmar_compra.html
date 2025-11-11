@@ -3,16 +3,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Confirmar Compra - FRUNA</title>
+  <title>Confirmar Pedido - FRUNA</title>
   <link rel="stylesheet" href="css/confirmar_compra.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Confirmar Compra</h1>
-    <div id="productos-container"></div>
-    <div id="total" class="total"></div>
+    <h1>Confirmar Pedido</h1>
 
-    <button id="btn-confirmar" class="btn-confirmar">Confirmar Compra</button>
+    <!-- Barra de progreso -->
+    <div class="progreso">
+      <div class="progreso-barra">
+        <div class="progreso-fill" id="progreso-fill"></div>
+      </div>
+      <div class="progreso-pasos">
+        <span id="paso1" class="activo">1. Carrito</span>
+        <span id="paso2">2. Entrega</span>
+        <span id="paso3">3. Confirmar</span>
+      </div>
+    </div>
+
+    <!-- Paso 1: Resumen del carrito -->
+    <section id="paso-carrito" class="paso activo">
+      <h2>Tu Carrito</h2>
+      <div id="productos-container"></div>
+      <div id="total" class="total"></div>
+      <button id="btn-continuar" class="btn">Continuar →</button>
+    </section>
+
+    <!-- Paso 2: Información de entrega -->
+    <section id="paso-entrega" class="paso">
+      <h2>Información de Entrega</h2>
+      <form id="form-entrega" class="formulario-entrega">
+        <div class="campo">
+          <label for="direccion">Dirección:</label>
+          <input type="text" id="direccion" required placeholder="Ej: Av. Siempre Viva 123" />
+        </div>
+        <div class="campo">
+          <label for="region">Región:</label>
+          <select id="region" required>
+            <option value="">Seleccione su región</option>
+            <option>Arica y Parinacota</option>
+            <option>Tarapacá</option>
+            <option>Antofagasta</option>
+            <option>Atacama</option>
+            <option>Coquimbo</option>
+            <option>Valparaíso</option>
+            <option>Metropolitana</option>
+            <option>O’Higgins</option>
+            <option>Maule</option>
+            <option>Ñuble</option>
+            <option>Biobío</option>
+            <option>Araucanía</option>
+            <option>Los Ríos</option>
+            <option>Los Lagos</option>
+            <option>Aysén</option>
+            <option>Magallanes</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="comuna">Comuna:</label>
+          <input type="text" id="comuna" required placeholder="Ej: Santiago Centro" />
+        </div>
+        <div class="campo">
+          <label for="comentarios">Comentarios (opcional):</label>
+          <textarea id="comentarios" rows="3" placeholder="Ej: entregar en portería..."></textarea>
+        </div>
+      </form>
+      <div class="acciones">
+        <button id="btn-volver" class="btn secundario">← Volver</button>
+        <button id="btn-resumen" class="btn">Continuar →</button>
+      </div>
+    </section>
+
+    <!-- Paso 3: Confirmación final -->
+    <section id="paso-confirmacion" class="paso">
+      <h2>Confirmación Final</h2>
+      <div id="resumen-compra"></div>
+      <div class="acciones">
+        <button id="btn-volver2" class="btn secundario">← Volver</button>
+      </div>
+      <button id="btn-confirmar" class="btn-confirmar">Confirmar Compra</button>
+    </section>
 
     <div class="footer-links">
       <a href="productos.html">Seguir comprando</a>

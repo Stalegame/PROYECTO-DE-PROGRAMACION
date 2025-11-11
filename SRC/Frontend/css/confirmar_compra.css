@@ -1,54 +1,120 @@
 body {
-  font-family: 'Poppins', sans-serif;
-  background: #fafafa;
-  color: #222;
+  font-family: system-ui, sans-serif;
+  background: #fff8fa;
+  margin: 0;
+  padding: 20px;
+  color: #333;
 }
 
 .container {
-  max-width: 700px;
-  margin: 40px auto;
-  background: white;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  max-width: 650px;
+  margin: auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
+h1, h2 {
+  color: #c2185b;
   text-align: center;
-  color: #e63946;
+  margin-bottom: 15px;
 }
 
+/* Barra de progreso */
+.progreso {
+  margin-bottom: 25px;
+}
+.progreso-barra {
+  width: 100%;
+  height: 8px;
+  background: #ffe4ec;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.progreso-fill {
+  height: 100%;
+  width: 0%;
+  background: #e91e63;
+  transition: width 0.5s ease;
+}
+.progreso-pasos {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin-top: 8px;
+  color: #888;
+}
+.progreso-pasos span.activo {
+  color: #e91e63;
+  font-weight: bold;
+}
+
+/* Formulario entrega */
+.formulario-entrega {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.campo {
+  display: flex;
+  flex-direction: column;
+}
+.campo label {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+.campo input, .campo select, .campo textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+/* Productos */
 .producto {
   display: flex;
   justify-content: space-between;
-  padding: 10px 0;
+  margin: 8px 0;
+  padding-bottom: 5px;
   border-bottom: 1px solid #eee;
 }
 
-.total {
+.total, .resumen-total {
   font-weight: bold;
   text-align: right;
-  margin-top: 20px;
-  font-size: 1.2em;
+  margin-top: 10px;
 }
 
-.btn-confirmar {
+.btn, .btn-confirmar {
   display: block;
   width: 100%;
-  background: #e63946;
-  color: white;
+  background: #e91e63;
+  color: #fff;
   border: none;
-  padding: 10px;
+  padding: 12px;
   border-radius: 8px;
+  font-size: 1rem;
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 15px;
 }
+.btn:hover { background: #c2185b; }
+.btn.secundario { background: #ccc; color: #000; }
 
-.btn-confirmar:hover {
-  background: #c92a3b;
-}
+.paso { display: none; }
+.paso.activo { display: block; }
 
 .footer-links {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 15px;
 }
+.footer-links a {
+  color: #e91e63;
+  text-decoration: none;
+}
+.footer-links a:hover {
+  text-decoration: underline;
+}
+.progreso-fill.paso-1 { width: 33%; }
+.progreso-fill.paso-2 { width: 66%; }
+.progreso-fill.paso-3 { width: 100%; }
