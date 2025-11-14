@@ -1,5 +1,6 @@
 /**
- * 
+ * Semilla inicial de datos para la base de datos usando Prisma ORM.
+ * Ejecutar con: `node src/backend/scripts/seed.js`
  */
 import bcrypt from 'bcryptjs';
 import prisma from '../db/index.js';

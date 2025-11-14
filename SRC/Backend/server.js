@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 3000;
   try {
     await PersistenceFactory.initialize();
 
+    // Iniciar el servidor
     app.listen(PORT, () => {
       console.log(`🟢 Servidor FRUNA escuchando en http://localhost:${PORT}`);
       console.log(`🧩 Health check: http://localhost:${PORT}/health`);
