@@ -79,8 +79,8 @@ app.use((req, res, next) => {
 
 // Servir Frontend estático
 function exists(p) { try { return fs.existsSync(p); } catch { return false; } }
-const FRONTEND_DIR_MAIN = path.join(__dirname, '..', 'Frontend');
-const FRONTEND_DIR_ALT = path.join(__dirname, 'Frontend');
+const FRONTEND_DIR_MAIN = path.join(__dirname, '..', 'frontend');
+const FRONTEND_DIR_ALT = path.join(__dirname, 'frontend');
 const FRONTEND_DIR = exists(FRONTEND_DIR_MAIN)
   ? FRONTEND_DIR_MAIN
   : (exists(FRONTEND_DIR_ALT) ? FRONTEND_DIR_ALT : null);
@@ -141,7 +141,10 @@ app.use('/api', (req, res) => res.status(404).json({ error: 'Ruta no encontrada'
 // Middleware 404 para Frontend
 app.use((req, res) => {
   console.warn(`⚠️ Página no encontrada: ${req.originalUrl}`);
-  res.status(404).sendFile(path.join(FRONTEND_DIR, 'page_404.html'));
+  if (FRONTEND_DIR) {
+    return res.status(404).sendFile(path.join(FRONTEND_DIR, 'page_404.html'));
+  }
+  return res.status(404).json({ error: 'Página no encontrada', path: req.originalUrl });
 });
 
 // Middleware general de manejo de errores
