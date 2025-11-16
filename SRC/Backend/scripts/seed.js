@@ -109,11 +109,20 @@ async function main() {
 
   console.log("✅ Seed completado con éxito");
 }
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+// Ejecutar sólo cuando este archivo se invoca explícitamente.
+// En producción requiere FORCE_SEED=true para evitar seeds accidentales.
+if (require.main === module) {
+  if (process.env.NODE_ENV === 'production' && process.env.FORCE_SEED !== 'true') {
+    console.log('Seed omitido en producción. Ejecuta con FORCE_SEED=true para forzar.');
+    process.exit(0);
+  }
+
+  main()
+    .catch((e) => {
+      console.error(e);
+      process.exit(1);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
+}

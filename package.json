@@ -10,8 +10,9 @@
     "seed": "node src/backend/scripts/seed.js",
     "seed:test": "cross-env NODE_ENV=test node src/backend/scripts/seed.js",
     "prisma:generate": "dotenv -e ./.env -- prisma generate",
-    "init_server": "npm install && npx prisma generate && npx prisma db push && node src/backend/scripts/seed.js",
-    "init_server_ci": "npm ci && npx prisma generate && npx prisma db push && node src/backend/scripts/seed.js",
+    "init_server": "npm install && npx prisma generate && npx prisma db push",
+    "init_server_ci": "npm ci && npx prisma generate && npx prisma db push",
+    "seed:force": "cross-env FORCE_SEED=true node src/backend/scripts/seed.js",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --runInBand",
     "db:push:test": "dotenv -e .env.test -- prisma db push --schema=src/backend/db/prisma/schema.prisma"
   },
