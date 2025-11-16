@@ -146,7 +146,6 @@ router.post(
 router.post('/checkout', async (_req, res) => {
   try {
     await cartDAO.clearCart();
-    // api paypal o similar iría aquí
     res.status(200).json({
       success: true, 
       message: '¡Compra finalizada! Tu carrito ha sido vaciado.' 
