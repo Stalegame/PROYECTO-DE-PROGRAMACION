@@ -34,13 +34,18 @@ app.use(helmet.contentSecurityPolicy({
   }
 }));
 
-// CORS
-app.use(cors({
-  origin: IS_PROD
+// CORS: usa FRONTEND_ORIGIN (csv) si está definida, si no usa valores por defecto
+const rawOrigins = process.env.FRONTEND_ORIGIN;
+let origins;
+if (rawOrigins) {
+  origins = rawOrigins.split(',').map(s => s.trim()).filter(Boolean);
+} else {
+  origins = IS_PROD
     ? ['https://tudominio.com']
-    : ['http://localhost:3000', 'http://localhost:8080'],
-  credentials: true
-}));
+    : ['http://localhost:3000', 'http://localhost:8080'];
+}
+console.log('🔐 CORS allowed origins:', origins);
+app.use(cors({ origin: origins, credentials: true }));
 
 // Rate limits
 const apiLimiter = rateLimit({
@@ -74,8 +79,8 @@ app.use((req, res, next) => {
 
 // Servir Frontend estático
 function exists(p) { try { return fs.existsSync(p); } catch { return false; } }
-const FRONTEND_DIR_MAIN = path.join(__dirname, '..', 'Frontend');
-const FRONTEND_DIR_ALT = path.join(__dirname, 'Frontend');
+const FRONTEND_DIR_MAIN = path.join(__dirname, '..', 'frontend');
+const FRONTEND_DIR_ALT = path.join(__dirname, 'frontend');
 const FRONTEND_DIR = exists(FRONTEND_DIR_MAIN)
   ? FRONTEND_DIR_MAIN
   : (exists(FRONTEND_DIR_ALT) ? FRONTEND_DIR_ALT : null);
@@ -136,7 +141,10 @@ app.use('/api', (req, res) => res.status(404).json({ error: 'Ruta no encontrada'
 // Middleware 404 para Frontend
 app.use((req, res) => {
   console.warn(`⚠️ Página no encontrada: ${req.originalUrl}`);
-  res.status(404).sendFile(path.join(FRONTEND_DIR, 'page_404.html'));
+  if (FRONTEND_DIR) {
+    return res.status(404).sendFile(path.join(FRONTEND_DIR, 'page_404.html'));
+  }
+  return res.status(404).json({ error: 'Página no encontrada', path: req.originalUrl });
 });
 
 // Middleware general de manejo de errores

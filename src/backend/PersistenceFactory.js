@@ -66,6 +66,19 @@ class PersistenceFactory {
     this.getDAO('productos');
     this.getDAO('clientes');
     this.getDAO('cart');
+    // Si usamos Prisma, intenta conectar de antemano para evitar latencia en la primera petición
+    const isPrisma = (use === 'postgres' || use === 'prisma');
+    if (isPrisma) {
+      try {
+        const prisma = require('./db');
+        if (prisma && typeof prisma.$connect === 'function') {
+          await prisma.$connect();
+          console.log('✅ Prisma preconectado (warm)');
+        }
+      } catch (e) {
+        console.warn('⚠️ No se pudo preconectar Prisma:', e.message);
+      }
+    }
     return true;
   }
 }

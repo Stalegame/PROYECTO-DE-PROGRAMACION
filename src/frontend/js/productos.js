@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // =============== 1) UI de sesión (nombre + logout) ===============
   const loginLink = document.getElementById('authLoginLink');   // <a href="login_users.html">
   const nameSpan  = document.getElementById('authName');        // <span id="authName">
-  const logoutBtn = document.getElementById('authLogoutBtn');   // <button id="authLogoutBtn">
+  const editBoton = document.getElementById('editUserBtn');   // <button id="editUserBtn">
   const authBox   = document.getElementById('authBox');         // contenedor opcional
 
   // Lee sesión
@@ -18,19 +18,17 @@ document.addEventListener('DOMContentLoaded', () => {
       (user.email ? String(user.email).split('@')[0] : 'Usuario');
 
     if (nameSpan) { nameSpan.textContent = `Hola, ${nombreMostrar}`; nameSpan.style.display = ''; }
-    if (logoutBtn) {
-      logoutBtn.style.display = '';
-      logoutBtn.onclick = () => {
-        localStorage.removeItem('fruna_token');
-        localStorage.removeItem('fruna_user');
-        window.location.replace('/index.html');
+    if (editBoton) {
+      editBoton.style.display = '';
+      editBoton.onclick = () => {
+        window.location.replace('/edit_user.html');
       };
     }
     if (loginLink) loginLink.style.display = 'none';
     if (authBox)   authBox.dataset.logged = 'true';
   } else {
     if (nameSpan)  { nameSpan.textContent = ''; nameSpan.style.display = 'none'; }
-    if (logoutBtn) { logoutBtn.style.display = 'none'; logoutBtn.onclick = null; }
+    if (editBoton) { editBoton .style.display = 'none'; editBoton .onclick = null; }
     if (loginLink) loginLink.style.display = '';
     if (authBox)   authBox.dataset.logged = 'false';
   }

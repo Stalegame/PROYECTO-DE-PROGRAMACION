@@ -6,7 +6,7 @@
 node_modules/
 
 # Archivos generados por npm
-package-lock.json
+#package-lock.json
 
 # Archivos específicos de VSCode
 .vscode/
