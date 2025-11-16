@@ -2,11 +2,12 @@
  * Semilla inicial de datos para la base de datos usando Prisma ORM.
  * Ejecutar con: `node src/backend/scripts/seed.js`
  */
-import bcrypt from 'bcryptjs';
-import prisma from '../db/index.js';
+const bcrypt = require('bcryptjs');
+const prisma = require('../db/index.js');
 
-console.log("NODE_ENV =", process.env.NODE_ENV);
-console.log("DATABASE_URL =", process.env.DATABASE_URL);
+// Descomentar las siguientes lineas para debuggear
+//console.log('NODE_ENV =', process.env.NODE_ENV);
+//console.log('DATABASE_URL =', process.env.DATABASE_URL);
 
 async function main() {
   // CLIENTES 
@@ -108,7 +109,6 @@ async function main() {
 
   console.log("✅ Seed completado con éxito");
 }
-
 main()
   .catch((e) => {
     console.error(e);
