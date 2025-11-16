@@ -24,7 +24,7 @@
 | Patricio Muñoz   | Líder técnico | Definición de arquitectura y decisiones técnicas, revision de código y supervicion de buenas prácticas, coordinación de integracion entre módulos |
 | ~~Amira Casanova~~   | Frontend | Diseño e implementación de interfaces, desarrollo de UI/UX y validaciones, consumo de APIs y manejo de estados en frontend. |
 
-## Ciclo 3 (Semanas 13 a 18)  
+## Hito 3 (Semanas 13 a 18)  
   
 | Nombre completo  | Rol inicial         | Funciones principales |
 |------------------|--------------------|-----------------------|
