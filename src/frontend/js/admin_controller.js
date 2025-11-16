@@ -52,7 +52,7 @@ async function apiFetchJSON(input, init) {
   const err = new Error(message);
   err.status = res.status;
   err.code = data && data.code;
-  err.details = data && data.details; // <- express-validator
+  err.details = data && data.details;
   err.payload = data;
   throw err;
 }
@@ -61,7 +61,6 @@ function formatApiError(err) {
   const lines = [];
   if (err && err.message) lines.push(err.message);
 
-  // express-validator: details: { campo: { msg, ...}, ... }
   if (err && err.details && typeof err.details === 'object') {
     const msgs = Object.values(err.details)
       .map(v => v && v.msg)
@@ -69,14 +68,15 @@ function formatApiError(err) {
     if (msgs.length) lines.push(...msgs);
   }
 
-  // Códigos de negocio del DAO (PRICE_INVALID, STOCK_INVALID, etc.)
   if (err && err.code) lines.push(`Código: ${err.code}`);
 
   return '• ' + lines.map(escapeHTML).join('\n• ');
 }
 
 // ===================== Estado del modal (crear/editar) =====================
-let currentEditId = null; // null = creando; string = editando
+let currentEditId = null;
+let pendingAction = null;
+let pendingUserId = null;
 
 // ===================== Carga de productos =====================
 async function loadProducts() {
@@ -146,7 +146,7 @@ document.addEventListener('click', async (e) => {
 async function openProductModalForEditById(id) {
   try {
     const data = await apiFetchJSON(`/api/products/${encodeURIComponent(id)}`);
-    const p = data.data || data; // por si el backend devuelve el objeto directo
+    const p = data.data || data;
     openProductModalForEdit(p);
   } catch (e) {
     alert(`No se pudo abrir edición:\n${formatApiError(e)}`);
@@ -182,7 +182,6 @@ function openProductModalForEdit(p) {
   if (titleEl) titleEl.textContent = 'Editar producto';
   if (saveBtn) saveBtn.textContent = 'Guardar cambios';
 
-  // Prellenar
   const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v ?? ''; };
   setVal('np-name', p.name);
   setVal('np-price', p.price);
@@ -207,7 +206,6 @@ async function np_save() {
   const image = document.getElementById('np-image')?.value.trim();
   const err = document.getElementById('np-error');
 
-  // Validación cliente alineada con el backend:
   const price = Number(priceRaw);
   const stock = Number(stockRaw);
 
@@ -245,87 +243,146 @@ async function np_save() {
   }
 }
 
-// ===================== Navegación (delegación compatible con CSP) =====================
+// ===================== GESTIÓN DE CLIENTES - SUSPENSIÓN DE CUENTAS =====================
+async function loadClients() {
+  const tbody = document.getElementById('clients-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="7">Cargando clientes...</td></tr>';
+  try {
+    const data = await apiFetchJSON('/api/admin/clientes');
+    const items = Array.isArray(data.data) ? data.data : [];
+    if (!items.length) {
+      tbody.innerHTML = '<tr><td colspan="7">No hay clientes.</td></tr>';
+      return;
+    }
+    
+    tbody.innerHTML = items.map(u => {
+      const isSuspended = u.activo === false;
+      const statusClass = isSuspended ? 'suspended' : 'active';
+      const statusText = isSuspended ? 'Suspendido' : 'Activo';
+      
+      return `
+        <tr>
+          <td>${escapeHTML(u.id)}</td>
+          <td>${escapeHTML(u.nombre)}</td>
+          <td>${escapeHTML(u.email)}</td>
+          <td>${escapeHTML(u.telefono ?? '')}</td>
+          <td>${escapeHTML(u.role || 'user')}</td>
+          <td><span class="status ${statusClass}">${statusText}</span></td>
+          <td>
+            <div class="client-actions">
+              ${isSuspended ? 
+                `<button class="btn-unsuspend" data-action="unsuspend" data-id="${escapeHTML(u.id)}" data-name="${escapeHTML(u.nombre)}">
+                  Reactivar
+                </button>` : 
+                `<button class="btn-suspend" data-action="suspend" data-id="${escapeHTML(u.id)}" data-name="${escapeHTML(u.nombre)}">
+                  Suspender
+                </button>`
+              }
+              <button class="btn-delete-user" data-action="delete-user" data-id="${escapeHTML(u.id)}" data-name="${escapeHTML(u.nombre)}">
+                Eliminar
+              </button>
+            </div>
+          </td>
+        </tr>`;
+    }).join('');
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="7">${formatApiError(e)}</td></tr>`;
+  }
+}
+
+// ===================== MANEJO DE ACCIONES DE USUARIO =====================
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('button[data-action]');
+  if (!btn) return;
+
+  const action = btn.getAttribute('data-action');
+  const userId = btn.getAttribute('data-id');
+  const userName = btn.getAttribute('data-name');
+
+  if (action === 'suspend') {
+    showConfirmModal(
+      `¿Estás seguro de que quieres suspender la cuenta de ${userName}?`,
+      'Suspender cuenta',
+      () => suspendUser(userId, true)
+    );
+  } else if (action === 'unsuspend') {
+    showConfirmModal(
+      `¿Estás seguro de que quieres reactivar la cuenta de ${userName}?`,
+      'Reactivar cuenta',
+      () => suspendUser(userId, false)
+    );
+  } else if (action === 'delete-user') {
+    showConfirmModal(
+      `¿Estás seguro de que quieres ELIMINAR permanentemente la cuenta de ${userName}? Esta acción no se puede deshacer.`,
+      'Eliminar cuenta',
+      () => deleteUser(userId)
+    );
+  }
+});
+
+// ===================== MODAL DE CONFIRMACIÓN =====================
+function showConfirmModal(message, title, callback) {
+  const modal = document.getElementById('modalConfirmAction');
+  const messageEl = document.getElementById('confirm-message');
+  const titleEl = document.getElementById('confirm-title');
+  const okBtn = document.getElementById('confirm-ok');
+  
+  if (messageEl) messageEl.textContent = message;
+  if (titleEl) titleEl.textContent = title;
+  
+  // Remover listeners anteriores
+  const newOkBtn = okBtn.cloneNode(true);
+  okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+  
+  newOkBtn.addEventListener('click', () => {
+    callback();
+    closeConfirmModal();
+  });
+  
+  modal.classList.add('show');
+}
+
+function closeConfirmModal() {
+  document.getElementById('modalConfirmAction')?.classList.remove('show');
+}
+
+// ===================== FUNCIONES DE SUSPENSIÓN Y ELIMINACIÓN =====================
+async function suspendUser(userId, suspend) {
+  try {
+    const action = suspend ? 'suspend' : 'unsuspend';
+    await apiFetchJSON(`/api/admin/users/${encodeURIComponent(userId)}/${action}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    
+    const actionText = suspend ? 'suspendida' : 'reactivada';
+    alert(`Cuenta ${actionText} correctamente`);
+    await loadClients();
+  } catch (e) {
+    alert(`No se pudo completar la acción:\n${formatApiError(e)}`);
+  }
+}
+
+async function deleteUser(userId) {
+  try {
+    await apiFetchJSON(`/api/admin/users/${encodeURIComponent(userId)}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    
+    alert('Cuenta eliminada correctamente');
+    await loadClients();
+  } catch (e) {
+    alert(`No se pudo eliminar la cuenta:\n${formatApiError(e)}`);
+  }
+}
+
+// ===================== NAVEGACIÓN =====================
 function activateSection(sectionId, clickedItem) {
   document.querySelectorAll('.content-section').forEach(s => s.classList.toggle('active', s.id === sectionId));
   if (clickedItem) {
     document.querySelectorAll('.sidebar .menu-item').forEach(mi => mi.classList.remove('active'));
     clickedItem.classList.add('active');
   }
-  if (sectionId === 'products') loadProducts();
-  if (sectionId === 'customers') loadClients();
 }
-
-// ===================== Cargar clientes =====================
-async function loadClients() {
-  const tbody = document.getElementById('clients-tbody');
-  if (!tbody) return;
-  tbody.innerHTML = '<tr><td colspan="6">Cargando clientes...</td></tr>';
-  try {
-    const data = await apiFetchJSON('/api/admin/clientes');
-    const items = Array.isArray(data.data) ? data.data : [];
-    if (!items.length) {
-      tbody.innerHTML = '<tr><td colspan="6">No hay clientes.</td></tr>';
-      return;
-    }
-    tbody.innerHTML = items.map(u => `
-      <tr>
-        <td>${escapeHTML(u.id)}</td>
-        <td>${escapeHTML(u.nombre)}</td>
-        <td>${escapeHTML(u.email)}</td>
-        <td>${escapeHTML(u.telefono ?? '')}</td>
-        <td>${escapeHTML(u.role || 'user')}</td>
-        <td><span class="status ${u.activo === false ? 'pending' : 'active'}">${u.activo === false ? 'No' : 'Sí'}</span></td>
-      </tr>`).join('');
-  } catch (e) {
-    tbody.innerHTML = `<tr><td colspan="6">${formatApiError(e)}</td></tr>`;
-  }
-}
-
-// ===================== Bootstrap inicial =====================
-document.addEventListener('DOMContentLoaded', () => {
-  updateDate();
-
-  // Sidebar (delegación)
-  const sidebar = document.querySelector('.sidebar');
-  if (sidebar) {
-    sidebar.addEventListener('click', (e) => {
-      const item = e.target.closest('.menu-item');
-      if (!item) return;
-      if (item.id === 'logoutBtn') {
-        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-          localStorage.removeItem('fruna_token');
-          localStorage.removeItem('fruna_user');
-          window.location.replace('/login_users.html');
-        }
-        return;
-      }
-      const target = item.getAttribute('data-target');
-      if (target) activateSection(target, item);
-    });
-  }
-
-  // Botón "Nuevo producto" abre modal en modo crear
-  const btnNew = document.getElementById('btnNewProduct');
-  if (btnNew) btnNew.addEventListener('click', np_open_create);
-
-  // Acciones del modal
-  document.getElementById('np-close')?.addEventListener('click', np_close);
-  document.getElementById('np-cancel')?.addEventListener('click', np_close);
-  document.getElementById('np-save')?.addEventListener('click', np_save);
-
-  // Cerrar al hacer click fuera del cuadro
-  document.getElementById('modalNewProduct')?.addEventListener('click', (e) => {
-    if (e.target.id === 'modalNewProduct') np_close();
-  });
-
-  // Cerrar con ESC
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') np_close();
-  });
-
-  // Activa la sección marcada inicialmente en el HTML
-  const activeItem = document.querySelector('.sidebar .menu-item.active');
-  const initial = activeItem?.getAttribute('data-target') || 'dashboard';
-  activateSection(initial, activeItem);
-});

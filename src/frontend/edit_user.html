@@ -4,81 +4,76 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mi Perfil - FRUNA</title>
-  <link rel="stylesheet" href="css/edit_user.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="./img/logo fruna.png" type="image/png">
+  <link rel="stylesheet" href="css/edit_user.css">
+  <link rel="stylesheet" href="css/page_loader.css">
 </head>
+
 <body>
-  <div class="container">
-    <div class="header">
+  <!-- Loader Pages -->
+  <div id="loader-fruna" aria-hidden="true" class="hidden" data-asset-base="/img/dulces/">
+    <div class="lf-backdrop"></div>
+    <div class="lf-stage" aria-label="Cargando… dulces cayendo"></div>
+  </div>
+
+  <!-- Botón Volver fijo en esquina superior izquierda -->
+  <a href="productos.html" class="btn-volver">
+    <i class="fas fa-arrow-left"></i>
+    Volver al Catálogo
+  </a>
+
+  <div class="contenedor-principal">
+    <header>
       <div class="logo">FRUNA</div>
       <div class="tagline">La dulcería de Chile</div>
-    </div>
+    </header>
 
-    <h1>Mi Perfil</h1>
-    <div class="loading" id="loading">Cargando datos...</div>
+    <div class="user-profile">
+      <h1>Mi Perfil</h1>
+      <div class="loading" id="loading">Cargando datos...</div>
 
-    <form id="profile-form" style="display: none;">
-      <div class="form-group">
-        <label for="email">Correo Electrónico</label>
-        <input type="email" id="email" name="email" disabled />
-      </div>
-
-      <div class="form-group">
-        <label for="nombre">Nombre Completo</label>
-        <input type="text" id="nombre" name="nombre" required />
-      </div>
-
-      <div class="form-group">
-        <label for="telefono">Teléfono</label>
-        <input type="tel" id="telefono" name="telefono" required pattern="\d{8,9}" placeholder="8 o 9 dígitos" />
-      </div>
-
-      <div class="form-group">
-        <label for="direccion">Dirección</label>
-        <input type="text" id="direccion" name="direccion" />
-      </div>
-
-      <div class="message error" id="form-message"></div>
-      <div class="message success" id="form-success"></div>
-
-      <button type="submit" class="btn-guardar" id="btn-save">Guardar Cambios</button>
-    </form>
-
-    <div class="danger-zone">
-      <h3>⚠️ Zona de Peligro</h3>
-      <p>Eliminará tu cuenta y todos tus datos permanentemente.</p>
-      <button class="btn-eliminar-cuenta" id="btn-eliminar-cuenta">🗑️ Eliminar Mi Cuenta</button>
-    </div>
-
-    <div class="footer-links">
-      <a href="productos.html">Volver al Catálogo</a>
-      <a href="mis_pedidos.html">Mis Pedidos</a>
-    </div>
-
-    <div class="copyright">
-      © 2025 FRUNA Chile - Todos los derechos reservados
-    </div>
-  </div>
-
-  <div class="modal" id="modal-eliminar">
-    <div class="modal-content">
-      <h3>🗑️ Confirmar Eliminación</h3>
-      <p>Ingresa tu contraseña para confirmar:</p>
-      <div class="form-group">
-        <input type="password" id="password-confirm" placeholder="Contraseña" />
-        <div class="checkbox-cont">
-          <input type="checkbox" id="showPasswordConfirm" />
-          <label for="showPasswordConfirm">Mostrar contraseña</label>
+      <form id="profile-form" style="display: none;">
+        <div class="form-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" disabled />
         </div>
+
+        <div class="form-group">
+          <i class="fas fa-user"></i>
+          <input type="text" id="nombre" name="nombre" placeholder="Nombre completo" required />
+        </div>
+
+        <div class="form-group">
+          <i class="fas fa-phone"></i>
+          <input type="tel" id="telefono" name="telefono" placeholder="8 o 9 dígitos" required pattern="\d{8,9}" />
+        </div>
+
+        <div class="form-group">
+          <i class="fas fa-map-marker-alt"></i>
+          <input type="text" id="direccion" name="direccion" placeholder="Dirección" />
+        </div>
+
+        <div class="message error" id="form-message" style="display: none;"></div>
+        <div class="message success" id="form-success" style="display: none;"></div>
+
+        <button type="submit" class="btn-guardar" id="btn-save">
+          <i class="fas fa-save"></i> Guardar Cambios
+        </button>
+      </form>
+
+      <div class="footer-links">
+        <a href="productos.html"><i class="fas fa-store"></i> Volver al Catálogo</a>
+        <a href="mis_pedidos.html"><i class="fas fa-shopping-bag"></i> Mis Pedidos</a>
       </div>
 
-      <div class="message warning" id="modal-message"></div>
-      <div class="modal-buttons">
-        <button class="btn-cancelar" id="btn-cancelar-eliminar">Cancelar</button>
-        <button class="btn-confirmar-eliminar" id="btn-confirmar-eliminar" disabled>Eliminar Cuenta</button>
+      <div class="copyright">
+        © 2025 FRUNA Chile - Todos los derechos reservados
       </div>
     </div>
   </div>
 
+  <script src="js/page_loader.js" defer></script>
   <script src="js/edit_user.js"></script>
 </body>
 </html>

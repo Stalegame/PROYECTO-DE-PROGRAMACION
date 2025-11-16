@@ -2,33 +2,44 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("profile-form");
   const loading = document.getElementById("loading");
 
+  // Efectos de enfoque en inputs
+  document.querySelectorAll('.form-group input').forEach(input => {
+    input.addEventListener('focus', () => {
+      const parent = input.parentElement;
+      parent.style.transform = 'translateY(-2px)';
+      parent.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+    });
+    
+    input.addEventListener('blur', () => {
+      const parent = input.parentElement;
+      parent.style.transform = 'translateY(0)';
+      parent.style.boxShadow = 'none';
+    });
+  });
+
   // Simular carga de datos de usuario
   setTimeout(() => {
     loading.style.display = "none";
     form.style.display = "block";
-    document.getElementById("email").value = "usuario@fruna.cl";
-    document.getElementById("nombre").value = "Juan Pérez";
-    document.getElementById("telefono").value = "987654321";
-    document.getElementById("direccion").value = "Av. Dulce 123";
+    
+    // Datos de ejemplo - en producción vendrían de la API
+    document.getElementById("email").value = "pepeacosta@example.com";
+    document.getElementById("nombre").value = "Pepe Acosta";
+    document.getElementById("telefono").value = "+56912345678";
+    document.getElementById("direccion").value = "Calle de Pepe Acosta";
   }, 1000);
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    alert("✅ Cambios guardados con éxito");
+    
+    // Mostrar mensaje de éxito
+    const successMsg = document.getElementById("form-success");
+    successMsg.textContent = "✅ Cambios guardados con éxito";
+    successMsg.style.display = "block";
+    
+    // Ocultar mensaje después de 3 segundos
+    setTimeout(() => {
+      successMsg.style.display = "none";
+    }, 3000);
   });
-
-  const btnEliminar = document.getElementById("btn-eliminar-cuenta");
-  const modal = document.getElementById("modal-eliminar");
-  const cancelar = document.getElementById("btn-cancelar-eliminar");
-  const confirmar = document.getElementById("btn-confirmar-eliminar");
-  const passInput = document.getElementById("password-confirm");
-
-  btnEliminar.onclick = () => modal.style.display = "flex";
-  cancelar.onclick = () => modal.style.display = "none";
-  passInput.oninput = () => confirmar.disabled = passInput.value.length < 4;
-
-  confirmar.onclick = () => {
-    alert("🗑️ Cuenta eliminada exitosamente");
-    window.location.href = "index.html";
-  };
 });

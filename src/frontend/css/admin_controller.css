@@ -153,8 +153,14 @@ table th {
 }
 
 .status.pending {
-    background-color: #ff000040;
-    color: #666;
+    background-color: #FFF3E0;
+    color: #FF9800;
+}
+
+.status.suspended {
+    background-color: #ffebee;
+    color: #e91e63;
+    border: 1px solid #e91e63;
 }
 
 .btn {
@@ -173,6 +179,57 @@ table th {
 .btn-secondary {
     background-color: #FFC107;
     color: #333;
+}
+
+.btn-suspend {
+    background-color: #ff9800;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin: 2px;
+}
+
+.btn-suspend:hover {
+    background-color: #f57c00;
+}
+
+.btn-unsuspend {
+    background-color: #4caf50;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin: 2px;
+}
+
+.btn-unsuspend:hover {
+    background-color: #45a049;
+}
+
+.btn-delete-user {
+    background-color: #f44336;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin: 2px;
+}
+
+.btn-delete-user:hover {
+    background-color: #d32f2f;
+}
+
+.client-actions {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
 }
 
 .form-group {
@@ -202,28 +259,67 @@ table th {
 
 /* Modal genérico */
 .modal-backdrop{
-position:fixed; inset:0; background:rgba(0,0,0,.45);
-display:none; align-items:center; justify-content:center; z-index:1000;
+    position:fixed; 
+    inset:0; 
+    background:rgba(0,0,0,.45);
+    display:none; 
+    align-items:center; 
+    justify-content:center; 
+    z-index:1000;
 }
-.modal-backdrop.show{ display:flex; }
+.modal-backdrop.show{ 
+    display:flex; 
+}
 
 .modal{
-width:min(600px, 92vw); background:#fff; border-radius:10px;
-box-shadow:0 10px 30px rgba(0,0,0,.2); overflow:hidden;
-animation:pop .12s ease-out;
+    width:min(600px, 92vw); 
+    background:#fff; 
+    border-radius:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,.2); 
+    overflow:hidden;
+    animation:pop .12s ease-out;
 }
-@keyframes pop{ from{ transform:scale(.98); opacity:.7 } to{ transform:scale(1); opacity:1 } }
+@keyframes pop{ 
+    from{ transform:scale(.98); opacity:.7 } 
+    to{ transform:scale(1); opacity:1 } 
+}
 
 .modal-header{
-display:flex; justify-content:space-between; align-items:center;
-padding:14px 16px; background:#E91E63; color:#fff;
+    display:flex; 
+    justify-content:space-between; 
+    align-items:center;
+    padding:14px 16px; 
+    background:#E91E63; 
+    color:#fff;
 }
-.modal-title{ font-weight:600; }
+.modal-title{ 
+    font-weight:600; 
+}
 .modal-close{
-background:transparent; border:none; color:#fff; font-size:22px; cursor:pointer;
+    background:transparent; 
+    border:none; 
+    color:#fff; 
+    font-size:22px; 
+    cursor:pointer;
 }
 
-.modal-body{ padding:16px; }
+.modal-body{ 
+    padding:16px; 
+}
 .modal-actions{
-display:flex; gap:10px; justify-content:flex-end; padding:12px 16px; border-top:1px solid #eee;
+    display:flex; 
+    gap:10px; 
+    justify-content:flex-end; 
+    padding:12px 16px; 
+    border-top:1px solid #eee;
+}
+
+/* Modal de confirmación para suspensión */
+.confirm-modal .modal-body {
+    text-align: center;
+    padding: 20px;
+}
+
+.confirm-modal .modal-actions {
+    justify-content: center;
 }
