@@ -81,17 +81,17 @@ document.addEventListener('DOMContentLoaded', () => {
       $('btn-comprar').dataset.productId = String(p.id ?? p._id ?? '');
 
       const stock = p.stock;
-      const stockElement = document.getElementById("p-stock");
+      const stockElement = document.getElementById('p-stock');
 
       if (stock > 0) {
         stockElement.textContent = `Cantidad de stock: ${stock}`;
-        stockElement.parentElement.style.backgroundColor = "#F1F8E9"; // verde claro
-        stockElement.style.color = "#33691E";
+        stockElement.parentElement.style.backgroundColor = '#F1F8E9'; // verde claro
+        stockElement.style.color = '#33691E';
       } else {
-        stockElement.textContent = "Sin stock";
-        stockElement.parentElement.style.backgroundColor = "#FFEBEE"; // rojo claro
-        stockElement.parentElement.style.borderColor = "#fc7f7fff";
-        stockElement.style.color = "#C62828";
+        stockElement.textContent = 'Sin stock';
+        stockElement.parentElement.style.backgroundColor = '#FFEBEE'; // rojo claro
+        stockElement.parentElement.style.borderColor = '#fc7f7fff';
+        stockElement.style.color = '#C62828';
       }
 
       const img = $('p-image');

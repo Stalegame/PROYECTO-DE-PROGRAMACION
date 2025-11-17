@@ -36,7 +36,6 @@
             <div class="menu-item" style="margin-top: 30px;" id="logoutBtn">
                 <i>🚪</i> Cerrar Sesión
             </div>
-
         </div>
         
         <div class="main-content">
@@ -179,47 +178,48 @@
                     </table>
                 </div>
             </div>
+
             <!-- Modal: Nuevo Producto -->
             <div class="modal-backdrop" id="modalNewProduct">
-            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="np-title">
-                <div class="modal-header">
-                <div class="modal-title" id="np-title">Nuevo Producto</div>
-                <button class="modal-close" type="button" aria-label="Cerrar" id="np-close">x</button>
-                </div>
+                <div class="modal" role="dialog" aria-modal="true" aria-labelledby="np-title">
+                    <div class="modal-header">
+                        <div class="modal-title" id="np-title">Nuevo Producto</div>
+                        <button class="modal-close" type="button" aria-label="Cerrar" id="np-close">×</button>
+                    </div>
 
-                <div class="modal-body">
-                <div class="form-group">
-                    <label for="np-name">Nombre</label>
-                    <input type="text" id="np-name" placeholder="Alfajor Clásico">
-                </div>
-                <div class="form-group">
-                    <label for="np-price">Precio</label>
-                    <input type="number" id="np-price" min="0" step="1" placeholder="1290">
-                </div>
-                <div class="form-group">
-                    <label for="np-stock">Stock</label>
-                    <input type="number" id="np-stock" min="0" step="1" placeholder="100">
-                </div>
-                <div class="form-group">
-                    <label for="np-category">Categoría</label>
-                    <input type="text" id="np-category" placeholder="Alfajores">
-                </div>
-                <div class="form-group">
-                    <label for="np-description">Descripción</label>
-                    <textarea id="np-description" placeholder="Alfajor tradicional con dulce de leche y coco"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="np-image">Imagen del Producto (URL o direccion en /img/products)</label>
-                    <textarea id="np-image" placeholder="alfajores.png"></textarea>
-                </div>
-                <div id="np-error" style="color:#F44336; font-size:14px; display:none;"></div>
-                </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="np-name">Nombre</label>
+                            <input type="text" id="np-name" placeholder="Alfajor Clásico">
+                        </div>
+                        <div class="form-group">
+                            <label for="np-price">Precio</label>
+                            <input type="number" id="np-price" min="0" step="1" placeholder="1290">
+                        </div>
+                        <div class="form-group">
+                            <label for="np-stock">Stock</label>
+                            <input type="number" id="np-stock" min="0" step="1" placeholder="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="np-category">Categoría</label>
+                            <input type="text" id="np-category" placeholder="Alfajores">
+                        </div>
+                        <div class="form-group">
+                            <label for="np-description">Descripción</label>
+                            <textarea id="np-description" placeholder="Alfajor tradicional con dulce de leche y coco"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="np-image">Imagen del Producto (URL o direccion en /img/products)</label>
+                            <textarea id="np-image" placeholder="alfajores.png"></textarea>
+                        </div>
+                        <div id="np-error" style="color:#F44336; font-size:14px; display:none;"></div>
+                    </div>
 
-                <div class="modal-actions">
-                <button class="btn" id="np-cancel" style="background:#ccc;">Cancelar</button>
-                <button class="btn btn-primary" id="np-save">Guardar</button>
+                    <div class="modal-actions">
+                        <button class="btn" id="np-cancel" style="background:#ccc;">Cancelar</button>
+                        <button class="btn btn-primary" id="np-save">Guardar</button>
+                    </div>
                 </div>
-            </div>
             </div>
             
             <div id="orders" class="content-section">
@@ -272,23 +272,24 @@
             <div id="customers" class="content-section">
                 <div class="table-section">
                     <div class="table-header">
-                    <h2>Gestión de Clientes</h2>
+                        <h2>Gestión de Clientes</h2>
                     </div>
 
                     <table>
-                    <thead>
-                        <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Teléfono</th>
-                        <th>Rol</th>
-                        <th>Activo</th>
-                        </tr>
-                    </thead>
-                    <tbody id="clients-tbody">
-                        <!-- aquí se inyectan filas -->
-                    </tbody>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Rol</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clients-tbody">
+                            <!-- aquí se inyectan filas -->
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -304,6 +305,24 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal de confirmación para suspensión -->
+    <div class="modal-backdrop" id="modalConfirmAction">
+        <div class="modal" role="dialog" aria-modal="true">
+            <div class="modal-header">
+                <div class="modal-title" id="confirm-title">Confirmar acción</div>
+                <button class="modal-close" type="button" aria-label="Cerrar" id="confirm-close">×</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">¿Estás seguro de que quieres realizar esta acción?</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn" id="confirm-cancel">Cancelar</button>
+                <button class="btn btn-primary" id="confirm-ok">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/admin_controller.js"></script>
 </body>
-<script src="/js/admin_controller.js"></script>
 </html>

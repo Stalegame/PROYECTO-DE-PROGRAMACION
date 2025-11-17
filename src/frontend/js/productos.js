@@ -37,10 +37,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.getElementById('products-grid'); // <div id="products-grid"></div>
   if (!grid) return;
 
-  grid.innerHTML = `<div class="loading">Cargando productos…</div>`;
+  grid.innerHTML = '<div class="loading">Cargando productos…</div>';
 
   const escapeHTML = (s) =>
-    String(s ?? '').replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    String(s ?? '').replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));
 
   const fmtCLP = (n) => {
     if (n == null || isNaN(n)) return '';
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   : (Array.isArray(payload) ? payload : []);
 
       if (!items.length) {
-        grid.innerHTML = `<div class="empty">No hay productos disponibles.</div>`;
+        grid.innerHTML = '<div class="empty">No hay productos disponibles.</div>';
         return;
       }
 
