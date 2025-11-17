@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mi Perfil - FRUNA</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="./img/logo fruna.png" type="image/png">
   <link rel="stylesheet" href="css/edit_user.css" />
 </head>
 <body>
@@ -13,45 +15,52 @@
       <div class="tagline">La dulcería de Chile</div>
     </div>
 
-    <h1>Mi Perfil</h1>
-    <div class="loading" id="loading">Cargando datos...</div>
+    <h1><i class="fas fa-user-circle"></i> Mi Perfil</h1>
+    <div class="loading" id="loading">
+      <div class="loading-spinner"></div>
+      Cargando datos...
+    </div>
 
     <form id="profile-form" style="display: none;">
       <div class="form-group">
-        <label for="email">Correo Electrónico</label>
+        <label for="email"><i class="fas fa-envelope"></i> Correo Electrónico</label>
         <input type="email" id="email" name="email" disabled />
       </div>
 
       <div class="form-group">
-        <label for="nombre">Nombre Completo</label>
+        <label for="nombre"><i class="fas fa-user"></i> Nombre Completo</label>
         <input type="text" id="nombre" name="nombre" required />
       </div>
 
       <div class="form-group">
-        <label for="telefono">Teléfono</label>
+        <label for="telefono"><i class="fas fa-phone"></i> Teléfono</label>
         <input type="tel" id="telefono" name="telefono" required pattern="\d{8,9}" placeholder="8 o 9 dígitos" />
       </div>
 
       <div class="form-group">
-        <label for="direccion">Dirección</label>
-        <input type="text" id="direccion" name="direccion" />
+        <label for="direccion"><i class="fas fa-map-marker-alt"></i> Dirección</label>
+        <input type="text" id="direccion" name="direccion" placeholder="Tu dirección completa" />
       </div>
 
-      <div class="message error" id="form-message"></div>
-      <div class="message success" id="form-success"></div>
+      <div class="message error" id="form-message" style="display: none;"></div>
+      <div class="message success" id="form-success" style="display: none;"></div>
 
-      <button type="submit" class="btn-guardar" id="btn-save">Guardar Cambios</button>
+      <button type="submit" class="btn-guardar" id="btn-save">
+        <i class="fas fa-save"></i> Guardar Cambios
+      </button>
     </form>
 
     <div class="danger-zone">
-      <h3>⚠️ Zona de Peligro</h3>
-      <p>Eliminará tu cuenta y todos tus datos permanentemente.</p>
-      <button class="btn-eliminar-cuenta" id="btn-eliminar-cuenta">🗑️ Eliminar Mi Cuenta</button>
+      <h3><i class="fas fa-exclamation-triangle"></i> Zona de Peligro</h3>
+      <p>Al suspender tu cuenta no podrás acceder al sistema hasta que un administrador la reactive.</p>
+      <button class="btn-eliminar-cuenta" id="btn-eliminar-cuenta">
+        <i class="fas fa-user-slash"></i> Suspender Mi Cuenta
+      </button>
     </div>
 
     <div class="footer-links">
-      <a href="productos.html">Volver al Catálogo</a>
-      <a href="mis_pedidos.html">Mis Pedidos</a>
+      <a href="productos.html"><i class="fas fa-store"></i> Volver al Catálogo</a>
+      <a href="mis_pedidos.html"><i class="fas fa-shopping-bag"></i> Mis Pedidos</a>
     </div>
 
     <div class="copyright">
@@ -61,24 +70,35 @@
 
   <div class="modal" id="modal-eliminar">
     <div class="modal-content">
-      <h3>🗑️ Confirmar Eliminación</h3>
-      <p>Ingresa tu contraseña para confirmar:</p>
+      <h3><i class="fas fa-user-slash"></i> Confirmar Suspensión</h3>
+      <p>Ingresa tu contraseña para confirmar la suspensión de tu cuenta:</p>
+      
       <div class="form-group">
-        <input type="password" id="password-confirm" placeholder="Contraseña" />
+        <div class="input-with-icon">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password-confirm" placeholder="Tu contraseña" />
+        </div>
         <div class="checkbox-cont">
           <input type="checkbox" id="showPasswordConfirm" />
           <label for="showPasswordConfirm">Mostrar contraseña</label>
         </div>
       </div>
 
-      <div class="message warning" id="modal-message"></div>
+      <div class="message warning" id="modal-message" style="display: none;"></div>
+      
       <div class="modal-buttons">
-        <button class="btn-cancelar" id="btn-cancelar-eliminar">Cancelar</button>
-        <button class="btn-confirmar-eliminar" id="btn-confirmar-eliminar" disabled>Eliminar Cuenta</button>
+        <button class="btn-cancelar" id="btn-cancelar-eliminar">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button class="btn-confirmar-eliminar" id="btn-confirmar-eliminar" disabled>
+          <i class="fas fa-check"></i> Suspender Cuenta
+        </button>
       </div>
     </div>
   </div>
 
   <script src="js/edit_user.js"></script>
+  <script src="js/index.js"></script>
 </body>
 </html>
+

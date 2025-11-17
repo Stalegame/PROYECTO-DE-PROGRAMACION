@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 
 const PersistenceFactory = require('../PersistenceFactory');
+const { auth } = require('../middlewares/auth');
 
 const router = express.Router();
 
@@ -222,4 +223,107 @@ router.post('/register', validateRegister, handleValidationErrors, async (req, r
     });
   }
 });
+
+// Obtener datos del cliente por ID (solo admin o el propio usuario)
+router.get('/:id', auth, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const usuario = await clientesDAO.getById(id);
+    if (!usuario) return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
+
+    // Quitar campos sensibles si existen
+    const { passwordHash, password, ...publicUser } = usuario;
+    return res.status(200).json({ success: true, data: publicUser });
+  } catch (err) {
+    console.error('❌ Error obteniendo usuario:', err);
+    return res.status(500).json({ success: false, error: 'Error al obtener usuario' });
+  }
+});
+
+// Desactivar usuario (requiere confirmación de contraseña si no es admin)
+router.post('/:id/desactivar', auth, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const target = await clientesDAO.getById(id);
+    if (!target) return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
+
+    const requesterId = String(req.user && req.user.id);
+    const isAdmin = String(req.user && req.user.role).toLowerCase() === 'admin';
+
+    // Si no es admin, solo el propio usuario puede desactivarse y debe confirmar contraseña
+    if (!isAdmin && requesterId !== String(target.id)) {
+      return res.status(403).json({ success: false, error: 'Acceso denegado' });
+    }
+
+    if (!isAdmin) {
+      const password = String(req.body.password || '');
+      if (!password) return res.status(400).json({ success: false, error: 'Contraseña requerida para confirmar desactivación' });
+
+      // Intentamos obtener el hash de la forma más fiable posible
+      let hash = target.passwordHash;
+      if (!hash && target.email) {
+        try {
+          const byEmail = await clientesDAO.getByEmail(target.email);
+          if (byEmail && byEmail.passwordHash) hash = byEmail.passwordHash;
+        } catch (e) {
+          // ignorar y seguir
+        }
+      }
+
+      if (!hash) return res.status(400).json({ success: false, error: 'No es posible verificar la contraseña de este usuario' });
+
+      const ok = await bcrypt.compare(password, hash);
+      if (!ok) return res.status(401).json({ success: false, error: 'Contraseña incorrecta' });
+    }
+
+    // Realizar la desactivación (baja lógica)
+    const actualizado = await clientesDAO.update(id, { activo: false });
+    // Adaptar la respuesta dependiendo del DAO
+    const publicUpdated = actualizado && typeof actualizado === 'object'
+      ? (function () { const { passwordHash, password, ...rest } = actualizado; return rest; })()
+      : { id };
+
+    return res.status(200).json({ success: true, message: 'Usuario desactivado', data: publicUpdated });
+  } catch (err) {
+    console.error('❌ Error desactivando usuario:', err);
+    // Trata errores de traducción si el DAO los provee
+    if (clientesDAO.translateError) {
+      const te = clientesDAO.translateError(err);
+      if (te) return res.status(400).json({ success: false, error: te.msg, code: te.code });
+    }
+    return res.status(500).json({ success: false, error: 'Error al desactivar usuario' });
+  }
+});
+
+// Ruta para editar usuario
+router.put('/:id', auth, async (req, res) => {
+  try {
+    const id = req.params.id;
+    // Parsear id a string por si acaso
+    const idStr = String(id);
+    const target = await clientesDAO.getById(idStr);
+    if (!target) return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
+    const nombre = req.body.nombre;
+    const telefono = req.body.telefono;
+    const direccion = req.body.direccion;
+    const actualizado = await clientesDAO.update(idStr, { nombre, telefono, direccion });
+    // Adaptar la respuesta dependiendo del DAO
+    const publicUpdated = actualizado && typeof actualizado === 'object'
+      ? (function () { const { passwordHash, password, ...rest } = actualizado; return rest; })()
+      : { id };
+    
+    // BORRAR
+    console.log('Public updated user:', publicUpdated);
+
+    return res.status(200).json({ success: true, data: publicUpdated });
+  } catch (err) {
+    console.error('❌ Error actualizando usuario:', err);
+    if (clientesDAO.translateError) {
+      const te = clientesDAO.translateError(err);
+      if (te) return res.status(400).json({ success: false, error: te.msg, code: te.code });
+    }
+    return res.status(500).json({ success: false, error: 'Error al actualizar usuario' });
+  }
+});
+
 module.exports = router;

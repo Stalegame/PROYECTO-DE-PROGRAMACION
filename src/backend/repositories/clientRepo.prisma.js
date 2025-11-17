@@ -14,9 +14,10 @@ function formatTelefono(telefono) {
 }
 
 function parseId(id) {
-  const n = Number(id);
-  if (!Number.isInteger(n)) throw Object.assign(new Error('ID inválido'), { code: 'BAD_ID' });
-  return n;
+  // En este proyecto los IDs se generan como strings (Date.now().toString()).
+  // Aseguramos que no sea nulo/indefinido y devolvemos siempre string.
+  if (id === undefined || id === null) throw Object.assign(new Error('ID inválido'), { code: 'BAD_ID' });
+  return String(id);
 }
 
 function normalizeEmail(v) {
@@ -101,6 +102,9 @@ module.exports = {
     if (changes.passwordHash) {
       data.passwordHash = String(changes.passwordHash);
     }
+
+    // Actualizar updatedAt para reflejar la modificación
+    data.updatedAt = new Date();
 
     return prisma.clients.update({
       where: { id: parseId(id) },
