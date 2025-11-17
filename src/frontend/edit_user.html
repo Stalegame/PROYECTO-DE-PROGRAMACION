@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mi Perfil - FRUNA</title>
+  <title>Mi Cuenta - FRUNA</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" href="./img/logo fruna.png" type="image/png">
   <link rel="stylesheet" href="css/edit_user.css">
@@ -17,62 +17,151 @@
     <div class="lf-stage" aria-label="Cargando… dulces cayendo"></div>
   </div>
 
-  <!-- Botón Volver fijo en esquina superior izquierda -->
-  <a href="productos.html" class="btn-volver">
-    <i class="fas fa-arrow-left"></i>
-    Volver al Catálogo
-  </a>
-
-  <div class="contenedor-principal">
-    <header>
-      <div class="logo">FRUNA</div>
-      <div class="tagline">La dulcería de Chile</div>
-    </header>
-
-    <div class="user-profile">
-      <h1>Mi Perfil</h1>
-      <div class="loading" id="loading">Cargando datos...</div>
-
-      <form id="profile-form" style="display: none;">
-        <div class="form-group">
-          <i class="fas fa-envelope"></i>
-          <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" disabled />
-        </div>
-
-        <div class="form-group">
-          <i class="fas fa-user"></i>
-          <input type="text" id="nombre" name="nombre" placeholder="Nombre completo" required />
-        </div>
-
-        <div class="form-group">
-          <i class="fas fa-phone"></i>
-          <input type="tel" id="telefono" name="telefono" placeholder="8 o 9 dígitos" required pattern="\d{8,9}" />
-        </div>
-
-        <div class="form-group">
-          <i class="fas fa-map-marker-alt"></i>
-          <input type="text" id="direccion" name="direccion" placeholder="Dirección" />
-        </div>
-
-        <div class="message error" id="form-message" style="display: none;"></div>
-        <div class="message success" id="form-success" style="display: none;"></div>
-
-        <button type="submit" class="btn-guardar" id="btn-save">
-          <i class="fas fa-save"></i> Guardar Cambios
-        </button>
-      </form>
-
-      <div class="footer-links">
-        <a href="productos.html"><i class="fas fa-store"></i> Volver al Catálogo</a>
-        <a href="mis_pedidos.html"><i class="fas fa-shopping-bag"></i> Mis Pedidos</a>
+  <div class="user-container">
+    <!-- SIDEBAR -->
+    <div class="user-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">FRUNA</div>
+        <div class="sidebar-tagline">Mi Cuenta</div>
       </div>
+      
+      <div class="menu-item active" data-target="informacion">
+        <i class="fas fa-user"></i> Información Personal
+      </div>
+      <div class="menu-item" data-target="editar">
+        <i class="fas fa-edit"></i> Editar Información
+      </div>
+      <div class="menu-item" data-target="pedidos">
+        <i class="fas fa-shopping-bag"></i> Mis Pedidos
+      </div>
+      <div class="menu-item" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+      </div>
+    </div>
+    
+    <!-- MAIN CONTENT -->
+    <div class="user-main-content">
+      <div class="content-header">
+        <h1>Mi Cuenta FRUNA</h1>
+        <div class="welcome-text" id="welcome-text">Bienvenido</div>
+      </div>
+      
+      <!-- SECCIÓN INFORMACIÓN PERSONAL -->
+      <div id="informacion" class="content-section active">
+        <div class="profile-card">
+          <h2><i class="fas fa-user-circle"></i> Información Personal</h2>
+          <div class="loading" id="loading-info">
+            <div class="loading-spinner"></div> Cargando información...
+          </div>
+          
+          <div class="profile-info" id="profile-info" style="display: none;">
+            <div class="info-item">
+              <label>Nombre Completo</label>
+              <div class="value" id="info-nombre">Cargando...</div>
+            </div>
+            <div class="info-item">
+              <label>Email</label>
+              <div class="value" id="info-email">Cargando...</div>
+            </div>
+            <div class="info-item">
+              <label>Teléfono</label>
+              <div class="value" id="info-telefono">Cargando...</div>
+            </div>
+            <div class="info-item">
+              <label>Dirección</label>
+              <div class="value" id="info-direccion">Cargando...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- SECCIÓN EDITAR INFORMACIÓN -->
+      <div id="editar" class="content-section">
+        <div class="profile-card">
+          <h2><i class="fas fa-edit"></i> Editar Información</h2>
+          <div class="loading" id="loading-edit">Cargando formulario...</div>
+          
+          <form id="profile-form" style="display: none;">
+            <div class="form-group">
+              <label for="email">Correo Electrónico</label>
+              <input type="email" id="email" name="email" disabled />
+            </div>
 
-      <div class="copyright">
-        © 2025 FRUNA Chile - Todos los derechos reservados
+            <div class="form-group">
+              <label for="nombre">Nombre Completo</label>
+              <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required />
+            </div>
+
+            <div class="form-group">
+              <label for="telefono">Teléfono</label>
+              <input type="tel" id="telefono" name="telefono" placeholder="8 o 9 dígitos" required pattern="\d{8,9}" />
+            </div>
+
+            <div class="form-group">
+              <label for="direccion">Dirección</label>
+              <input type="text" id="direccion" name="direccion" placeholder="Tu dirección" />
+            </div>
+
+            <div class="message error" id="form-message" style="display: none;"></div>
+            <div class="message success" id="form-success" style="display: none;"></div>
+
+            <button type="submit" class="btn-guardar" id="btn-save">
+              <i class="fas fa-save"></i> Guardar Cambios
+            </button>
+          </form>
+        </div>
+      </div>
+      
+      <!-- SECCIÓN MIS PEDIDOS -->
+      <div id="pedidos" class="content-section">
+        <div class="profile-card">
+          <h2><i class="fas fa-shopping-bag"></i> Mis Pedidos</h2>
+          <div class="loading" id="loading-orders">Cargando pedidos...</div>
+          
+          <div class="orders-grid" id="orders-grid" style="display: none;">
+            <!-- Los pedidos se cargarán aquí dinámicamente -->
+          </div>
+          
+          <div id="no-orders" style="display: none; text-align: center; padding: 40px; color: #666;">
+            <i class="fas fa-shopping-cart" style="font-size: 3em; margin-bottom: 15px; opacity: 0.5;"></i>
+            <h3>No tienes pedidos aún</h3>
+            <p>¡Explora nuestro catálogo y realiza tu primer pedido!</p>
+            <a href="productos.html" style="display: inline-block; margin-top: 15px; padding: 10px 20px; background: #e91e63; color: white; text-decoration: none; border-radius: 8px;">
+              <i class="fas fa-store"></i> Ir al Catálogo
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+<!-- Agregar este menú en el sidebar -->
+<div class="menu-item" data-target="suspender">
+    <i class="fas fa-user-slash"></i> Suspender Cuenta
+</div>
 
+<!-- Agregar esta sección en el main content -->
+<div id="suspender" class="content-section">
+    <div class="profile-card">
+        <h2><i class="fas fa-user-slash"></i> Suspender Mi Cuenta</h2>
+        <div class="danger-zone">
+            <h3><i class="fas fa-exclamation-triangle"></i> Advertencia Importante</h3>
+            <p>Al suspender tu cuenta:</p>
+            <ul style="text-align: left; margin: 20px 0; padding-left: 25px; color: #666;">
+                <li>❌ No podrás iniciar sesión en el sistema</li>
+                <li>❌ No podrás realizar nuevos pedidos</li>
+                <li>📊 Tus datos se mantendrán en el sistema</li>
+                <li>🔒 Solo un administrador puede reactivar tu cuenta</li>
+            </ul>
+            <p style="color: #e63946; font-weight: 600;">Esta acción no se puede deshacer por ti mismo.</p>
+            
+            <div class="message warning" id="suspend-message" style="display: none; margin: 20px 0;"></div>
+            
+            <button class="btn-eliminar-cuenta" id="btn-suspender-cuenta" style="margin-top: 20px;">
+                <i class="fas fa-user-slash"></i> Suspender Mi Cuenta Definitivamente
+            </button>
+        </div>
+    </div>
+</div>
   <script src="js/page_loader.js" defer></script>
   <script src="js/edit_user.js"></script>
 </body>
