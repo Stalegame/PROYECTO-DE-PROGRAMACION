@@ -5,38 +5,66 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  directUrl= env("DIRECT_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-model clients {
-  id           String   @id
-  nombre       String
+model Client {
+  id           String   @id @default(cuid())
+  name         String
   email        String   @unique
-  telefono     String?
-  direccion    String?
-  passwordHash String   @map("password_hash")
-  role         String
-  activo       Boolean  @default(true)
-  createdAt    DateTime @map("created_at") @default(now()) @db.Timestamptz(6)
-  updatedAt    DateTime @map("updated_at") @default(now()) @db.Timestamptz(6)
+  phone        String?
+  address      String?
+  passwordHash String
+  role         Role     @default(USER)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  @@index([activo], map: "idx_clients_activo")
-  @@index([email], map: "idx_clients_email")
-  @@map("clients")
+  orders       Order[]
 }
 
-model products {
-  id          String   @id
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  products  Product[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
   name        String   @unique
   price       Int
   stock       Int      @default(0)
-  category    String
   description String?
   image       String?
-  createdAt  DateTime @map("created_at") @default(now()) @db.Timestamptz(6)
-  updatedAt  DateTime @map("updated_at") @default(now()) @db.Timestamptz(6)
 
-  @@index([stock], map: "idx_products_active_stock")
-  @@index([category], map: "idx_products_category")
-  @@map("products")
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id          String   @id @default(cuid())
+  client      Client   @relation(fields: [clientId], references: [id])
+  clientId    String
+  totalAmount Int
+  status      OrderStatus @default(PENDING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum OrderStatus {
+  PENDING
+  PREPARING
+  COMPLETED
+  CANCELLED
+}
+
+enum Role {
+  ADMIN
+  USER
 }

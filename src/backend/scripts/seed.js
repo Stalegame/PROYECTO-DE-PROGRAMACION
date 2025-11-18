@@ -1,63 +1,61 @@
 /**
- * Semilla inicial de datos para la base de datos usando Prisma ORM.
+ * Seed inicial para tu nueva base de datos con el schema actualizado.
  * Ejecutar con: `node src/backend/scripts/seed.js`
  */
 const bcrypt = require('bcryptjs');
 const prisma = require('../db/index.js');
 
-// Descomentar las siguientes lineas para debuggear
-//console.log('NODE_ENV =', process.env.NODE_ENV);
-//console.log('DATABASE_URL =', process.env.DATABASE_URL);
-
 async function main() {
-  // CLIENTES 
+  // CLIENTS
+
   const clients = [
     {
-      id: '1758128875560',
-      nombre: 'Example Admin',
+      id: 'cj2xk2q9m0000s0ez8g8z9hdp',
+      name: 'Example Admin',
       email: 'example@fruna.cl',
-      telefono: null,
-      direccion: null,
-      password: 'admin123',
-      role: 'admin',
-      activo: true
+      phone: null,
+      address: null,
+      password: 'ADMIN123',
+      role: 'ADMIN',
+      active: true
     },
     {
-      id: '1758129268033',
-      nombre: 'Pepe Acosta',
+      id: 'cj2xk3h5b0001s0ez9jx0f2lm',
+      name: 'Pepe Acosta',
       email: 'pepeacosta@example.com',
-      telefono: '+56912345678',
-      direccion: 'Calle de Pepe Acosta',
-      password: '123456',
-      role: 'user',
-      activo: true
+      phone: '+56912345678',
+      address: 'Calle de Pepe Acosta',
+      password: '12345678',
+      role: 'USER',
+      active: true
     },
     {
-      id: '1758131713782',
-      nombre: 'Laura Fernández',
+      id: 'cj2xk48m60002s0ezea0q9n7ys',
+      name: 'Laura Fernández',
       email: 'laura.fernandez@example.com',
-      telefono: '+5698765432',
-      direccion: 'Av. Los Olivos 123',
-      password: '123456',
-      role: 'user',
-      activo: false
+      phone: '+5698765432',
+      address: 'Av. Los Olivos 123',
+      password: '12345678',
+      role: 'USER',
+      active: false
     },
     {
-      id: '1758131811794',
-      nombre: 'Martín Rojas',
+      id: 'cj2xk4sfp0003s0ezezwl8u4qk',
+      name: 'Martín Rojas',
       email: 'martin.rojas@example.com',
-      telefono: '+5692318745',
-      direccion: 'Calle Central 45',
-      password: '123456',
-      role: 'user',
-      activo: true
+      phone: '+5692318745',
+      address: 'Calle Central 45',
+      password: '12345678',
+      role: 'USER',
+      active: true
     }
   ];
 
   for (const c of clients) {
     const hash = await bcrypt.hash(c.password, 10);
-    const { password, ...rest } = c; // quitar password
-    await prisma.clients.upsert({
+    const { password, ...rest } = c;
+
+    await prisma.client.upsert({
       where: { id: c.id },
       update: {},
       create: {
@@ -67,41 +65,57 @@ async function main() {
     });
   }
 
-  // ===== PRODUCTOS =====
+  // CATEGORIES
+
+  const categories = [
+    { id: 'cat_helados', name: 'Helados' },
+    { id: 'cat_bebidas', name: 'Bebidas' },
+    { id: 'cat_snacks', name: 'Snacks' }
+  ];
+
+  for (const category of categories) {
+    await prisma.category.upsert({
+      where: { id: category.id },
+      update: {},
+      create: category
+    });
+  }
+
+  // PRODUCTS
+
   const products = [
     {
-      id: '1758149195472',
+      id: 'cj2xk6r9y0004s0eze9js1rnl',
       name: 'Palo Palito',
       price: 390,
       stock: 15,
-      category: 'Helados',
+      categoryId: 'cat_helados',
       description: 'Helado de agua sabor cereza y piña.',
       image: 'palo_palito.png'
     },
     {
-      id: '1758149775878',
+      id: 'cj2xk74by0005s0ezectp82jt',
       name: 'Cola Cola Clásica 2Lt',
       price: 1490,
       stock: 10,
-      category: 'Bebidas',
-      description: 'Refresca tus momentos con el sabor clásico y burbujeante de siempre. Ideal para compartir.',
+      categoryId: 'cat_bebidas',
+      description: 'Refresca tus momentos con el sabor clásico.',
       image: 'cola_cola_fruna.jpg'
     },
     {
-      id: '1758149867672',
+      id: 'cj2xk7s6y0006s0ezeou7fcwn',
       name: 'Sufle Maní',
       price: 990,
       stock: 20,
-      category: 'Snacks',
-      description: 'Snack crocante de maní con el sabor clásico de siempre.',
+      categoryId: 'cat_snacks',
+      description: 'Snack crocante de maní.',
       image: 'Sufle_Chanfle_Mani.jpg'
     }
-    // Agrega más productos si quieres
   ];
 
   for (const p of products) {
-    await prisma.products.upsert({
-      where: { id: p.id }, // ⚠️ usar id para evitar conflictos
+    await prisma.product.upsert({
+      where: { id: p.id },
       update: {},
       create: p
     });
@@ -109,8 +123,9 @@ async function main() {
 
   console.log("✅ Seed completado con éxito");
 }
-// Ejecutar sólo cuando este archivo se invoca explícitamente.
-// En producción requiere FORCE_SEED=true para evitar seeds accidentales.
+
+// MAIN EXECUTION
+
 if (require.main === module) {
   if (process.env.NODE_ENV === 'production' && process.env.FORCE_SEED !== 'true') {
     console.log('Seed omitido en producción. Ejecuta con FORCE_SEED=true para forzar.');
