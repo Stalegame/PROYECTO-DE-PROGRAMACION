@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
         const producto = await obtenerProducto(nombreProducto);
         if (producto) {
           return res.json({
-            reply: `El producto "${producto.name}" tiene ${producto.stock} unidades en stock, precio: $${producto.price}, categoría: ${producto.category}.`
+            reply: `El producto "${producto.name}" tiene ${producto.stock} unidades en stock, precio: $${producto.price}, categoría: ${producto.category.name}.`
           });
         } else {
           return res.json({ reply: `No encontré el producto "${nombreProducto}" en la base de datos.` });

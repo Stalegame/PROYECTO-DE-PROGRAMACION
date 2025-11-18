@@ -1,90 +1,128 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-
 const router = express.Router();
+const PersistenceFactory = require('../PersistenceFactory');
 
-// Ruta del archivo cart.json
 const CART_PATH = path.join(__dirname, "..", "data", "cart.json");
+const productosDAO = PersistenceFactory.getDAO('productos');
 
-// Helpers para leer y escribir el carrito
-
+// Leer carrito
 function readCart() {
   if (!fs.existsSync(CART_PATH)) {
     fs.writeFileSync(CART_PATH, JSON.stringify([]));
   }
-
   const data = fs.readFileSync(CART_PATH, "utf8");
   return JSON.parse(data);
 }
 
+// Guardar carrito
 function saveCart(cart) {
   fs.writeFileSync(CART_PATH, JSON.stringify(cart, null, 2));
 }
 
-// Rutas del carrito
+// Obtener datos del producto
+async function getProductData(productId) {
+  try {
+    const producto = await productosDAO.getById(productId);
+    return producto || null;
+  } catch (error) {
+    console.error('Error al buscar producto:', error);
+    return null;
+  }
+}
 
-// Obtener carrito
-router.get("/", (req, res) => {
+// Obtener carrito del usuario
+router.get("/:userId", (req, res) => {
+  const { userId } = req.params;
   const cart = readCart();
-  res.json({ ok: true, data: cart });
+  const userCart = cart.find(c => c.userId === userId) || { userId, items: [] };
+  res.json({ ok: true, data: userCart });
 });
 
 // Agregar producto
-router.post("/add", (req, res) => {
-  const { productId, quantity } = req.body;
+router.post("/add", async (req, res) => {
+  const { userId, productId, quantity } = req.body;
 
-  if (!productId || !quantity) {
-    return res.status(400).json({ ok: false, msg: "productId y quantity son obligatorios" });
+  if (!userId || !productId || !quantity) {
+    return res.status(400).json({ ok: false, msg: "userId, productId y quantity son obligatorios" });
   }
 
   const cart = readCart();
-  const existing = cart.find((item) => item.productId === productId);
+  let userCart = cart.find(c => c.userId === userId);
+  if (!userCart) {
+    userCart = { userId, items: [] };
+    cart.push(userCart);
+  }
 
+  // Obtener datos del producto
+  const product = await getProductData(productId);
+  if (!product) return res.status(404).json({ ok: false, msg: "Producto no encontrado" });
+
+  const existing = userCart.items.find(i => i.productId === productId);
   if (existing) {
-    existing.quantity += quantity;
+    existing.quantity += Number(quantity);
   } else {
-    cart.push({ productId, quantity });
+    userCart.items.push({
+      productId,
+      quantity: Number(quantity),
+      name: product.name,
+      price: product.price,
+      image: product.image
+    });
   }
 
   saveCart(cart);
-  res.json({ ok: true, msg: "Producto agregado al carrito", data: cart });
+  res.json({ ok: true, msg: "Producto agregado al carrito", data: userCart });
 });
 
 // Actualizar cantidad
-router.put("/update/:id", (req, res) => {
-  const { id } = req.params;
+router.put("/update/:userId/:productId", (req, res) => {
+  const { userId, productId } = req.params;
   const { quantity } = req.body;
 
   const cart = readCart();
-  const item = cart.find((item) => item.productId === id);
+  const userCart = cart.find(c => c.userId === userId);
+  if (!userCart) return res.status(404).json({ ok: false, msg: "Carrito no encontrado" });
 
-  if (!item) {
-    return res.status(404).json({ ok: false, msg: "Producto no encontrado en el carrito" });
-  }
+  const item = userCart.items.find(i => i.productId === productId);
+  if (!item) return res.status(404).json({ ok: false, msg: "Producto no encontrado en el carrito" });
 
-  item.quantity = quantity;
+  item.quantity = Number(quantity);
   saveCart(cart);
-
-  res.json({ ok: true, msg: "Cantidad actualizada", data: cart });
+  res.json({ ok: true, msg: "Cantidad actualizada", data: userCart });
 });
 
-// Eliminar producto del carrito
-router.delete("/remove/:id", (req, res) => {
-  const { id } = req.params;
+// Eliminar producto
+router.delete("/remove/:userId/:productId", (req, res) => {
+  const { userId, productId } = req.params;
 
   const cart = readCart();
-  const updated = cart.filter((item) => item.productId !== id);
+  const userCart = cart.find(c => c.userId === userId);
+  if (!userCart) return res.status(404).json({ ok: false, msg: "Carrito no encontrado" });
 
-  saveCart(updated);
+  userCart.items = userCart.items.filter(i => i.productId !== productId);
+  if (userCart.items.length === 0) {
+    // Si no quedan items, eliminar el carrito del usuario
+    const index = cart.findIndex(c => c.userId === userId);
+    if (index !== -1) {
+      cart.splice(index, 1);
+    }
+  }
 
-  res.json({ ok: true, msg: "Producto eliminado", data: updated });
+  saveCart(cart);
+  res.json({ ok: true, msg: "Producto eliminado", data: userCart });
 });
 
-// Vaciar carrito completo
-router.delete("/clear", (req, res) => {
-  saveCart([]);
-  res.json({ ok: true, msg: "Carrito vaciado" });
+// Vaciar carrito completo (Con el usuario)
+router.delete("/clear/:userId", (req, res) => {
+  const { userId } = req.params;
+  let cart = readCart();
+
+  const newCart = cart.filter(c => c.userId !== userId);
+  saveCart(newCart);
+
+  res.json({ ok: true, msg: "Carrito vaciado", data: newCart });
 });
 
 module.exports = router;

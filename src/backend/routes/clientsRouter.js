@@ -8,9 +8,6 @@ const PersistenceFactory = require('../PersistenceFactory');
 const { auth } = require('../middlewares/auth');
 
 const router = express.Router();
-
-// ===== Nuestro "libro de clientes" =====
-// Ahora depende 100% de la PersistenceFactory
 const clientesDAO = PersistenceFactory.getDAO('clientes');
 
 // ===== Ayudantes para validaciones =====
@@ -119,7 +116,7 @@ router.post('/login', validateLogin, handleValidationErrors, async (req, res) =>
     }
 
     // Verificamos si la cuenta está activa
-    if (user.activo === false) {
+    if (user.active === false) {
       return res.status(403).json({ success: false, error: 'Tu cuenta está desactivada' });
     }
 
@@ -137,7 +134,7 @@ router.post('/login', validateLogin, handleValidationErrors, async (req, res) =>
 
     // Creamos el "carnet de identidad digital" (JWT)
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role || 'user' },
+      { id: user.id, email: user.email, role: user.role || 'USER' },
       JWT_SECRET,
       { expiresIn: '1h' } // El token dura 1 hora
     );
@@ -150,7 +147,7 @@ router.post('/login', validateLogin, handleValidationErrors, async (req, res) =>
       message: '¡Bienvenido! Has iniciado sesión correctamente',
       user: usuarioPublico,
       token, // Este token hay que guardarlo en el frontend
-      redirect: user.role === 'admin' ? '/admin_controller.html' : '/productos.html',
+      redirect: user.role === 'ADMIN' ? '/admin_controller.html' : '/productos.html',
     });
   } catch (err) {
     console.error('❌ Error en el login:', err);
@@ -248,7 +245,7 @@ router.post('/:id/desactivar', auth, async (req, res) => {
     if (!target) return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
 
     const requesterId = String(req.user && req.user.id);
-    const isAdmin = String(req.user && req.user.role).toLowerCase() === 'admin';
+    const isAdmin = String(req.user && req.user.role).toUpperCase() === 'ADMIN';
 
     // Si no es admin, solo el propio usuario puede desactivarse y debe confirmar contraseña
     if (!isAdmin && requesterId !== String(target.id)) {
@@ -277,7 +274,7 @@ router.post('/:id/desactivar', auth, async (req, res) => {
     }
 
     // Realizar la desactivación (baja lógica)
-    const actualizado = await clientesDAO.update(id, { activo: false });
+    const actualizado = await clientesDAO.update(id, { active: false });
     // Adaptar la respuesta dependiendo del DAO
     const publicUpdated = actualizado && typeof actualizado === 'object'
       ? (function () { const { passwordHash, password, ...rest } = actualizado; return rest; })()
@@ -299,21 +296,16 @@ router.post('/:id/desactivar', auth, async (req, res) => {
 router.put('/:id', auth, async (req, res) => {
   try {
     const id = req.params.id;
-    // Parsear id a string por si acaso
-    const idStr = String(id);
-    const target = await clientesDAO.getById(idStr);
+    const target = await clientesDAO.getById(id);
     if (!target) return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
-    const nombre = req.body.nombre;
-    const telefono = req.body.telefono;
-    const direccion = req.body.direccion;
-    const actualizado = await clientesDAO.update(idStr, { nombre, telefono, direccion });
+    const name = req.body.name;
+    const phone = req.body.phone;
+    const address = req.body.address;
+    const actualizado = await clientesDAO.update(id, { name, phone, address });
     // Adaptar la respuesta dependiendo del DAO
     const publicUpdated = actualizado && typeof actualizado === 'object'
       ? (function () { const { passwordHash, password, ...rest } = actualizado; return rest; })()
       : { id };
-    
-    // BORRAR
-    console.log('Public updated user:', publicUpdated);
 
     return res.status(200).json({ success: true, data: publicUpdated });
   } catch (err) {

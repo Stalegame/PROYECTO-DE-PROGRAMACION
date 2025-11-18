@@ -3,104 +3,167 @@ const express = require('express');
 const router = express.Router();
 const PersistenceFactory = require('../PersistenceFactory');
 
-// Traemos el DAO de clientes (Prisma/JSON, etc., según tu factory)
+// DAOs desde tu Factory
 const clientesDAO = PersistenceFactory.getDAO('clientes');
+const productosDAO = PersistenceFactory.getDAO('productos');
 
-/** 
- * Sanear/normalizar un cliente para respuesta pública:
- * - quita passwordHash/password_hash
- * - normaliza createdAt/updatedAt
- */
+/** Sanitización de cliente (evita mutar el objeto original) */
 function toPublicClient(c) {
-  if (!c) return c;
-
-  // Extrae y descarta variantes de contraseña
-  const {
-    passwordHash,      // camel
-    password_hash,     // snake
-    ...rest
-  } = c;
-
-  // Normaliza fechas (si vienen en snake_case)
-  const createdAt = rest.createdAt ?? rest.created_at ?? null;
-  const updatedAt = rest.updatedAt ?? rest.updated_at ?? null;
-
-  // Elimina las keys snake duplicadas para no confundir al frontend
-  delete rest.created_at;
-  delete rest.updated_at;
+  if (!c) return null;
 
   return {
-    ...rest,
-    ...(createdAt ? { createdAt } : {}),
-    ...(updatedAt ? { updatedAt } : {}),
+    id: c.id,
+    email: c.email,
+    name: c.name,
+    active: c.active,
+    createdAt: c.createdAt ?? c.created_at ?? null,
+    updatedAt: c.updatedAt ?? c.updated_at ?? null,
   };
 }
 
-// ==================== RUTAS DEL ADMINISTRADOR ====================
-
-// Esta ruta es como el "tablero de control" del administrador
+// Panel Del ADMIN (En construcción)
 router.get('/dashboard', (req, res) => {
   res.status(200).json({
     success: true,
-    message: '¡Hola administrador! Bienvenido a tu panel de control',
-    user: req.user
+    message: 'Bienvenido al panel administrativo',
+    user: req.user,
   });
 });
 
-// Listar todos los clientes (sin contraseñas)
-router.get('/clientes', async (req, res) => {
+// Listar clientes
+router.get('/clientes', async (_req, res) => {
   try {
-    // Pedimos todos los clientes al DAO
     const clientes = await clientesDAO.getAll();
+    const data = clientes.map(toPublicClient);
 
-    // Convertimos a versión pública y normalizamos campos
-    const data = Array.isArray(clientes) ? clientes.map(toPublicClient) : [];
-
-    res.status(200).json({ 
-      success: true, 
+    res.status(200).json({
+      success: true,
       data,
       message: `Encontrados ${data.length} clientes`
     });
-  } catch (error) {
-    console.error('Error al obtener clientes:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'No pudimos cargar la lista de clientes' 
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: 'Error cargando clientes'
     });
   }
 });
 
-// Esta ruta permite desactivar un cliente (sin eliminarlo)
+// Desactivar cliente
 router.patch('/clientes/:id/desactivar', async (req, res) => {
   try {
     const id = req.params.id;
 
-    // Importante: solo tocamos "activo". No editamos contraseña aquí.
-    const actualizado = await clientesDAO.update(id, { activo: false });
-
-    if (!actualizado) { 
-      return res.status(404).json({ 
-        success: false, 
-        error: 'No encontramos este usuario' 
+    const actualizado = await clientesDAO.update(id, { active: false });
+    if (!actualizado) {
+      return res.status(404).json({
+        success: false,
+        error: 'No encontramos este usuario'
       });
     }
 
-    // Devolvemos versión pública
-    const data = toPublicClient(actualizado);
-
-    res.status(200).json({ 
-      success: true, 
-      message: 'El usuario ha sido desactivado',
-      data
+    res.status(200).json({
+      success: true,
+      message: 'Usuario desactivado',
+      data: toPublicClient(actualizado)
     });
-  } catch (error) {
-    console.error('Error al desactivar cliente:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'No pudimos desactivar al usuario' 
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: 'Error desactivando usuario'
     });
   }
 });
 
-// Exportamos el router para usarlo en el servidor principal
+// Crear producto
+router.post('/products', async (req, res) => {
+  try {
+    const { name, price, stock, category, description, image } = req.body;
+
+    if (!name || !price || !stock || !category) {
+      return res.status(400).json({
+        success: false,
+        error: 'Nombre, precio, stock y categoria son obligatorios'
+      });
+    }
+
+    const nuevo = await productosDAO.save({
+      name,
+      price,
+      stock,
+      category,
+      description,
+      image
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Producto creado correctamente',
+      data: nuevo
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: 'Error al crear el producto'
+    });
+  }
+});
+
+// Actualizar producto
+router.put('/products/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const cambios = req.body;
+
+    const actualizado = await productosDAO.update(id, cambios);
+
+    if (!actualizado) {
+      return res.status(404).json({
+        success: false,
+        error: 'Producto no encontrado'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Producto actualizado',
+      data: actualizado
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: 'Error al actualizar el producto'
+    });
+  }
+});
+
+// Eliminar producto
+router.delete('/products/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const eliminado = await productosDAO.delete(id);
+
+    if (!eliminado) {
+      return res.status(404).json({
+        success: false,
+        error: 'Producto no encontrado'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Producto eliminado correctamente'
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: 'Error eliminando el producto'
+    });
+  }
+});
+
 module.exports = router;

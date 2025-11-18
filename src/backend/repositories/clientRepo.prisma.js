@@ -26,6 +26,7 @@ module.exports = {
   // Obtener todos los clientes
   async getAll() {
     return prisma.client.findMany({
+      include: { orders: true },
       orderBy: { createdAt: 'asc' }
     });
   },
