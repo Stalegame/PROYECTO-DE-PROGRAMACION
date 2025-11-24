@@ -494,3 +494,36 @@ header{
   background: #ffebee;
   border-radius: 8px;
 }
+
+.search-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 20px 0;
+}
+
+.pag-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #eee;
+  cursor: pointer;
+}
+
+.pag-btn.active {
+  background: #ff006e;
+  color: white;
+}
+
+.pag-btn:disabled {
+  background: #ddd;
+  cursor: not-allowed;
+}
