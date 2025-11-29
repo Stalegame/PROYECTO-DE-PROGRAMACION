@@ -1,118 +1,602 @@
-# 📄 Selección y Documentación de APIs — Proyecto Fruna
+# 📄 Documentación de APIs — Proyecto Fruna
 
-Este documento detalla todas las interfaces de programación utilizadas en el proyecto, incluyendo las librerías de terceros (APIs internas de Node/Express) y los servicios web externos (Nutrición, Pagos y Notificaciones) que se planean integrar.
+Este documento detalla todas las interfaces de programación (APIs) utilizadas en el proyecto FRUNA, incluyendo las rutas internas del backend y las APIs externas planificadas.
 
 ---
 
-# APIS externas
-## A) Información Nutricional
+## 📌 APIs Internas del Backend
 
-### A.1 — **USDA FoodData Central (oficial)**
-- **Guía:** https://fdc.nal.usda.gov/api-guide.html
-- **Base URL:** `https://api.nal.usda.gov/fdc`
-- **Auth:** `api_key` (query param).
+### Base URL
+- **Desarrollo**: `http://localhost:3000/api`
+- **Producción**: Configurar según deployment
 
-**Endpoints clave**
-1) **Buscar alimentos**
-GET /v1/foods/search?query={texto}&pageSize=10&api_key={API_KEY}**Ejemplo de respuesta (recortado)**
+### Autenticación
+La mayoría de las rutas protegidas requieren un token JWT en el header:
+```
+Authorization: Bearer {token}
+```
+
+---
+
+## 🔐 Autenticación y Clientes (`/api/clients`)
+
+### POST `/api/clients/login`
+Iniciar sesión de usuario.
+
+**Body**:
 ```json
 {
-  "totalHits": 2,
-  "foods": [
-    {
-      "fdcId": 1104067,
-      "description": "Banana, raw",
-      "brandOwner": null,
-      "dataType": "Survey (FNDDS)",
-      "servingSize": 118.0,
-      "servingSizeUnit": "g"
-    }
-  ]
+  "email": "usuario@ejemplo.com",
+  "password": "contraseña123"
 }
-Detalle por fdcIdGET /v1/food/{fdcId}?api_key={API_KEY}
-Ejemplo (recortado)JSON{
-  "fdcId": 1104067,
-  "description": "Banana, raw",
-  "labelNutrients": {
-    "calories": {"value": 105},
-    "protein": {"value": 1.3},
-    "fat": {"value": 0.4},
-    "carbohydrates": {"value": 27.0}
-  }
-}
-B) Pagos / Transacciones (Chile)B.1 — Flow CLDocs: https://www.flow.cl/documentacion/api.htmlBase URL frecuente: https://www.flow.cl/apiFlujo común: 
-// crear pago → redirigir a Flow → confirmar/consultar estado.Endpoints clave (nombres referenciales)Crear pagoPOST /payment/create
-Body (ej.): {
-  "apiKey": "...",
-  "amount": 19990,
-  "currency": "CLP",
-  "subject": "Pedido #123",
-  "email": "cliente@correo.com",
-  "urlConfirmation": "[https://tuapp.com/flow/confirm](https://tuapp.com/flow/confirm)",
-  "urlReturn": "[https://tuapp.com/flow/return](https://tuapp.com/flow/return)"
-}
-JSON{ "token": "abcd1234", "url": "[https://www.flow.cl/payment/init/abcd1234](https://www.flow.cl/payment/init/abcd1234)" }
-Estado del pagoGET /payment/getStatus?apiKey=...&token=abcd1234
-JSON{ "status": 2, "status_desc": "paid", "amount": 19990, "currency": "CLP" }
-Webhook: configurar urlConfirmation para notificaciones de pago (server-to-server).B.2 — Webpay Plus (Transbank)Docs: https://www.transbankdevelopers.cl/referencia/webpayBase URL (sandbox): https://webpay3gint.transbank.cl (según ambiente).Flujo: crear → redirigir → commit → status/refund.Endpoints claveCrear transacciónPOST /rswebpaytransaction/api/webpay/v1.2/transactions
-Body: { "buy_order":"O-123", "session_id":"S-123", "amount":19990, "return_url":"[https://tuapp.com/tbk/return](https://tuapp.com/tbk/return)" }
-JSON{ "token": "abc123", "url": "[https://webpay3gint.transbank.cl/webpayserver/initTransaction](https://webpay3gint.transbank.cl/webpayserver/initTransaction)" }
-Commit (confirmar)PUT /rswebpaytransaction/api/webpay/v1.2/transactions/{token}
-JSON{ "status":"AUTHORIZED", "amount":19990, "buy_order":"O-123", "authorization_code":"012345" }
-StatusGET /rswebpaytransaction/api/webpay/v1.2/transactions/{token}
-RefundPOST /rswebpaytransaction/api/webpay/v1.2/transactions/{token}/refunds
-C) Notificaciones (Email/SMS/WhatsApp)C.1 — EmailJS (sin backend)Sitio: https://www.emailjs.com/Uso: enviar correo desde el frontend sin servidor.Ejemplo (JS):HTML<script src="[https://cdn.emailjs.com/sdk/3.11.0/email.min.js](https://cdn.emailjs.com/sdk/3.11.0/email.min.js)"></script>
-<script>
-  (function(){ emailjs.init("PUBLIC_KEY"); })();
-  function sendContact() {
-    emailjs.send("service_id","template_id", { name, email, message })
-      .then(() => console.log("enviado"))
-      .catch(console.error);
-  }
-</script>
-C.2 — Twilio (SMS/WhatsApp)Sitio: https://www.twilio.com/Endpoint (mensajes): POST /2010-04-01/Accounts/{AccountSid}/Messages.jsonEjemplo (Node)JavaScriptimport twilio from "twilio";
-const client = twilio(ACCOUNT_SID, AUTH_TOKEN);
-await client.messages.create({
-  from: "whatsapp:+14155238886",
-  to: "whatsapp:+569XXXXXXXX",
-  body: "Tu pedido #123 fue pagado ✅"
-});
-APIS internas (Librerías de Node.js y Estructura del Proyecto)La estructura interna se basa en el framework Express.js, utilizando APIs nativas de Node.js (fs, path) y librerías de terceros para la seguridad (jsonwebtoken, bcryptjs).I. APIs de Persistencia (DAO - Data Access Object)I.1 — fs.promises (File System API)Uso: Acceso asíncrono a archivos. Es el motor de persistencia del proyecto (guarda datos en JSON).Librería: Nativa de Node.js.Funcionalidad: Lectura, escritura, creación y verificación de archivos/directorios.Endpoints clave (Funciones del DAO)Lectura de DatosJavaScriptasync function _readAllRaw() {
-  const data = await fs.readFile(this.filePath, 'utf8');
-  return JSON.parse(data);
-}
-Ejemplo de uso// JsonClientesDAO.js
-const fs = require('fs').promises; 
-// ...
-const raw = await this._readAllRaw();
-Escritura de DatosJavaScriptasync function _writeAllRaw(arr) {
-  await fs.writeFile(this.filePath, JSON.stringify(arr, null, 2));
-}
-Ejemplo de uso// JsonProductosDAO.js
-await fs.writeFile(this.filePath, JSON.stringify(productos, null, 2));
-II. APIs de Seguridad y AutenticaciónII.1 — jsonwebtoken (jwt)Uso: Crea, firma y verifica los tokens de sesión de los clientes.Librería: jsonwebtoken (Terceros).Funcionalidad: Gestión del ciclo de vida de la sesión (login/auth).Endpoints clave (Middleware auth)Verificación del TokenJavaScriptlet payload;
-try {
-  payload = jwt.verify(token, secret); // Verifica firma y expiración
-} catch {
-  // Manejo de token inválido o expirado
-}
-Ejemplo de uso// SRC/Backend/middlewares/auth.js
-const jwt = require('jsonwebtoken');
-// ...
-payload = jwt.verify(token, secret); // { id, email, role, iat, exp }
-II.2 — bcryptjsUso: Hasheo criptográfico de contraseñas.
-Librería: bcryptjs (Terceros).
-Funcionalidad: Garantiza que las contraseñas se almacenen de forma segura.Endpoints clave (Función save)Hashear ContraseñaJavaScript// En registro de cliente
-passwordHash: bcrypt.hashSync(input.password, 10) // 10 es el factor de coste (salt)
-Ejemplo de uso // SRC/Backend/json/JsonClientesDAO.js
-const bcrypt = require('bcryptjs');
-// ...
-passwordHash: bcrypt.hashSync(input.password, 10),
+```
 
-Funcionalidad,Método,URL/Endpoint,Fragmento de Código (Ej.)
-Login,POST,/api/clients/login,"`app.use('/api/clients/login', strictLimiter);`"
-Registro,POST,/api/clients/register,"`app.use('/api/clients/register', strictLimiter);`"
-Productos,GET,/api/products,"`app.use('/api/products', productsRouter);`"
-Carrito (Agregar),POST,/api/cart,"`await fetch(""/api/cart"", { method: ""POST"", ... });` (Frontend)"
-Carrito (Checkout),POST,/api/cart/checkout,"`await fetch(""/api/cart/checkout"", { method: ""POST"" });` (Frontend)"
-Administración,GET/POST/...,/api/admin/...,"`app.use('/api/admin', auth, onlyAdminEmail(...), adminRouter);`"
+**Respuesta exitosa (200)**:
+```json
+{
+  "success": true,
+  "message": "¡Bienvenido! Has iniciado sesión correctamente",
+  "user": {
+    "id": "abc123",
+    "name": "Juan Pérez",
+    "email": "usuario@ejemplo.com",
+    "role": "USER",
+    "active": true
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "redirect": "/productos.html"
+}
+```
+
+**Errores**:
+- `401`: Credenciales incorrectas
+- `403`: Cuenta desactivada
+
+---
+
+### POST `/api/clients/register`
+Registrar nuevo usuario.
+
+**Body**:
+```json
+{
+  "nombre": "Juan Pérez",
+  "email": "usuario@ejemplo.com",
+  "password": "Contraseña123",
+  "telefono": "98765432",
+  "direccion": "Av. Providencia 1234" // opcional
+}
+```
+
+**Validaciones**:
+- **nombre**: 2-60 caracteres, solo letras, espacios, guiones y apóstrofes
+- **email**: formato válido, máximo 100 caracteres
+- **password**: 8-64 caracteres, debe combinar al menos 2 tipos (mayúsculas, minúsculas, números, símbolos)
+- **telefono**: exactamente 8 dígitos
+- **direccion**: 5-120 caracteres (opcional)
+
+**Respuesta exitosa (201)**:
+```json
+{
+  "success": true,
+  "message": "¡Te has registrado exitosamente!",
+  "data": {
+    "id": "abc123",
+    "name": "Juan Pérez",
+    "email": "usuario@ejemplo.com",
+    "phone": "+56998765432",
+    "address": "Av. Providencia 1234",
+    "role": "USER",
+    "active": true
+  }
+}
+```
+
+**Errores**:
+- `400`: Datos inválidos
+- `409`: Email ya registrado
+
+---
+
+### GET `/api/clients/:id`
+Obtener datos de un cliente (requiere autenticación).
+
+**Headers**: `Authorization: Bearer {token}`
+
+**Respuesta (200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "abc123",
+    "name": "Juan Pérez",
+    "email": "usuario@ejemplo.com",
+    "phone": "+56998765432",
+    "address": "Av. Providencia 1234",
+    "role": "USER",
+    "active": true
+  }
+}
+```
+
+---
+
+### PUT `/api/clients/:id`
+Actualizar datos del cliente (requiere autenticación).
+
+**Headers**: `Authorization: Bearer {token}`
+
+**Body**:
+```json
+{
+  "name": "Juan Carlos Pérez",
+  "phone": "87654321",
+  "address": "Nueva dirección 456"
+}
+```
+
+**Respuesta (200)**:
+```json
+{
+  "success": true,
+  "data": { /* usuario actualizado */ }
+}
+```
+
+---
+
+### POST `/api/clients/:id/desactivar`
+Desactivar cuenta de usuario (requiere autenticación y confirmación de contraseña).
+
+**Headers**: `Authorization: Bearer {token}`
+
+**Body**:
+```json
+{
+  "password": "contraseña_actual"
+}
+```
+
+**Respuesta (200)**:
+```json
+{
+  "success": true,
+  "message": "Usuario desactivado",
+  "data": { /* usuario desactivado */ }
+}
+```
+
+---
+
+## 🛍️ Productos (`/api/products`)
+
+### GET `/api/products`
+Obtener todos los productos.
+
+**Respuesta (200)**:
+```json
+{
+  "success": true,
+  "count": 25,
+  "data": [
+    {
+      "id": "prod123",
+      "name": "Alfajor Clásico",
+      "price": 1290,
+      "stock": 45,
+      "description": "Alfajor tradicional con dulce de leche",
+      "image": "alfajores.png",
+      "category": {
+        "id": "cat1",
+        "name": "Alfajores"
+      }
+    }
+  ],
+  "message": "Encontrados 25 productos"
+}
+```
+
+---
+
+### GET `/api/products/:id`
+Obtener un producto específico.
+
+**Respuesta (200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "prod123",
+    "name": "Alfajor Clásico",
+    "price": 1290,
+    "stock": 45,
+    "description": "Alfajor tradicional con dulce de leche",
+    "image": "alfajores.png",
+    "category": {
+      "id": "cat1",
+      "name": "Alfajores"
+    }
+  },
+  "message": "Producto encontrado"
+}
+```
+
+**Errores**:
+- `404`: Producto no encontrado
+
+---
+
+## 🛒 Carrito (`/api/cart`)
+
+### GET `/api/cart/:userId`
+Obtener carrito del usuario.
+
+**Respuesta (200)**:
+```json
+{
+  "ok": true,
+  "data": {
+    "userId": "user123",
+    "items": [
+      {
+        "productId": "prod123",
+        "quantity": 2,
+        "name": "Alfajor Clásico",
+        "price": 1290,
+        "image": "alfajores.png"
+      }
+    ]
+  }
+}
+```
+
+---
+
+### POST `/api/cart/add`
+Agregar producto al carrito.
+
+**Body**:
+```json
+{
+  "userId": "user123",
+  "productId": "prod123",
+  "quantity": 2
+}
+```
+
+**Respuesta (200)**:
+```json
+{
+  "ok": true,
+  "msg": "Producto agregado al carrito",
+  "data": { /* carrito actualizado */ }
+}
+```
+
+---
+
+### PUT `/api/cart/update/:userId/:productId`
+Actualizar cantidad de un producto en el carrito.
+
+**Body**:
+```json
+{
+  "quantity": 5
+}
+```
+
+---
+
+### DELETE `/api/cart/remove/:userId/:productId`
+Eliminar producto del carrito.
+
+**Respuesta (200)**:
+```json
+{
+  "ok": true,
+  "msg": "Producto eliminado",
+  "data": { /* carrito actualizado */ }
+}
+```
+
+---
+
+### DELETE `/api/cart/clear/:userId`
+Vaciar carrito completo.
+
+**Respuesta (200)**:
+```json
+{
+  "ok": true,
+  "msg": "Carrito vaciado",
+  "data": []
+}
+```
+
+---
+
+## 🤖 Chatbot (`/api/chat`)
+
+### POST `/api/chat`
+Enviar mensaje al chatbot.
+
+**Body**:
+```json
+{
+  "message": "¿Cuál es el stock del Alfajor Clásico?"
+}
+```
+
+**Respuesta (200)**:
+```json
+{
+  "reply": "El producto \"Alfajor Clásico\" tiene 45 unidades en stock, precio: $1290, categoría: Alfajores."
+}
+```
+
+**Funcionalidades del chatbot**:
+- Consultar stock de productos
+- Verificar disponibilidad
+- Listar productos por categoría
+- Buscar productos por rango de precio
+- Búsqueda general de productos
+- Respuestas generales usando modelo de IA (DeepSeek)
+
+---
+
+## 👨‍💼 Administración (`/api/admin`)
+
+**Todas las rutas requieren autenticación y rol ADMIN**
+
+### GET `/api/admin/dashboard`
+Obtener datos del dashboard de administración.
+
+**Headers**: `Authorization: Bearer {token}`
+
+**Respuesta (200)**:
+```json
+{
+  "success": true,
+  "message": "Bienvenido al panel administrativo",
+  "user": { /* datos del admin */ }
+}
+```
+
+---
+
+### GET `/api/admin/users`
+Listar todos los usuarios.
+
+**Headers**: `Authorization: Bearer {token}`
+
+**Respuesta (200)**:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "user123",
+      "name": "Juan Pérez",
+      "email": "juan@ejemplo.com",
+      "active": true
+    }
+  ],
+  "message": "Encontrados 15 clientes"
+}
+```
+
+---
+
+### PUT `/api/admin/users/:id/suspend`
+Suspender cuenta de usuario.
+
+**Headers**: `Authorization: Bearer {token}`
+
+**Respuesta (200)**:
+```json
+{
+  "success": true,
+  "message": "Usuario suspendido",
+  "data": { /* usuario suspendido */ }
+}
+```
+
+---
+
+### PUT `/api/admin/users/:id/unsuspend`
+Reactivar cuenta de usuario.
+
+**Headers**: `Authorization: Bearer {token}`
+
+**Respuesta (200)**:
+```json
+{
+  "success": true,
+  "message": "Usuario reactivado",
+  "data": { /* usuario reactivado */ }
+}
+```
+
+---
+
+### DELETE `/api/admin/users/:id`
+Eliminar usuario permanentemente.
+
+**Headers**: `Authorization: Bearer {token}`
+
+**Respuesta (200)**:
+```json
+{
+  "success": true,
+  "message": "Usuario eliminado correctamente"
+}
+```
+
+---
+
+### POST `/api/admin/products`
+Crear nuevo producto.
+
+**Headers**: `Authorization: Bearer {token}`
+
+**Body**:
+```json
+{
+  "name": "Nuevo Producto",
+  "price": 1500,
+  "stock": 100,
+  "category": "Alfajores",
+  "description": "Descripción del producto",
+  "image": "imagen.png"
+}
+```
+
+**Nota**: La categoría se crea automáticamente si no existe.
+
+**Respuesta (201)**:
+```json
+{
+  "success": true,
+  "message": "Producto creado correctamente",
+  "data": { /* producto creado */ }
+}
+```
+
+---
+
+### PUT `/api/admin/products/:id`
+Actualizar producto existente.
+
+**Headers**: `Authorization: Bearer {token}`
+
+**Body**:
+```json
+{
+  "name": "Producto Actualizado",
+  "price": 1600,
+  "stock": 80,
+  "category": "Nueva Categoría"
+}
+```
+
+**Respuesta (200)**:
+```json
+{
+  "success": true,
+  "message": "Producto actualizado",
+  "data": { /* producto actualizado */ }
+}
+```
+
+---
+
+### DELETE `/api/admin/products/:id`
+Eliminar producto.
+
+**Headers**: `Authorization: Bearer {token}`
+
+**Respuesta (200)**:
+```json
+{
+  "success": true,
+  "message": "Producto eliminado correctamente"
+}
+```
+
+---
+
+## 🌐 APIs Externas (Planificadas)
+
+### A) Información Nutricional - USDA FoodData Central
+
+**Base URL**: `https://api.nal.usda.gov/fdc`
+**Autenticación**: API Key (query param)
+
+**Endpoints**:
+- `GET /v1/foods/search?query={texto}&pageSize=10&api_key={API_KEY}`
+- `GET /v1/food/{fdcId}?api_key={API_KEY}`
+
+---
+
+### B) Pagos (Chile)
+
+#### B.1 - Flow CL
+**Docs**: https://www.flow.cl/documentacion/api.html
+**Base URL**: `https://www.flow.cl/api`
+
+**Endpoints**:
+- `POST /payment/create` - Crear pago
+- `GET /payment/getStatus` - Consultar estado
+
+#### B.2 - Webpay Plus (Transbank)
+**Docs**: https://www.transbankdevelopers.cl/referencia/webpay
+**Base URL**: `https://webpay3gint.transbank.cl` (sandbox)
+
+**Endpoints**:
+- `POST /rswebpaytransaction/api/webpay/v1.2/transactions` - Crear transacción
+- `PUT /rswebpaytransaction/api/webpay/v1.2/transactions/{token}` - Confirmar
+- `GET /rswebpaytransaction/api/webpay/v1.2/transactions/{token}` - Consultar estado
+
+---
+
+### C) Notificaciones
+
+#### C.1 - EmailJS
+**Sitio**: https://www.emailjs.com/
+**Uso**: Envío de correos desde frontend sin backend
+
+#### C.2 - Twilio (SMS/WhatsApp)
+**Sitio**: https://www.twilio.com/
+**Endpoint**: `POST /2010-04-01/Accounts/{AccountSid}/Messages.json`
+
+---
+
+## 🔧 Tecnologías Utilizadas
+
+### Backend
+- **Framework**: Express.js
+- **Base de Datos**: PostgreSQL con Prisma ORM
+- **Autenticación**: JWT (jsonwebtoken)
+- **Seguridad**: bcryptjs, helmet, express-rate-limit
+- **Validación**: express-validator
+
+### Librerías Principales
+- `@prisma/client` - ORM para PostgreSQL
+- `bcryptjs` - Hasheo de contraseñas
+- `jsonwebtoken` - Gestión de tokens JWT
+- `express-validator` - Validación de datos
+- `helmet` - Seguridad HTTP
+- `cors` - Control de acceso CORS
+- `express-rate-limit` - Limitación de peticiones
+
+---
+
+## 📊 Códigos de Estado HTTP
+
+- `200 OK` - Solicitud exitosa
+- `201 Created` - Recurso creado exitosamente
+- `400 Bad Request` - Datos inválidos
+- `401 Unauthorized` - No autenticado o credenciales incorrectas
+- `403 Forbidden` - No autorizado (cuenta desactivada o sin permisos)
+- `404 Not Found` - Recurso no encontrado
+- `409 Conflict` - Conflicto (ej: email duplicado)
+- `500 Internal Server Error` - Error del servidor
+
+---
+
+## 🔒 Seguridad
+
+### Rate Limiting
+- **API General**: 100 peticiones por 15 minutos
+- **Login/Register**: 5 intentos por 15 minutos
+
+### Headers de Seguridad
+- Content Security Policy (CSP)
+- CORS configurado
+- Helmet para headers seguros
+
+### Validaciones
+- Sanitización de inputs
+- Validación de formatos (email, teléfono, etc.)
+- Protección contra inyección SQL (Prisma ORM)
+- Hasheo de contraseñas con bcrypt (factor 10)

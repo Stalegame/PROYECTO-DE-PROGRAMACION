@@ -1,13 +1,14 @@
 const fs = require('fs').promises;
 const path = require('path');
-const CART_FILE = path.join(__dirname,'..' ,'data' ,'cart.json');
+
+const CART_FILE = path.join(__dirname, '..', 'data', 'cart.json');
 
 class JsonCartDAO {
   constructor() {
     this.cartFile = CART_FILE;
   }
 
-  // Carga el carrito completo; Es como abrir la caja del carrito para ver qué hay dentro
+  // Carga el carrito completo
   async _loadCart() {
     try {
       const data = await fs.readFile(this.cartFile, 'utf8');
@@ -18,7 +19,7 @@ class JsonCartDAO {
   }
 
   // Guarda el carrito completo
-  async _saveCart(cart) { //Es como guardar la caja del carrito después de hacer cambios
+  async _saveCart(cart) {
     await fs.writeFile(this.cartFile, JSON.stringify(cart, null, 2));
   }
 
@@ -27,22 +28,31 @@ class JsonCartDAO {
     return await this._loadCart();
   }
 
+  // Obtener un ítem por su ID
+  async getById(productId) {
+    const cart = await this._loadCart();
+    return cart.find(item => item.productId === productId) || null;
+  }
+
   // Agregar producto (o aumentar cantidad si ya existe)
   async addItem(productId, quantity) {
     const cart = await this._loadCart();
-    const index = cart.findIndex(item => item.productId === productId);
 
-    if (index !== -1) {
-        cart[index].quantity += quantity;
+    let item = cart.find(item => item.productId === productId);
+
+    if (item) {
+      item.quantity += quantity;
     } else {
-        cart.push({ productId, quantity });
+      item = { id: productId, productId, quantity };
+      cart.push(item);
     }
 
     // No permitir cantidades menores o iguales a 0
     const filteredCart = cart.filter(item => item.quantity > 0);
 
     await this._saveCart(filteredCart);
-    return filteredCart.find(item => item.productId === productId);
+
+    return filteredCart.find(i => i.productId === productId);
   }
 
   // Eliminar un ítem del carrito
@@ -50,7 +60,7 @@ class JsonCartDAO {
     const cart = await this._loadCart();
     const updatedCart = cart.filter(item => item.productId !== productId);
 
-    if (updatedCart.length === cart.length) return false; // no se eliminó nada
+    if (updatedCart.length === cart.length) return false;
 
     await this._saveCart(updatedCart);
     return true;

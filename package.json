@@ -1,12 +1,12 @@
 {
   "name": "fruna-backend",
-  "version": "2.2.1",
+  "version": "3.0.1",
   "description": "Backend para Supermercado FRUNA",
   "prisma": {
     "schema": "src/backend/db/prisma/schema.prisma"
   },
   "scripts": {
-    "dev": "nodemon src/backend/server.js",
+    "dev": "nodemon",
     "seed": "node src/backend/scripts/seed.js",
     "seed:test": "cross-env NODE_ENV=test node src/backend/scripts/seed.js",
     "prisma:generate": "dotenv -e ./.env -- prisma generate",

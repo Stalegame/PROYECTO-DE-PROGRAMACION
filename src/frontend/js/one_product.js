@@ -73,12 +73,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const p = json.data || json;
 
-      $('p-name').textContent = p.name ?? p.nombre ?? 'Producto';
-      $('p-price').textContent = fmtCLP(p.price ?? p.precio);
-      $('p-category').textContent = p.category ?? p.categoria ?? '';
-      $('p-desc').textContent = p.description ?? p.descripcion ?? '';
+      $('p-name').textContent = p.name ?? 'Producto';
+      $('p-price').textContent = fmtCLP(p.price);
+      $('p-category').textContent = p.category.name ?? '';
+      $('p-desc').textContent = p.description ?? '';
       $('p-stock').textContent = p.stock ?? '';
-      $('btn-comprar').dataset.productId = String(p.id ?? p._id ?? '');
+      $('btn-comprar').dataset.productId = String(p.id ?? '');
 
       const stock = p.stock;
       const stockElement = document.getElementById('p-stock');

@@ -21,7 +21,7 @@ describe('Pruebas básicas de creacion de objetos del servidor', () => {
       password: 'Test1234',
       telefono: '44556677'
     };
-    
+
     const res = await request(app).post('/api/clients/register').send(newClient);
     const duration = Date.now() - start;
 
@@ -49,17 +49,17 @@ describe('Pruebas básicas de creacion de objetos del servidor', () => {
 
     const newProduct = {
       name: 'Test Product',
-      categoria: 'Test',
+      category: 'Test',
       price: 999,
       stock: 10
     };
 
-    const res = await request(app).post('/api/products')
+    const res = await request(app).post('/api/admin/products')
       .set('Authorization', `Bearer ${token}`)
       .send(newProduct);
     const duration = Date.now() - start;
 
-    logRequest('POST', '/api/products', res.statusCode, duration);
+    logRequest('POST', '/api/admin/products', res.statusCode, duration);
 
     expect(res.statusCode).toBe(201);
     const product = res.body.data;
@@ -72,13 +72,13 @@ describe('Pruebas básicas de creacion de objetos del servidor', () => {
   // afterEach elimina los objetos creados después de cada test
   afterEach(async () => {
     if (createdUserId) {
-      await prisma.clients.delete({
+      await prisma.client.delete({
         where: { id: createdUserId }
       });
       createdUserId = null;
     }
     if (createdProductId) {
-      await prisma.products.delete({
+      await prisma.product.delete({
         where: { id: createdProductId }
       });
       createdProductId = null;

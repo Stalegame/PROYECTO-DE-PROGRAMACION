@@ -43,8 +43,8 @@ const auth = async (req, res, next) => {
       return res.status(401).json({ success: false, message: 'Token no válido (usuario no existe).' });
     }
 
-    //Verificar que la cuenta esté activa (si existe la propiedad activo)
-    if (Object.prototype.hasOwnProperty.call(user, 'activo') && user.activo === false) {
+    //Verificar que la cuenta esté activa (si existe la propiedad active)
+    if (Object.prototype.hasOwnProperty.call(user, 'active') && user.active === false) {
       return res.status(403).json({ success: false, message: 'Cuenta desactivada.' });
     }
 
@@ -52,8 +52,8 @@ const auth = async (req, res, next) => {
     req.user = {
       id: user.id,
       email: user.email,
-      role: user.role || 'user', // Usar el rol de la BD, default 'user'
-      nombre: user.nombre,
+      role: user.role || 'USER', // Usar el rol de la BD, default 'USER'
+      name: user.name,
       // opcional: payloadExp: payload.exp
     };
 
@@ -67,8 +67,8 @@ const auth = async (req, res, next) => {
 
 // Middleware para verificar que el usuario sea administrador
 const adminAuth = (req, res, next) => {
-  // Verifica que el usuario exista en el request y tenga rol 'admin'
-  if (req.user && String(req.user.role).toLowerCase() === 'admin') {
+  // Verifica que el usuario exista en el request y tenga rol 'ADMIN'
+  if (req.user && String(req.user.role).toUpperCase() === 'ADMIN') {
     return next();
   }
   return res.status(403).json({ success: false, message: 'Acceso denegado. Se requieren privilegios de administrador.' });

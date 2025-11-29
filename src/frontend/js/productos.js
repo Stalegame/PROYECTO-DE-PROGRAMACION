@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // =============== 1) UI de sesión (nombre + logout) ===============
+  // 1) UI de sesión (nombre + logout)
   const loginLink = document.getElementById('authLoginLink');   // <a href="login_users.html">
   const nameSpan  = document.getElementById('authName');        // <span id="authName">
   const editBoton = document.getElementById('editUserBtn');   // <button id="editUserBtn">
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (authBox)   authBox.dataset.logged = 'false';
   }
 
-  // =============== 2) Cargar y pintar productos ===============
+  // 2) Cargar y pintar productos
   const grid = document.getElementById('products-grid'); // <div id="products-grid"></div>
   if (!grid) return;
 

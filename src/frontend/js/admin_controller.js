@@ -29,8 +29,8 @@
 
 // ===================== UTILIDADES =====================
 function escapeHTML(s) {
-  return String(s ?? '').replace(/[&<>"']/g, m => ({ 
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' 
+  return String(s ?? '').replace(/[&<>"']/g, m => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[m]));
 }
 
@@ -38,16 +38,16 @@ function updateDate() {
   const el = document.getElementById('current-date');
   if (!el) return;
   const now = new Date();
-  el.textContent = now.toLocaleDateString('es-ES', { 
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+  el.textContent = now.toLocaleDateString('es-ES', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
   });
 }
 
 async function apiFetchJSON(input, init) {
   const res = await fetch(input, init);
   let data = null;
-  try { data = await res.json(); } catch {}
-  
+  try { data = await res.json(); } catch { }
+
   if (!res.ok || (data && data.success === false)) {
     const message = (data && (data.error || data.message)) || `Error HTTP ${res.status}`;
     const err = new Error(message);
@@ -55,34 +55,34 @@ async function apiFetchJSON(input, init) {
     err.payload = data;
     throw err;
   }
-  
+
   return data ?? {};
 }
 
 // ===================== NAVEGACIÓN =====================
 function activateSection(sectionId, clickedItem) {
   console.log('Activando sección:', sectionId);
-  
+
   // Ocultar todas las secciones
   document.querySelectorAll('.content-section').forEach(s => {
     s.classList.remove('active');
   });
-  
+
   // Mostrar sección seleccionada
   const targetSection = document.getElementById(sectionId);
   if (targetSection) {
     targetSection.classList.add('active');
   }
-  
+
   // Actualizar menú activo
   document.querySelectorAll('.sidebar .menu-item').forEach(mi => {
     mi.classList.remove('active');
   });
-  
+
   if (clickedItem) {
     clickedItem.classList.add('active');
   }
-  
+
   // Cargar datos según la sección
   if (sectionId === 'products') {
     loadProducts();
@@ -95,23 +95,23 @@ function activateSection(sectionId, clickedItem) {
 async function loadClients() {
   const tbody = document.getElementById('clients-tbody');
   if (!tbody) return;
-  
+
   tbody.innerHTML = '<tr><td colspan="7">Cargando clientes...</td></tr>';
-  
+
   try {
-    const data = await apiFetchJSON('/api/admin/clientes');
+    const data = await apiFetchJSON('/api/admin/users');
     const items = Array.isArray(data.data) ? data.data : [];
-    
+
     if (!items.length) {
       tbody.innerHTML = '<tr><td colspan="7">No hay clientes registrados.</td></tr>';
       return;
     }
-    
+
     tbody.innerHTML = items.map(u => {
       const isSuspended = u.activo === false;
       const statusClass = isSuspended ? 'suspended' : 'active';
       const statusText = isSuspended ? 'Suspendido' : 'Activo';
-      
+
       return `
         <tr>
           <td>${escapeHTML(u.id)}</td>
@@ -122,14 +122,14 @@ async function loadClients() {
           <td><span class="status ${statusClass}">${statusText}</span></td>
           <td>
             <div class="client-actions">
-              ${isSuspended ? 
-                `<button class="btn-unsuspend" data-action="unsuspend" data-id="${escapeHTML(u.id)}" data-name="${escapeHTML(u.nombre)}">
+              ${isSuspended ?
+          `<button class="btn-unsuspend" data-action="unsuspend" data-id="${escapeHTML(u.id)}" data-name="${escapeHTML(u.nombre)}">
                   Reactivar
-                </button>` : 
-                `<button class="btn-suspend" data-action="suspend" data-id="${escapeHTML(u.id)}" data-name="${escapeHTML(u.nombre)}">
+                </button>` :
+          `<button class="btn-suspend" data-action="suspend" data-id="${escapeHTML(u.id)}" data-name="${escapeHTML(u.nombre)}">
                   Suspender
                 </button>`
-              }
+        }
               <button class="btn-delete-user" data-action="delete-user" data-id="${escapeHTML(u.id)}" data-name="${escapeHTML(u.nombre)}">
                 Eliminar
               </button>
@@ -137,7 +137,7 @@ async function loadClients() {
           </td>
         </tr>`;
     }).join('');
-    
+
   } catch (e) {
     console.error('Error cargando clientes:', e);
     tbody.innerHTML = `<tr><td colspan="7">Error al cargar clientes: ${e.message}</td></tr>`;
@@ -182,7 +182,7 @@ async function suspendUser(userId, suspend) {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
     });
-    
+
     const actionText = suspend ? 'suspendida' : 'reactivada';
     alert(`Cuenta ${actionText} correctamente`);
     await loadClients();
@@ -197,7 +197,7 @@ async function deleteUser(userId) {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
     });
-    
+
     alert('Cuenta eliminada correctamente');
     await loadClients();
   } catch (e) {
@@ -211,18 +211,18 @@ let currentEditId = null;
 async function loadProducts() {
   const tbody = document.getElementById('products-tbody');
   if (!tbody) return;
-  
+
   tbody.innerHTML = '<tr><td colspan="6">Cargando productos...</td></tr>';
-  
+
   try {
     const data = await apiFetchJSON('/api/products');
     const items = Array.isArray(data.data) ? data.data : [];
-    
+
     if (!items.length) {
       tbody.innerHTML = '<tr><td colspan="6">No hay productos.</td></tr>';
       return;
     }
-    
+
     tbody.innerHTML = items.map(p => `
       <tr>
         <td>${escapeHTML(p.id)}</td>
@@ -235,7 +235,7 @@ async function loadProducts() {
           <button class="btn" style="background:#f44336;color:white" data-action="del" data-id="${escapeHTML(p.id)}">Eliminar</button>
         </td>
       </tr>`).join('');
-    
+
   } catch (e) {
     tbody.innerHTML = `<tr><td colspan="6">Error: ${e.message}</td></tr>`;
   }
@@ -244,7 +244,7 @@ async function loadProducts() {
 // Eliminar producto
 async function deleteProduct(id) {
   try {
-    await apiFetchJSON(`/api/products/${encodeURIComponent(id)}`, {
+    await apiFetchJSON(`/api/admin/products/${encodeURIComponent(id)}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -336,13 +336,13 @@ async function np_save() {
 
   try {
     if (currentEditId) {
-      await apiFetchJSON(`/api/products/${encodeURIComponent(currentEditId)}`, {
+      await apiFetchJSON(`/api/admin/products/${encodeURIComponent(currentEditId)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
     } else {
-      await apiFetchJSON('/api/products', {
+      await apiFetchJSON('/api/admin/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -362,19 +362,19 @@ function showConfirmModal(message, title, callback) {
   const messageEl = document.getElementById('confirm-message');
   const titleEl = document.getElementById('confirm-title');
   const okBtn = document.getElementById('confirm-ok');
-  
+
   if (messageEl) messageEl.textContent = message;
   if (titleEl) titleEl.textContent = title;
-  
+
   // Reemplazar botón para evitar múltiples listeners
   const newOkBtn = okBtn.cloneNode(true);
   okBtn.parentNode.replaceChild(newOkBtn, okBtn);
-  
+
   newOkBtn.addEventListener('click', () => {
     callback();
     closeConfirmModal();
   });
-  
+
   modal.classList.add('show');
 }
 
@@ -385,17 +385,17 @@ function closeConfirmModal() {
 // ===================== INICIALIZACIÓN =====================
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Admin Controller iniciado');
-  
+
   // Actualizar fecha
   updateDate();
-  
+
   // Configurar navegación del sidebar
   const sidebar = document.querySelector('.sidebar');
   if (sidebar) {
     sidebar.addEventListener('click', (e) => {
       const item = e.target.closest('.menu-item');
       if (!item) return;
-      
+
       // Manejar logout
       if (item.id === 'logoutBtn') {
         if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
@@ -405,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return;
       }
-      
+
       // Manejar navegación
       const target = item.getAttribute('data-target');
       console.log('Click en menú:', target);
@@ -414,45 +414,45 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-  
+
   // Botón "Nuevo producto"
   const btnNew = document.getElementById('btnNewProduct');
   if (btnNew) {
     btnNew.addEventListener('click', np_open_create);
   }
-  
+
   // Modal de productos
   document.getElementById('np-close')?.addEventListener('click', np_close);
   document.getElementById('np-cancel')?.addEventListener('click', np_close);
   document.getElementById('np-save')?.addEventListener('click', np_save);
-  
+
   // Modal de confirmación
   document.getElementById('confirm-close')?.addEventListener('click', closeConfirmModal);
   document.getElementById('confirm-cancel')?.addEventListener('click', closeConfirmModal);
-  
+
   // Cerrar modales al hacer clic fuera
   document.getElementById('modalNewProduct')?.addEventListener('click', (e) => {
     if (e.target.id === 'modalNewProduct') np_close();
   });
-  
+
   document.getElementById('modalConfirmAction')?.addEventListener('click', (e) => {
     if (e.target.id === 'modalConfirmAction') closeConfirmModal();
   });
-  
+
   // Delegación de eventos para botones dinámicos
   document.addEventListener('click', (e) => {
     // Botones de clientes
     if (e.target.closest('.client-actions button')) {
       handleClientAction(e);
     }
-    
+
     // Botones de productos
     const btn = e.target.closest('button[data-action]');
     if (!btn) return;
-    
+
     const action = btn.getAttribute('data-action');
     const id = btn.getAttribute('data-id');
-    
+
     if (action === 'del') {
       if (confirm(`¿Eliminar producto ${id}?`)) {
         deleteProduct(id);
@@ -461,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
       openProductModalForEditById(id);
     }
   });
-  
+
   // Activar sección inicial
   const activeItem = document.querySelector('.sidebar .menu-item.active');
   const initialSection = activeItem?.getAttribute('data-target') || 'dashboard';

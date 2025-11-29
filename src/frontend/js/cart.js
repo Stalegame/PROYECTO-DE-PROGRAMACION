@@ -1,5 +1,3 @@
-// /js/carrito.js
-
 document.addEventListener('DOMContentLoaded', async () => {
   const carritoBtn       = document.querySelector('.btn-shop-bag');
   const sidebar          = document.querySelector('.sidebar');
@@ -7,195 +5,213 @@ document.addEventListener('DOMContentLoaded', async () => {
   const overlay          = document.querySelector('.sidebar-overlay');
   const contenedorItems  = document.querySelector('.carrito-items');
   const totalTexto       = document.querySelector('.carrito-total strong');
-  const contador         = document.getElementById('contadorCarrito') || document.getElementById('contador');
+  const contador         = document.getElementById('contadorCarrito');
   const btnFinalizar     = document.querySelector('.btn-buy-bag');
+
+  // Si intenta agregar al carrito sin estar logueado
+  const rawToken = localStorage.getItem('fruna_token');
+  if (!rawToken) {
+    carritoBtn?.addEventListener('click', () => {
+      alert('Debes iniciar sesión para usar el carrito de compras.');
+    });
+    return;
+  }
+
+  // Obtener usuario actual
+  const rawUser  = localStorage.getItem('fruna_user');
+  const user = rawUser ? JSON.parse(rawUser) : null;
+
+  const userId = user.id;
 
   let carrito = [];
 
-  async function actualizarCarritoProducto(productId, cantidad) {
-    try {
-      const res = await fetch('/api/cart', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId: String(productId), quantity: Number(cantidad) })
-      });
-
-<<<<<<< HEAD:SRC/Frontend/js/cart.js
-      // Si la ruta no existe, queda clarísimo:
-      if (res.status === 404) {
-        const text = await res.text().catch(() => '');
-        console.warn('[carrito] /api/cart 404 →', text);
-        alert('La ruta /api/cart no está disponible en el backend.');
-        return;
-      }
-
-=======
->>>>>>> ec901694508924e888d4669edb6069b728561b6e:src/frontend/js/cart.js
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || data?.success === false) {
-        alert(data?.error || 'No se pudo actualizar el carrito');
-        return;
-      }
-
-      await fetchCart();
-      actualizarCarritoUI();
-    } catch (err) {
-      alert('Error de red al actualizar el carrito');
-      console.error(err);
-    }
-  }
-
+  // Obtener carrito del usuario
   async function fetchCart() {
     try {
-      const res = await fetch('/api/cart', { cache: 'no-store' });
-      const data = await res.json().catch(() => ({}));
-      carrito = Array.isArray(data?.data) ? data.data : [];
+      const res = await fetch(`/api/cart/${userId}`, { cache: 'no-store' });
+      const data = await res.json();
+      carrito = Array.isArray(data?.data?.items) ? data.data.items : [];
     } catch (err) {
       console.error('Error al cargar carrito:', err.message);
       carrito = [];
     }
   }
 
+  // Agregar producto
+  async function agregarProducto(productId, cantidad) {
+    try {
+      const res = await fetch('/api/cart/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, productId, quantity: cantidad })
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data?.msg || 'No se pudo agregar el producto');
+        return;
+      }
+
+      await fetchCart();
+      actualizarCarritoUI();
+    } catch (err) {
+      console.error(err);
+      alert('Error al agregar producto al carrito.');
+    }
+  }
+
+  // Actualizar cantidad
+  async function actualizarCantidad(productId, nuevaCantidad) {
+    try {
+      const res = await fetch(`/api/cart/update/${userId}/${productId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity: nuevaCantidad })
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data?.msg || 'No se pudo actualizar la cantidad');
+        return;
+      }
+
+      await fetchCart();
+      actualizarCarritoUI();
+    } catch (err) {
+      console.error(err);
+      alert('Error al actualizar cantidad.');
+    }
+  }
+
+  // Eliminar producto
+  async function eliminarProducto(productId) {
+    try {
+      const res = await fetch(`/api/cart/remove/${userId}/${productId}`, { method: 'DELETE' });
+      if (!res.ok) {
+        alert('No se pudo eliminar el producto del carrito');
+        return;
+      }
+      await fetchCart();
+      actualizarCarritoUI();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // Renderizar un item
+  function renderItem(item) {
+    const cantidad = item.quantity || 1;
+    const subtotal = cantidad * (item.price || 1);
+
+    const div = document.createElement('div');
+    div.className = 'carrito-item';
+    div.innerHTML = `
+      <img class="item-img" src="/img/products/${item.image}" alt="${item.name}" />
+      <div class="item-info">
+        <p class="item-nombre">${item.name}</p>
+        <p class="item-detalle">$${subtotal.toLocaleString()}</p>
+        <div class="item-cantidad">
+          <button class="cantidad-btn btn-restar" data-id="${item.productId}">−</button>
+          <span class="cantidad-texto">${cantidad}</span>
+          <button class="cantidad-btn btn-sumar" data-id="${item.productId}">+</button>
+        </div>
+      </div>
+      <button class="btn-eliminar" data-id="${item.productId}">✖</button>
+    `;
+    contenedorItems.appendChild(div);
+  }
+
+  // Actualizar UI del carrito
   function actualizarCarritoUI() {
     if (!contenedorItems || !totalTexto || !contador) return;
 
     contenedorItems.innerHTML = '';
 
     if (!carrito.length) {
-      contenedorItems.innerHTML = '<p class="mensaje-vacio">Tu carrito está vacío 😞...</p>';
+      contenedorItems.innerHTML = `<p class="mensaje-vacio">Tu carrito está vacío 😞</p>`;
       totalTexto.textContent = '$0';
       contador.textContent = '0';
       return;
     }
 
     let total = 0;
-
     carrito.forEach(item => {
-      const p         = item.product || {};
-      const nombre    = p.name || p.nombre || 'Producto eliminado';
-      const precio    = Number(p.price ?? p.precio ?? 0);
-      const imagen    = p.image || p.imagen || 'placeholder.png';
-      const cantidad  = Number(item.quantity || 1);
-      const subtotal  = precio * cantidad;
-      total += subtotal;
-
-      const esAbsoluta = /^https?:\/\//i.test(imagen);
-      const src = esAbsoluta ? imagen : `/img/products/${imagen}`;
-
-      const div = document.createElement('div');
-      div.className = 'carrito-item';
-      div.innerHTML = `
-        <img class="item-img" src="${src}" alt="${nombre}" />
-        <div class="item-info">
-          <p class="item-nombre">${nombre}</p>
-          <p class="item-detalle">$${subtotal.toLocaleString()}</p>
-          <div class="item-cantidad">
-            <button class="cantidad-btn btn-restar" data-id="${item.productId}">−</button>
-            <span class="cantidad-texto">${cantidad}</span>
-            <button class="cantidad-btn btn-sumar" data-id="${item.productId}">+</button>
-          </div>
-        </div>
-        <button class="btn-eliminar" data-id="${item.productId}">✖</button>
-      `;
-      contenedorItems.appendChild(div);
+      renderItem(item);
+      total += (item.price || 0) * (item.quantity || 1);
     });
 
     totalTexto.textContent = `$${total.toLocaleString()}`;
     contador.textContent = carrito.reduce((acc, p) => acc + (Number(p.quantity) || 0), 0);
 
-    // Listeners dinámicos (elementos recién pintados)
+    // Listeners dinámicos
     contenedorItems.querySelectorAll('.btn-eliminar').forEach(btn => {
-      btn.onclick = async () => {
-        const id = btn.dataset.id;
-        await fetch(`/api/cart/${encodeURIComponent(id)}`, { method: 'DELETE' });
-        await fetchCart();
-        actualizarCarritoUI();
-      };
+      btn.onclick = () => eliminarProducto(btn.dataset.id);
     });
 
     contenedorItems.querySelectorAll('.btn-sumar').forEach(btn => {
       btn.onclick = () => {
         const id = btn.dataset.id;
-        actualizarCarritoProducto(id, 1);
+        const item = carrito.find(i => i.productId === id);
+        if (item) actualizarCantidad(id, item.quantity + 1);
       };
     });
 
     contenedorItems.querySelectorAll('.btn-restar').forEach(btn => {
       btn.onclick = () => {
         const id = btn.dataset.id;
-        const item = carrito.find(p => p.productId === id);
-        if (item && item.quantity > 1) {
-          actualizarCarritoProducto(id, -1);
-        }
+        const item = carrito.find(i => i.productId === id);
+        if (item && item.quantity > 1) actualizarCantidad(id, item.quantity - 1);
       };
     });
   }
 
-  // ================== Delegación para "Añadir al carrito" ==================
-  // En lugar de capturar NodeList al cargar (que no incluye productos renderizados después),
-  // usamos delegación para que funcione con tarjetas futuras.
+  // Delegación para "Agregar al carrito"
   document.body.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-add-to-cart], .btn-comprar');
     if (!btn) return;
-
-    // Evita que un <a> padre interrumpa el flujo
     e.preventDefault();
-    e.stopPropagation();
 
-    const card = btn.closest('.producto');
-    const id = btn.dataset.productId || card?.dataset?.id;
-    if (!id) {
-      console.warn('[carrito] No se encontró productId en el botón/tarjeta');
-      return;
-    }
+    const id = btn.dataset.productId || btn.closest('.producto')?.dataset.id;
+    if (!id) return;
 
-    actualizarCarritoProducto(String(id), 1);
-    // Abrir sidebar para feedback
+    agregarProducto(String(id), 1);
     sidebar?.classList.add('active');
     overlay?.classList.add('active');
   });
 
-  // ================== Abrir/cerrar sidebar ==================
+  // Abrir/cerrar sidebar
   carritoBtn?.addEventListener('click', () => {
     sidebar?.classList.add('active');
     overlay?.classList.add('active');
     fetchCart().then(actualizarCarritoUI);
   });
-
   cerrarSidebar?.addEventListener('click', () => {
     sidebar?.classList.remove('active');
     overlay?.classList.remove('active');
   });
-
   overlay?.addEventListener('click', () => {
     sidebar?.classList.remove('active');
     overlay?.classList.remove('active');
   });
 
-  // ================== Finalizar compra ==================
+  // Finalizar compra
   btnFinalizar?.addEventListener('click', async () => {
     if (!carrito.length) {
       alert('Tu carrito está vacío.');
       return;
     }
-<<<<<<< HEAD:SRC/Frontend/js/cart.js
-
     try {
-      const res = await fetch('/api/cart/checkout', { method: 'POST' });
-      if (!res.ok) throw new Error('Error al finalizar compra');
+      const res = await fetch(`/api/cart/clear/${userId}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error();
       alert('¡Gracias por tu compra!');
       await fetchCart();
       actualizarCarritoUI();
     } catch (err) {
-      alert('Error al procesar compra: ' + err.message);
+      alert('Error al finalizar compra');
     }
-=======
-    // redirigir a confirmar_compra.html
-    window.location.href = "/confirmar_compra.html";
->>>>>>> ec901694508924e888d4669edb6069b728561b6e:src/frontend/js/cart.js
   });
 
-  // ================== Carga inicial ==================
+  // Carga inicial
   await fetchCart();
   actualizarCarritoUI();
 });
