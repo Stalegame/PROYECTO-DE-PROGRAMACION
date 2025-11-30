@@ -8,20 +8,6 @@ const prisma = require('../db');
 const clientesDAO = PersistenceFactory.getDAO('clientes');
 const productosDAO = PersistenceFactory.getDAO('productos');
 
-/** Sanitización de cliente (evita mutar el objeto original) */
-function toPublicClient(c) {
-  if (!c) return null;
-
-  return {
-    id: c.id,
-    email: c.email,
-    name: c.name,
-    active: c.active,
-    createdAt: c.createdAt ?? c.created_at ?? null,
-    updatedAt: c.updatedAt ?? c.updated_at ?? null,
-  };
-}
-
 // Panel Del ADMIN (En construcción)
 router.get('/dashboard', (req, res) => {
   res.status(200).json({
@@ -35,12 +21,11 @@ router.get('/dashboard', (req, res) => {
 router.get('/users', async (_req, res) => {
   try {
     const clientes = await clientesDAO.getAll();
-    const data = clientes.map(toPublicClient);
 
     res.status(200).json({
       success: true,
-      data,
-      message: `Encontrados ${data.length} clientes`
+      data: clientes,
+      message: `Encontrados ${clientes.length} clientes`
     });
   } catch (err) {
     res.status(500).json({
@@ -55,6 +40,14 @@ router.put('/users/:id/suspend', async (req, res) => {
   try {
     const id = req.params.id;
 
+    // El admin no se puede suspender a sí mismo
+    if (req.user.id === id) {
+      return res.status(400).json({
+        success: false,
+        error: 'No puedes suspender tu propia cuenta Admin'
+      });
+    }
+
     const actualizado = await clientesDAO.update(id, { active: false });
     if (!actualizado) {
       return res.status(404).json({
@@ -66,7 +59,7 @@ router.put('/users/:id/suspend', async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Usuario suspendido',
-      data: toPublicClient(actualizado)
+      data: actualizado
     });
 
   } catch (err) {
@@ -93,7 +86,7 @@ router.put('/users/:id/unsuspend', async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Usuario reactivado',
-      data: toPublicClient(actualizado)
+      data: actualizado
     });
 
   } catch (err) {
@@ -108,6 +101,15 @@ router.put('/users/:id/unsuspend', async (req, res) => {
 router.delete('/users/:id', async (req, res) => {
   try {
     const id = req.params.id;
+
+    // El admin no se puede eliminar a sí mismo
+    if (req.user.id === id) {
+      return res.status(400).json({
+        success: false,
+        error: 'No puedes eliminar tu propia cuenta Admin'
+      });
+    }
+
     await clientesDAO.delete(id);
 
     res.status(200).json({
@@ -142,7 +144,7 @@ router.post('/products', async (req, res) => {
 
     if (!categoryRecord) {
       categoryRecord = await prisma.category.create({
-        data: { name: category }
+        data: { name: category.trim() }
       });
     }
 

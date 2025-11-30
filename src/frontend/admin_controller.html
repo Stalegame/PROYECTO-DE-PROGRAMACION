@@ -30,9 +30,6 @@
             <div class="menu-item" data-target="reports">
                 <i>📈</i> Reportes
             </div>
-            <div class="menu-item" data-target="settings">
-                <i>⚙️</i> Configuración
-            </div>
             <div class="menu-item" style="margin-top: 30px;" id="logoutBtn">
                 <i>🚪</i> Cerrar Sesión
             </div>
@@ -90,28 +87,8 @@
                                 <th>Estado</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>#12345</td>
-                                <td>María González</td>
-                                <td>20/03/2024</td>
-                                <td>$45.990</td>
-                                <td><span class="status active">Entregado</span></td>
-                            </tr>
-                            <tr>
-                                <td>#12346</td>
-                                <td>Juan Pérez</td>
-                                <td>20/03/2024</td>
-                                <td>$32.500</td>
-                                <td><span class="status active">En camino</span></td>
-                            </tr>
-                            <tr>
-                                <td>#12347</td>
-                                <td>Carlos López</td>
-                                <td>19/03/2024</td>
-                                <td>$28.750</td>
-                                <td><span class="status pending">Pendiente</span></td>
-                            </tr>
+                        <tbody id="pedidos-resumen-tbody">
+                            <!-- aquí se inyectan filas -->
                         </tbody>
                     </table>
                 </div>
@@ -130,25 +107,8 @@
                                 <th>Stock</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>Alfajor Clásico</td>
-                                <td>Alfajores</td>
-                                <td>150 unidades</td>
-                                <td>45</td>
-                            </tr>
-                            <tr>
-                                <td>Chocolate Maní</td>
-                                <td>Chocolates</td>
-                                <td>120 unidades</td>
-                                <td>32</td>
-                            </tr>
-                            <tr>
-                                <td>Galleta Chispas</td>
-                                <td>Galletas</td>
-                                <td>98 unidades</td>
-                                <td>12</td>
-                            </tr>
+                        <tbody id="products-popular-tbody">
+                            <!-- aquí se inyectan filas -->
                         </tbody>
                     </table>
                 </div>
@@ -239,31 +199,8 @@
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>#12345</td>
-                                <td>María González</td>
-                                <td>20/03/2024</td>
-                                <td>$45.990</td>
-                                <td><span class="status active">Entregado</span></td>
-                                <td><button class="btn btn-secondary">Ver Detalle</button></td>
-                            </tr>
-                            <tr>
-                                <td>#12346</td>
-                                <td>Juan Pérez</td>
-                                <td>20/03/2024</td>
-                                <td>$32.500</td>
-                                <td><span class="status active">En camino</span></td>
-                                <td><button class="btn btn-secondary">Ver Detalle</button></td>
-                            </tr>
-                            <tr>
-                                <td>#12347</td>
-                                <td>Carlos López</td>
-                                <td>19/03/2024</td>
-                                <td>$28.750</td>
-                                <td><span class="status pending">Pendiente</span></td>
-                                <td><button class="btn btn-secondary">Ver Detalle</button></td>
-                            </tr>
+                        <tbody id="pedidos-tbody">
+                            <!-- aquí se inyectan filas -->
                         </tbody>
                     </table>
                 </div>
@@ -297,11 +234,6 @@
             <div id="reports" class="content-section">
                 <h2>Reportes y Estadísticas</h2>
                 <p>Contenido de reportes...</p>
-            </div>
-            
-            <div id="settings" class="content-section">
-                <h2>Configuración del Sistema</h2>
-                <p>Contenido de configuración...</p>
             </div>
         </div>
     </div>

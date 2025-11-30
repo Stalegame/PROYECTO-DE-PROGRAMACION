@@ -108,29 +108,31 @@ async function loadClients() {
     }
 
     tbody.innerHTML = items.map(u => {
-      const isSuspended = u.activo === false;
+
+      console.log('Phone: ', u.phone);
+      const isSuspended = u.active === false;
       const statusClass = isSuspended ? 'suspended' : 'active';
       const statusText = isSuspended ? 'Suspendido' : 'Activo';
 
       return `
         <tr>
           <td>${escapeHTML(u.id)}</td>
-          <td>${escapeHTML(u.nombre)}</td>
+          <td>${escapeHTML(u.name)}</td>
           <td>${escapeHTML(u.email)}</td>
-          <td>${escapeHTML(u.telefono || '')}</td>
-          <td>${escapeHTML(u.role || 'user')}</td>
+          <td>${escapeHTML(u.phone || '')}</td>
+          <td>${escapeHTML(u.role)}</td>
           <td><span class="status ${statusClass}">${statusText}</span></td>
           <td>
             <div class="client-actions">
               ${isSuspended ?
-          `<button class="btn-unsuspend" data-action="unsuspend" data-id="${escapeHTML(u.id)}" data-name="${escapeHTML(u.nombre)}">
+          `<button class="btn-unsuspend" data-action="unsuspend" data-id="${escapeHTML(u.id)}" data-name="${escapeHTML(u.name)}">
                   Reactivar
                 </button>` :
-          `<button class="btn-suspend" data-action="suspend" data-id="${escapeHTML(u.id)}" data-name="${escapeHTML(u.nombre)}">
+          `<button class="btn-suspend" data-action="suspend" data-id="${escapeHTML(u.id)}" data-name="${escapeHTML(u.name)}">
                   Suspender
                 </button>`
         }
-              <button class="btn-delete-user" data-action="delete-user" data-id="${escapeHTML(u.id)}" data-name="${escapeHTML(u.nombre)}">
+              <button class="btn-delete-user" data-action="delete-user" data-id="${escapeHTML(u.id)}" data-name="${escapeHTML(u.name)}">
                 Eliminar
               </button>
             </div>
@@ -227,7 +229,7 @@ async function loadProducts() {
       <tr>
         <td>${escapeHTML(p.id)}</td>
         <td>${escapeHTML(p.name)}</td>
-        <td>${escapeHTML(p.category || '')}</td>
+        <td>${escapeHTML(p.category.name || '')}</td>
         <td>${p.price != null ? `$${p.price}` : ''}</td>
         <td>${p.stock != null ? p.stock : ''}</td>
         <td>
@@ -299,7 +301,7 @@ function openProductModalForEdit(p) {
   setVal('np-name', p.name);
   setVal('np-price', p.price);
   setVal('np-stock', p.stock);
-  setVal('np-category', p.category);
+  setVal('np-category', p.category.name);
   setVal('np-description', p.description);
   setVal('np-image', p.image);
 

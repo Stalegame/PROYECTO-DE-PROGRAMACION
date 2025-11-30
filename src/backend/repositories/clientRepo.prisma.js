@@ -26,8 +26,19 @@ module.exports = {
   // Obtener todos los clientes
   async getAll() {
     return prisma.client.findMany({
-      include: { orders: true },
-      orderBy: { createdAt: 'asc' }
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        address: true,
+        role: true,
+        active: true,
+        createdAt: true,
+        updatedAt: true,
+        orders : true,
+      },
+      orderBy: { createdAt: 'desc' }
     });
   },
 
@@ -57,12 +68,8 @@ module.exports = {
         id: true,
         name: true,
         email: true,
-        phone: true,
-        address: true,
         role: true,
         active: true,
-        createdAt: true,
-        updatedAt: true,
         passwordHash: true, // Necesario para login
       }
     });

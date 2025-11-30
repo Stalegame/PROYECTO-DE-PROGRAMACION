@@ -139,13 +139,10 @@ router.post('/login', validateLogin, handleValidationErrors, async (req, res) =>
       { expiresIn: '1h' } // El token dura 1 hora
     );
 
-    // Quitamos la información sensible antes de devolver el usuario
-    const { passwordHash: _omit, password: _omitOld, ...usuarioPublico } = user;
-
     res.status(200).json({
       success: true,
       message: '¡Bienvenido! Has iniciado sesión correctamente',
-      user: usuarioPublico,
+      user: user,
       token, // Este token hay que guardarlo en el frontend
       redirect: user.role === 'ADMIN' ? '/admin_controller.html' : '/productos.html',
     });
