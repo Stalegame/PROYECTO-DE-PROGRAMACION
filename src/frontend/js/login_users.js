@@ -42,28 +42,24 @@ document.addEventListener('DOMContentLoaded', () => {
         body: new URLSearchParams({ email, password })
       });
 
-      let data = {};
-      try { data = await res.json(); } catch {}
+      const data = await res.json();
 
       if (loadingElement) loadingElement.style.display = 'none';
       if (submitBtn) submitBtn.disabled = false;
 
       if (!res.ok || data.success === false) {
-        const msg = (data && data.error) || 'Credenciales incorrectas. Intenta nuevamente.';
-        alert(msg);
+        alert(data.error || 'Error al iniciar sesión. Revisa tus credenciales.');
         return;
       }
 
       // Guardar sesión
       if (data.token) localStorage.setItem('fruna_token', data.token);
-      if (data.user)  localStorage.setItem('fruna_user', JSON.stringify(data.user));
+      const safeUser = { id: data.user.id, nombre: data.user.name, role: data.user.role };
+      localStorage.setItem('fruna_user', JSON.stringify(safeUser));
 
       // Redirección según rol
-      const redirect =
-        data.redirect ||
-        (data.user && data.user.role === 'admin' ? '/admin_controller.html' : '/productos.html');
+      window.location.href = data.redirect;
 
-      window.location.href = redirect;
     } catch {
       if (loadingElement) loadingElement.style.display = 'none';
       if (submitBtn) submitBtn.disabled = false;

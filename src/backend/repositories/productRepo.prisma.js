@@ -37,6 +37,17 @@ module.exports = {
     });
   },
 
+  // Obtener Número de productos con stock < o = a 15 
+  async getLowStock() {
+    return prisma.product.count({
+      where: {
+        stock: {
+          lte: 15
+        }
+      }
+    });
+  },
+
   // Crear producto
   async save(input) {
     return prisma.product.create({

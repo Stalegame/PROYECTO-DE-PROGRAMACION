@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const userStr = localStorage.getItem('fruna_user');
         try {
             const user = userStr ? JSON.parse(userStr) : {};
-            return user.id || 'guest';
+            return user.id;
         } catch {
             return 'guest';
         }

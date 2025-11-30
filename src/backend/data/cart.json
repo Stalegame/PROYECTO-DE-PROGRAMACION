@@ -1,1 +1,21 @@
-[]
+[
+  {
+    "userId": "cj2xk3h5b0001s0ez9jx0f2lm",
+    "items": [
+      {
+        "productId": "cj2xk74by0005s0ezectp82jt",
+        "quantity": 1,
+        "name": "Cola Cola Clásica 2Lt",
+        "price": 1490,
+        "image": "cola_cola_fruna.jpg"
+      },
+      {
+        "productId": "cj2xk7s6y0006s0ezeou7fcwn",
+        "quantity": 1,
+        "name": "Sufle Maní",
+        "price": 990,
+        "image": "Sufle_Chanfle_Mani.jpg"
+      }
+    ]
+  }
+]

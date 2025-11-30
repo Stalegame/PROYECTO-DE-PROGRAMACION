@@ -2,19 +2,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginLink = document.getElementById('authLoginLink');
     const nameSpan  = document.getElementById('authName');
     const editBoton = document.getElementById('editUserBtn');
-    const logoutBtn = document.getElementById('logoutBtn'); // NUEVO
+    const logoutBtn = document.getElementById('logoutBtn');
     const authBox   = document.getElementById('authBox');
 
     // Leer sesión
     const token    = localStorage.getItem('fruna_token');
     const rawUser  = localStorage.getItem('fruna_user');
     let user = null;
-    try { user = rawUser ? JSON.parse(rawUser) : null; } catch {}
+    user = rawUser ? JSON.parse(rawUser) : null;
 
-    const hasSession = Boolean(token && user && (user.email || user.nombre));
+    const hasSession = Boolean(token && user && (user.nombre));
 
     if (hasSession) {
-        const nombreMostrar = user.nombre?.trim() || (user.email?.split('@')[0] || 'Usuario');
+        const nombreMostrar = user.nombre?.trim() || 'Usuario';
 
         if (nameSpan) {
             nameSpan.textContent = `Hola, ${nombreMostrar}`;
@@ -46,13 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         if (nameSpan)  { nameSpan.textContent = ''; nameSpan.style.display = 'none'; }
         if (editBoton) { editBoton.style.display = 'none'; editBoton.onclick = null; }
-        if (logoutBtn) { logoutBtn.style.display = 'none'; logoutBtn.onclick = null; } // NUEVO
+        if (logoutBtn) { logoutBtn.style.display = 'none'; logoutBtn.onclick = null; }
         if (loginLink) loginLink.style.display = '';
         if (authBox)   authBox.dataset.logged = 'false';
     }
 });
 
-// Función para mostrar notificaciones (si no la tienes ya)
+// Función para mostrar notificaciones
 function showNotification(message, type = 'info') {
     const notif = document.getElementById('notif');
     if (!notif) return;

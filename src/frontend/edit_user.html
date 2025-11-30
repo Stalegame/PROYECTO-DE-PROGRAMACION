@@ -41,17 +41,17 @@
 
         <div class="form-group">
           <i class="fas fa-user"></i>
-          <input type="text" id="nombre" name="nombre" placeholder="Nombre completo" required />
+          <input type="text" id="nombre" name="nombre" placeholder="Nombre completo" maxlength="35" />
         </div>
 
         <div class="form-group">
           <i class="fas fa-phone"></i>
-          <input type="tel" id="telefono" name="telefono" placeholder="8 o 9 dígitos" required pattern="\d{8,9}" />
+          <input type="tel" id="telefono" name="telefono" placeholder="8 dígitos" pattern="\d{8}" />
         </div>
 
         <div class="form-group">
           <i class="fas fa-map-marker-alt"></i>
-          <input type="text" id="direccion" name="direccion" placeholder="Dirección" />
+          <input type="text" id="direccion" name="direccion" placeholder="Dirección" maxlength="80" />
         </div>
 
         <div class="message error" id="form-message" style="display: none;"></div>

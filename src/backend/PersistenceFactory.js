@@ -4,6 +4,8 @@ const path = require("path");
 // Repos Prisma
 const productRepo = require("./repositories/productRepo.prisma");
 const clientRepo  = require("./repositories/clientRepo.prisma");
+const categoryRepo = require("./repositories/categoryRepo.prisma");
+const orderRepo = require("./repositories/orderRepo.prisma");
 
 // Repo JSON (carrito)
 const JsonCartDAO = require(path.join(__dirname, "json", "JsonCartDAO"));
@@ -24,6 +26,12 @@ class PersistenceFactory {
       case "cart":
         // el carrito es JSON, no Prisma
         return new JsonCartDAO();
+
+      case "categorias":
+        return categoryRepo;
+
+      case "orders":
+        return orderRepo;
 
       default:
         throw new Error(`DAO desconocido: ${type}`);

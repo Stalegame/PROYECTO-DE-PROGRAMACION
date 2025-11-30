@@ -2,19 +2,34 @@
 const express = require('express');
 const router = express.Router();
 const PersistenceFactory = require('../PersistenceFactory');
-const prisma = require('../db');
 
 // DAOs desde tu Factory
 const clientesDAO = PersistenceFactory.getDAO('clientes');
 const productosDAO = PersistenceFactory.getDAO('productos');
+const categoriaDAO = PersistenceFactory.getDAO('categorias');
+const ordersDAO = PersistenceFactory.getDAO('orders');
 
-// Panel Del ADMIN (En construcción)
-router.get('/dashboard', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'Bienvenido al panel administrativo',
-    user: req.user,
-  });
+// Panel Del ADMIN
+router.get('/dashboard', async (_req, res) => {
+  try {
+    let dataTotal = {};
+    dataTotal.resumenOrders = await ordersDAO.getLastOrders();
+    dataTotal.pendingOrders = await ordersDAO.getPending();
+    dataTotal.sumOfDay = await ordersDAO.getSumOfDay();
+    dataTotal.lowStockProducts = await productosDAO.getLowStock();
+    dataTotal.createdThisMonth = await clientesDAO.getCreatedThisMonth();
+
+    res.status(200).json({
+      success: true,
+      data: dataTotal,
+      message: 'Bienvenido al panel administrativo',
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: 'Error cargando el panel administrativo'
+    });
+  }
 });
 
 // Listar clientes
@@ -31,6 +46,24 @@ router.get('/users', async (_req, res) => {
     res.status(500).json({
       success: false,
       error: 'Error cargando clientes'
+    });
+  }
+});
+
+// Listar pedidos
+router.get('/orders', async (_req, res) => {
+  try {
+    const orders = await ordersDAO.getAll();
+
+    res.status(200).json({
+      success: true,
+      data: orders,
+      message: 'Pedidos obtenidos correctamente'
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: 'Error obteniendo pedidos'
     });
   }
 });
@@ -138,14 +171,10 @@ router.post('/products', async (req, res) => {
     }
 
     // Buscar o crear categoría
-    let categoryRecord = await prisma.category.findUnique({
-      where: { name: category }
-    });
+    let categoryRecord = await categoriaDAO.getByName(category);
 
     if (!categoryRecord) {
-      categoryRecord = await prisma.category.create({
-        data: { name: category.trim() }
-      });
+      categoryRecord = await categoriaDAO.save(category);
     }
 
     const nuevo = await productosDAO.save({
@@ -180,14 +209,10 @@ router.put('/products/:id', async (req, res) => {
 
     // Si viene category (nombre), buscar o crear la categoría
     if (cambios.category) {
-      let categoryRecord = await prisma.category.findUnique({
-        where: { name: cambios.category }
-      });
+      let categoryRecord = await categoriaDAO.getByName(cambios.category);
 
       if (!categoryRecord) {
-        categoryRecord = await prisma.category.create({
-          data: { name: cambios.category }
-        });
+        categoryRecord = await categoriaDAO.save(cambios.category);
       }
 
       cambios.categoryId = categoryRecord.id;

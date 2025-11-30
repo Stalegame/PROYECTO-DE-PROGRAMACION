@@ -27,9 +27,6 @@
             <div class="menu-item" data-target="customers">
                 <i>👥</i> Clientes
             </div>
-            <div class="menu-item" data-target="reports">
-                <i>📈</i> Reportes
-            </div>
             <div class="menu-item" style="margin-top: 30px;" id="logoutBtn">
                 <i>🚪</i> Cerrar Sesión
             </div>
@@ -48,46 +45,45 @@
                 <div class="stats-cards">
                     <div class="stat-card">
                         <h3>VENTAS HOY</h3>
-                        <div class="number">$1.250.890</div>
-                        <div class="trend">+12% vs ayer</div>
+                        <div class="number" id="ventas-hoy">0</div>
+                        <div class="trend">Valor total en Ventas</div>
                     </div>
                     
                     <div class="stat-card">
                         <h3>PEDIDOS ACTIVOS</h3>
-                        <div class="number">47</div>
-                        <div class="trend">5 nuevos</div>
+                        <div class="number" id="pedidos-activos">0</div>
+                        <div class="trend negative">Pedidos pendientes de entrega</div>
                     </div>
                     
                     <div class="stat-card">
                         <h3>PRODUCTOS BAJO STOCK</h3>
-                        <div class="number">8</div>
-                        <div class="trend negative">Necesitan atención</div>
+                        <div class="number" id="productos-bajo-stock">0</div>
+                        <div class="trend negative">Necesitan atención urgente</div>
                     </div>
                     
                     <div class="stat-card">
                         <h3>CLIENTES NUEVOS</h3>
-                        <div class="number">12</div>
-                        <div class="trend">+20% este mes</div>
+                        <div class="number" id="nuevo-clientes">0</div>
+                        <div class="trend">Crecimiento en este mes</div>
                     </div>
                 </div>
                 
                 <div class="table-section">
                     <div class="table-header">
                         <h2>Pedidos Recientes</h2>
-                        <button class="btn btn-primary">Ver Todos</button>
                     </div>
                     
                     <table>
                         <thead>
                             <tr>
-                                <th># Pedido</th>
+                                <th>ID Pedido</th>
                                 <th>Cliente</th>
                                 <th>Fecha</th>
                                 <th>Total</th>
                                 <th>Estado</th>
                             </tr>
                         </thead>
-                        <tbody id="pedidos-resumen-tbody">
+                        <tbody id="orders-resumen-tbody">
                             <!-- aquí se inyectan filas -->
                         </tbody>
                     </table>
@@ -176,8 +172,8 @@
                     </div>
 
                     <div class="modal-actions">
-                        <button class="btn" id="np-cancel" style="background:#ccc;">Cancelar</button>
-                        <button class="btn btn-primary" id="np-save">Guardar</button>
+                        <button class="btn-cancel" id="np-cancel">Cancelar</button>
+                        <button class="btn-save" id="np-save">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -191,7 +187,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th># Pedido</th>
+                                <th>ID Pedido</th>
                                 <th>Cliente</th>
                                 <th>Fecha</th>
                                 <th>Total</th>
@@ -199,7 +195,7 @@
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="pedidos-tbody">
+                        <tbody id="orders-tbody">
                             <!-- aquí se inyectan filas -->
                         </tbody>
                     </table>
@@ -230,11 +226,6 @@
                     </table>
                 </div>
             </div>
-            
-            <div id="reports" class="content-section">
-                <h2>Reportes y Estadísticas</h2>
-                <p>Contenido de reportes...</p>
-            </div>
         </div>
     </div>
 
@@ -249,8 +240,8 @@
                 <p id="confirm-message">¿Estás seguro de que quieres realizar esta acción?</p>
             </div>
             <div class="modal-actions">
-                <button class="btn" id="confirm-cancel">Cancelar</button>
-                <button class="btn btn-primary" id="confirm-ok">Confirmar</button>
+                <button class="btn-cancel" id="confirm-cancel">Cancelar</button>
+                <button class="btn-save" id="confirm-ok">Confirmar</button>
             </div>
         </div>
     </div>

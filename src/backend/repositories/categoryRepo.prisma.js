@@ -34,6 +34,13 @@ module.exports = {
     });
   },
 
+  // Obtener por nombre
+  async getByName(name){
+    return prisma.category.findUnique({
+      where: { name }
+    });
+  },
+
   // Crear categoría
   async save(input) {
     return prisma.category.create({

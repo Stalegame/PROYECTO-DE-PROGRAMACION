@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
       try { data = await res.json(); } catch {}
 
       if (!res.ok || data.success === false) {
-        let msg = (data && data.error) || 'No se pudo registrar. Revisa tus datos.';
+        let msg ='No se pudo registrar. Revisa tus datos.';
         if (data && data.details) {
           const details = Array.isArray(data.details)
             ? data.details
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       alert('¡Registro exitoso! Ya puedes iniciar sesión.');
-      window.location.href = 'login_users.html';
+      window.location.href = '/login_users.html';
     } catch {
       alert('Error de conexión. Intenta nuevamente.');
     } finally {

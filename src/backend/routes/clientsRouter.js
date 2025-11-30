@@ -225,9 +225,7 @@ router.get('/:id', auth, async (req, res) => {
     const usuario = await clientesDAO.getById(id);
     if (!usuario) return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
 
-    // Quitar campos sensibles si existen
-    const { passwordHash, password, ...publicUser } = usuario;
-    return res.status(200).json({ success: true, data: publicUser });
+    return res.status(200).json({ success: true, data: usuario });
   } catch (err) {
     console.error('❌ Error obteniendo usuario:', err);
     return res.status(500).json({ success: false, error: 'Error al obtener usuario' });
@@ -299,12 +297,8 @@ router.put('/:id', auth, async (req, res) => {
     const phone = req.body.phone;
     const address = req.body.address;
     const actualizado = await clientesDAO.update(id, { name, phone, address });
-    // Adaptar la respuesta dependiendo del DAO
-    const publicUpdated = actualizado && typeof actualizado === 'object'
-      ? (function () { const { passwordHash, password, ...rest } = actualizado; return rest; })()
-      : { id };
-
-    return res.status(200).json({ success: true, data: publicUpdated });
+    
+    return res.status(200).json({ success: true, data: actualizado });
   } catch (err) {
     console.error('❌ Error actualizando usuario:', err);
     if (clientesDAO.translateError) {

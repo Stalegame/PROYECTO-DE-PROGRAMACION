@@ -59,9 +59,28 @@ async function apiFetchJSON(input, init) {
   return data ?? {};
 }
 
+function setTime(time) {
+  const fecha = new Date(time);
+
+  const opciones = {
+    timeZone: "America/Santiago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false
+  };
+
+  const fechaChile = new Intl.DateTimeFormat("es-CL", opciones).format(fecha);
+
+  return fechaChile; 
+}
+
 // ===================== NAVEGACIÓN =====================
 function activateSection(sectionId, clickedItem) {
-  console.log('Activando sección:', sectionId);
+  //console.log('Activando sección:', sectionId);
 
   // Ocultar todas las secciones
   document.querySelectorAll('.content-section').forEach(s => {
@@ -84,12 +103,90 @@ function activateSection(sectionId, clickedItem) {
   }
 
   // Cargar datos según la sección
-  if (sectionId === 'products') {
+  if (sectionId === 'dashboard') {
+    loadResume();
+  } else if (sectionId === 'products') {
     loadProducts();
   } else if (sectionId === 'customers') {
     loadClients();
+  } else if (sectionId === 'orders') {
+    loadOrders();
   }
 }
+
+// Cargar Resumen de dashboard
+async function loadResume() {
+  const dataTotal = await apiFetchJSON('/api/admin/dashboard');
+
+  await loadResumeOrders(dataTotal.data.resumenOrders);
+  await loadVentasHoy(dataTotal.data.sumOfDay);
+  await loadPending(dataTotal.data.pendingOrders);
+  await loadLowStock(dataTotal.data.lowStockProducts);
+  await loadCreatedThisMonth(dataTotal.data.createdThisMonth);
+}
+
+async function loadResumeOrders(data) {
+  const tbody = document.getElementById('orders-resumen-tbody');
+  if (!tbody) return;
+
+  tbody.innerHTML = '<tr><td colspan="5">Cargando resumen de pedidos...</td></tr>';
+
+  try {
+    const items = Array.isArray(data) ? data : [];
+
+    if (!items.length) {
+      tbody.innerHTML = '<tr><td colspan="5">No hay pedidos registrados.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = items.map(o => `
+      <tr>
+        <td>${escapeHTML(o.id)}</td>
+        <td>${escapeHTML(o.client.name)}</td>
+        <td>${escapeHTML(setTime(o.createdAt))}</td>
+        <td>${escapeHTML(o.totalAmount)}</td>
+        <td>${escapeHTML(o.status)}</td>
+      </tr>`).join('');
+
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="6">Error: ${e.message}</td></tr>`;
+  }
+}
+
+async function loadVentasHoy(data) {
+  const tbody = document.getElementById('ventas-hoy');
+  if (!tbody) return;
+  const items = Array.isArray(data) ? data : [];
+
+  let sumaTotal = 0;
+  items.forEach(venta => {
+    sumaTotal += venta.totalAmount;
+  });
+
+  tbody.innerHTML = `$${sumaTotal}`;
+}
+
+async function loadPending(data) {
+  const tbody = document.getElementById('pedidos-activos');
+  if (!tbody) return;
+
+  tbody.innerHTML = data;
+}
+
+async function loadLowStock(data) {
+  const tbody = document.getElementById('productos-bajo-stock');
+  if (!tbody) return;
+
+  tbody.innerHTML = data
+}
+
+async function loadCreatedThisMonth(data) {
+  const tbody = document.getElementById('nuevo-clientes');
+  if (!tbody) return;
+  
+  tbody.innerHTML = data;
+}
+
 
 // ===================== GESTIÓN DE CLIENTES =====================
 async function loadClients() {
@@ -108,8 +205,6 @@ async function loadClients() {
     }
 
     tbody.innerHTML = items.map(u => {
-
-      console.log('Phone: ', u.phone);
       const isSuspended = u.active === false;
       const statusClass = isSuspended ? 'suspended' : 'active';
       const statusText = isSuspended ? 'Suspendido' : 'Activo';
@@ -132,9 +227,6 @@ async function loadClients() {
                   Suspender
                 </button>`
         }
-              <button class="btn-delete-user" data-action="delete-user" data-id="${escapeHTML(u.id)}" data-name="${escapeHTML(u.name)}">
-                Eliminar
-              </button>
             </div>
           </td>
         </tr>`;
@@ -167,12 +259,6 @@ async function handleClientAction(e) {
       'Reactivar cuenta',
       () => suspendUser(userId, false)
     );
-  } else if (action === 'delete-user') {
-    showConfirmModal(
-      `¿Estás seguro de que quieres ELIMINAR permanentemente la cuenta de ${userName}?`,
-      'Eliminar cuenta',
-      () => deleteUser(userId)
-    );
   }
 }
 
@@ -187,20 +273,6 @@ async function suspendUser(userId, suspend) {
 
     const actionText = suspend ? 'suspendida' : 'reactivada';
     alert(`Cuenta ${actionText} correctamente`);
-    await loadClients();
-  } catch (e) {
-    alert(`Error: ${e.message}`);
-  }
-}
-
-async function deleteUser(userId) {
-  try {
-    await apiFetchJSON(`/api/admin/users/${encodeURIComponent(userId)}`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-    });
-
-    alert('Cuenta eliminada correctamente');
     await loadClients();
   } catch (e) {
     alert(`Error: ${e.message}`);
@@ -233,8 +305,8 @@ async function loadProducts() {
         <td>${p.price != null ? `$${p.price}` : ''}</td>
         <td>${p.stock != null ? p.stock : ''}</td>
         <td>
-          <button class="btn btn-secondary" data-action="edit" data-id="${escapeHTML(p.id)}">Editar</button>
-          <button class="btn" style="background:#f44336;color:white" data-action="del" data-id="${escapeHTML(p.id)}">Eliminar</button>
+          <button class="btn-edit" data-action="edit" data-id="${escapeHTML(p.id)}">Editar</button>
+          <button class="btn-delete" data-action="del" data-id="${escapeHTML(p.id)}">Eliminar</button>
         </td>
       </tr>`).join('');
 
@@ -358,6 +430,40 @@ async function np_save() {
   }
 }
 
+// Cargar Orders
+async function loadOrders() {
+  const tbody = document.getElementById('orders-tbody');
+  if (!tbody) return;
+
+  tbody.innerHTML = '<tr><td colspan="6">Cargando pedidos...</td></tr>';
+
+  try {
+    const data = await apiFetchJSON('/api/admin/orders');
+    const items = Array.isArray(data.data) ? data.data : [];
+
+    if (!items.length) {
+      tbody.innerHTML = '<tr><td colspan="6">No hay pedidos registrados.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = items.map(o => `
+      <tr>
+        <td>${escapeHTML(o.id)}</td>
+        <td>${escapeHTML(o.client.name)}</td>
+        <td>${escapeHTML(setTime(o.createdAt))}</td>
+        <td>${escapeHTML(o.totalAmount)}</td>
+        <td>${escapeHTML(o.status)}</td>
+        <td>
+          <button class="btn-delete"  data-action="del" data-id="${escapeHTML(o.id)}">Eliminar</button>
+        </td>
+      </tr>`).join('');
+
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="6">Error: ${e.message}</td></tr>`;
+  }
+}
+
+
 // ===================== MODALES =====================
 function showConfirmModal(message, title, callback) {
   const modal = document.getElementById('modalConfirmAction');
@@ -386,7 +492,7 @@ function closeConfirmModal() {
 
 // ===================== INICIALIZACIÓN =====================
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('Admin Controller iniciado');
+  //console.log('Admin Controller iniciado');
 
   // Actualizar fecha
   updateDate();
@@ -410,7 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Manejar navegación
       const target = item.getAttribute('data-target');
-      console.log('Click en menú:', target);
+      //console.log('Click en menú:', target);
       if (target) {
         activateSection(target, item);
       }
@@ -467,6 +573,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Activar sección inicial
   const activeItem = document.querySelector('.sidebar .menu-item.active');
   const initialSection = activeItem?.getAttribute('data-target') || 'dashboard';
-  console.log('Sección inicial:', initialSection);
+  //console.log('Sección inicial:', initialSection);
   activateSection(initialSection, activeItem);
 });

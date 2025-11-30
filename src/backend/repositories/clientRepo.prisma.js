@@ -75,6 +75,21 @@ module.exports = {
     });
   },
 
+  // Obtener Numero de clientes creados en el mes
+  async getCreatedThisMonth() {
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    return prisma.client.count({
+      where: {
+        createdAt: {
+          gte: startOfMonth
+        }
+      }
+    });
+  },
+
   // Crear cliente
   async save(input = {}) {
     const data = {
