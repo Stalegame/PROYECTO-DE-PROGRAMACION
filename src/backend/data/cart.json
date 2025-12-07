@@ -8,6 +8,7 @@
         "name": "Cola Cola Clásica 2Lt",
         "price": 1490,
         "image": "cola_cola_fruna.jpg"
+<<<<<<< HEAD
       },
       {
         "productId": "cj2xk7s6y0006s0ezeou7fcwn",
@@ -15,6 +16,8 @@
         "name": "Sufle Maní",
         "price": 990,
         "image": "Sufle_Chanfle_Mani.jpg"
+=======
+>>>>>>> d692bf72c5404d863afca6c015b79a4fbce57230
       }
     ]
   }

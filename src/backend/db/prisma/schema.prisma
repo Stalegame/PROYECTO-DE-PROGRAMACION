@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -19,7 +19,6 @@ model Client {
   active       Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-
   orders       Order[]
 }
 
@@ -28,7 +27,6 @@ model Category {
   name      String    @unique
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-
   products  Product[]
 }
 
@@ -39,22 +37,20 @@ model Product {
   stock       Int      @default(0)
   description String?
   image       String?
-
-  category    Category @relation(fields: [categoryId], references: [id])
   categoryId  String
-
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  category    Category @relation(fields: [categoryId], references: [id])
 }
 
 model Order {
-  id          String   @id @default(cuid())
-  client      Client   @relation(fields: [clientId], references: [id])
+  id          String      @id @default(cuid())
   clientId    String
   totalAmount Int
   status      OrderStatus @default(PENDING)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  client      Client      @relation(fields: [clientId], references: [id])
 }
 
 enum OrderStatus {
