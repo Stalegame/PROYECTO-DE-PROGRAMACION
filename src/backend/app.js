@@ -120,6 +120,7 @@ try {
   const adminRouter    = require('./routes/adminRouter');
   const cartRouter     = require('./routes/cartRouter');
   const chatRouter     = require('./routes/chatRouter');
+  const ordersRouter   = require('./routes/ordersRouter');
 
   app.use('/api/clients/login', strictLimiter);
   app.use('/api/clients/register', strictLimiter);
@@ -128,6 +129,7 @@ try {
   app.use('/api/clients', clientsRouter);
   app.use('/api/cart', cartRouter);
   app.use('/api/chat', chatRouter);
+  app.use('/api/orders', ordersRouter);
   app.use('/api/admin', auth, adminAuth, adminRouter);
 
   console.log('✅ Rutas registradas correctamente');

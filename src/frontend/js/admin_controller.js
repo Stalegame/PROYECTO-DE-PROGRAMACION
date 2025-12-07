@@ -120,7 +120,7 @@ async function loadResume() {
 
   await loadResumeOrders(dataTotal.data.resumenOrders);
   await loadVentasHoy(dataTotal.data.sumOfDay);
-  await loadPending(dataTotal.data.pendingOrders);
+  await loadPreparingOrders(dataTotal.data.preparingOrders);
   await loadLowStock(dataTotal.data.lowStockProducts);
   await loadCreatedThisMonth(dataTotal.data.createdThisMonth);
 }
@@ -166,7 +166,7 @@ async function loadVentasHoy(data) {
   tbody.innerHTML = `$${sumaTotal}`;
 }
 
-async function loadPending(data) {
+async function loadPreparingOrders(data) {
   const tbody = document.getElementById('pedidos-activos');
   if (!tbody) return;
 

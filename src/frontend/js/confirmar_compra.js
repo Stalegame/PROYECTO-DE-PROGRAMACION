@@ -28,14 +28,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   let total = 0;
   let pasoActual = 1;
 
+  // Obtener usuario actual
+  const rawUser  = localStorage.getItem('fruna_user');
+  const user = rawUser ? JSON.parse(rawUser) : null;
+
+  const userId = user.id;
+
   // Cargar carrito desde backend
   async function cargarCarrito() {
     try {
-      const res = await fetch("/api/cart", { cache: "no-store" });
-      const data = await res.json().catch(() => ({}));
-      carrito = Array.isArray(data?.data) ? data.data : [];
+      const res = await fetch(`/api/cart/${userId}`, { cache: 'no-store' });
+      const data = await res.json();
+      carrito = Array.isArray(data?.data?.items) ? data.data.items : [];
     } catch (err) {
-      console.error("Error al cargar carrito:", err.message);
+      console.error('Error al cargar carrito:', err.message);
       carrito = [];
     }
 
@@ -43,10 +49,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     total = 0;
 
     carrito.forEach(item => {
-      const p = item.product || {};
-      const nombre = p.name || p.nombre || "Producto eliminado";
-      const precio = Number(p.price ?? p.precio ?? 0);
-      const cantidad = Number(item.quantity || 1);
+      const nombre = item.name || "Producto eliminado";
+      const precio = item.price ?? 0;
+      const cantidad = item.quantity || 1;
       const subtotal = precio * cantidad;
       total += subtotal;
 
@@ -103,10 +108,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       <h4>Productos:</h4>
       <ul>
         ${carrito.map(i => {
-          const p = i.product || {};
-          const nombre = p.name || p.nombre;
-          const precio = Number(p.price ?? p.precio ?? 0);
-          const cantidad = Number(i.quantity || 1);
+          const nombre = i.name || "Producto eliminado";
+          const precio = i.price ?? 0;
+          const cantidad = i.quantity || 1;
           return `<li>${nombre} x${cantidad} - $${(precio * cantidad).toLocaleString()}</li>`;
         }).join("")}
       </ul>
@@ -116,33 +120,71 @@ document.addEventListener("DOMContentLoaded", async () => {
     mostrarPaso("confirmacion", 3);
   };
 
+
+  // Click en "Confirmar"
   btnConfirmar.onclick = async () => {
-    const payload = {
-      total,
-      direccion: direccion.value,
-      region: region.value,
-      comuna: comuna.value,
-      comentarios: comentarios.value,
-    };
-
     try {
-      const res = await fetch("/api/cart/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      btnConfirmar.disabled = true;
+      btnConfirmar.textContent = 'Procesando...';
 
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || data?.success === false) {
-        alert(data?.error || "No se pudo confirmar la compra.");
+      const token = localStorage.getItem('fruna_token');
+      if (!token) {
+        alert('Sesión expirada. Por favor inicia sesión nuevamente.');
+        window.location.href = '/login_users.html';
         return;
       }
 
-      alert("✅ Compra confirmada con éxito. ¡Gracias por preferir FRUNA!");
-      window.location.href = "/index.html";
+      // Guardar datos de entrega en localStorage para después
+      localStorage.setItem('fruna_address', direccion.value);
+      localStorage.setItem('fruna_region', region.value);
+      localStorage.setItem('fruna_comuna', comuna.value);
+
+      // Crear orden en backend
+      const createRes = await fetch('/api/orders/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          items: carrito,
+          direccion: direccion.value,
+          region: region.value,
+          comuna: comuna.value,
+          comentarios: comentarios.value,
+          total
+        })
+      });
+
+      const createData = await createRes.json();
+
+      if (!createRes.ok || !createData.success) {
+        alert(`Error: ${createData.error || 'No se pudo crear la orden'}`);
+        btnConfirmar.disabled = false;
+        btnConfirmar.textContent = 'Confirmar y Pagar';
+        return;
+      }
+
+      const { orderId, approvalLink } = createData;
+
+      if (!approvalLink) {
+        alert('Error al obtener enlace de PayPal');
+        btnConfirmar.disabled = false;
+        btnConfirmar.textContent = 'Confirmar y Pagar';
+        return;
+      }
+
+      // Guardar orderId en localStorage
+      localStorage.setItem('fruna_orderId', orderId);
+
+      // Redirigir a PayPal para que apruebe
+      window.location.href = approvalLink;
+
     } catch (err) {
-      console.error("Error en la confirmación:", err);
-      alert("Error de conexión. Intenta nuevamente.");
+      console.error('Error al confirmar compra:', err);
+      alert(`Error de conexión: ${err.message}`);
+      btnConfirmar.disabled = false;
+      btnConfirmar.textContent = 'Confirmar y Pagar';
     }
   };
 });

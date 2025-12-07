@@ -79,9 +79,9 @@ module.exports = {
   },
 
   // Obtener pedidos pendientes
-  async getPending() {
+  async getPreparing() {
     return prisma.order.count({
-        where: { status: 'PENDING' }
+        where: { status: 'PREPARING' }
     });
   },
 

@@ -14,7 +14,7 @@ router.get('/dashboard', async (_req, res) => {
   try {
     let dataTotal = {};
     dataTotal.resumenOrders = await ordersDAO.getLastOrders();
-    dataTotal.pendingOrders = await ordersDAO.getPending();
+    dataTotal.preparingOrders = await ordersDAO.getPreparing();
     dataTotal.sumOfDay = await ordersDAO.getSumOfDay();
     dataTotal.lowStockProducts = await productosDAO.getLowStock();
     dataTotal.createdThisMonth = await clientesDAO.getCreatedThisMonth();

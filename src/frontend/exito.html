@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compra Confirmada - FRUNA</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/exito.css">
+</head>
+<body>
+    <div class="exito-container">
+        <div class="exito-card">
+            <div class="exito-icon" id="icon">✓</div>
+
+            <div class="success-message" id="successMsg" style="display: none;">
+                ¡Pago capturado exitosamente!
+            </div>
+
+            <div class="error-message" id="errorMsg"></div>
+
+            <h1 id="title">Procesando Pago...</h1>
+            <p id="subtitle">
+                <span class="loading"></span>
+                Estamos confirmando tu compra en PayPal
+            </p>
+
+            <div class="orden-id" id="orderId" style="display: none;">
+                Orden: <strong id="orderNumber"></strong>
+            </div>
+
+            <div class="detalles" id="details" style="display: none;">
+                <h3>Detalles de tu Compra</h3>
+                <p><strong>Monto:</strong> <span id="monto">$0</span></p>
+                <p><strong>Dirección:</strong> <span id="directionDetail"></span></p>
+                <p><strong>Región:</strong> <span id="regionDetail"></span></p>
+                <p><strong>Comuna:</strong> <span id="comunaDetail"></span></p>
+                <p><strong>Fecha:</strong> <span id="fecha"></span></p>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" id="btnVolver" style="display: none;">
+                    Volver al Inicio
+                </button>
+                <button class="btn btn-secondary" id="btnDescargar" style="display: none;">
+                    Descargar Factura
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/exito.js"></script>
+</body>
+</html>

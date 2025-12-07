@@ -1,1 +1,0 @@
-// Cosas de PayPal deshabilitadas temporalmente

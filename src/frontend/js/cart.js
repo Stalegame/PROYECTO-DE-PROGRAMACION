@@ -46,6 +46,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         body: JSON.stringify({ userId, productId, quantity: cantidad })
       });
 
+      console.log(res);
+
       const data = await res.json();
       if (!res.ok) {
         alert(data?.msg || 'No se pudo agregar el producto');
@@ -200,15 +202,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       alert('Tu carrito está vacío.');
       return;
     }
-    try {
-      const res = await fetch(`/api/cart/clear/${userId}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error();
-      alert('¡Gracias por tu compra!');
-      await fetchCart();
-      actualizarCarritoUI();
-    } catch (err) {
-      alert('Error al finalizar compra');
-    }
+    window.location.href = '/confirmar_compra.html';
   });
 
   // Carga inicial
