@@ -68,9 +68,9 @@ async function main() {
   // CATEGORIES
 
   const categories = [
-    { id: 'cat_helados', name: 'Helados' },
-    { id: 'cat_bebidas', name: 'Bebidas' },
-    { id: 'cat_snacks', name: 'Snacks' }
+    { id: 'cmils0rgj0000uirk24jfq2j3', name: 'Helados' },
+    { id: 'cmils0rgj0001uirk24jfq2j4', name: 'Bebidas' },
+    { id: 'cmils0rgj0002uirk24jfq2j5', name: 'Snacks' }
   ];
 
   for (const category of categories) {
@@ -89,7 +89,7 @@ async function main() {
       name: 'Palo Palito',
       price: 390,
       stock: 15,
-      categoryId: 'cat_helados',
+      categoryId: 'cmils0rgj0000uirk24jfq2j3',
       description: 'Helado de agua sabor cereza y piña.',
       image: 'palo_palito.png'
     },
@@ -98,8 +98,8 @@ async function main() {
       name: 'Cola Cola Clásica 2Lt',
       price: 1490,
       stock: 10,
-      categoryId: 'cat_bebidas',
-      description: 'Refresca tus momentos con el sabor clásico.',
+      categoryId: 'cmils0rgj0001uirk24jfq2j4',
+      description: 'Refresca tus momentos con el sabor clásico de Cola Cola.',
       image: 'cola_cola_fruna.jpg'
     },
     {
@@ -107,7 +107,7 @@ async function main() {
       name: 'Sufle Maní',
       price: 990,
       stock: 20,
-      categoryId: 'cat_snacks',
+      categoryId: 'cmils0rgj0002uirk24jfq2j5',
       description: 'Snack crocante de maní.',
       image: 'Sufle_Chanfle_Mani.jpg'
     }

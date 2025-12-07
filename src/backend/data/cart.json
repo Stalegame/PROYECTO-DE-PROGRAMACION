@@ -1,23 +1,13 @@
 [
   {
-    "userId": "cj2xk3h5b0001s0ez9jx0f2lm",
+    "userId": "cj2xk2q9m0000s0ez8g8z9hdp",
     "items": [
       {
-        "productId": "cj2xk74by0005s0ezectp82jt",
-        "quantity": 1,
-        "name": "Cola Cola Clásica 2Lt",
+        "productId": "cmils0rgm0002uirkurn523no",
+        "quantity": 3,
+        "name": "Tabletones Maní",
         "price": 1490,
-        "image": "cola_cola_fruna.jpg"
-<<<<<<< HEAD
-      },
-      {
-        "productId": "cj2xk7s6y0006s0ezeou7fcwn",
-        "quantity": 1,
-        "name": "Sufle Maní",
-        "price": 990,
-        "image": "Sufle_Chanfle_Mani.jpg"
-=======
->>>>>>> d692bf72c5404d863afca6c015b79a4fbce57230
+        "image": "tabletones.png"
       }
     ]
   }
