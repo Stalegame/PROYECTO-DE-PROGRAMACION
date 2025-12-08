@@ -1,9 +1,8 @@
+/* Estilos específicos para confirmar compra */
+
 body {
-  font-family: system-ui, sans-serif;
-  background: #fff8fa;
-  margin: 0;
   padding: 20px;
-  color: #333;
+  color: var(--text);
 }
 
 .container {
@@ -16,7 +15,7 @@ body {
 }
 
 h1, h2 {
-  color: #c2185b;
+  color: var(--rosaOsc);
   text-align: center;
   margin-bottom: 15px;
 }
@@ -35,7 +34,7 @@ h1, h2 {
 .progreso-fill {
   height: 100%;
   width: 0%;
-  background: #e91e63;
+  background: var(--rosa);
   transition: width 0.5s ease;
 }
 .progreso-pasos {
@@ -46,7 +45,7 @@ h1, h2 {
   color: #888;
 }
 .progreso-pasos span.activo {
-  color: #e91e63;
+  color: var(--rosa);
   font-weight: bold;
 }
 
@@ -89,7 +88,7 @@ h1, h2 {
 .btn, .btn-confirmar {
   display: block;
   width: 100%;
-  background: #e91e63;
+  background: var(--rosa);
   color: #fff;
   border: none;
   padding: 12px;
@@ -97,19 +96,16 @@ h1, h2 {
   font-size: 1rem;
   cursor: pointer;
   margin-top: 15px;
+  transition: var(--transition-normal);
 }
-.btn:hover { background: #c2185b; }
+.btn:hover { background: var(--rosaOsc); }
 .btn.secundario { background: #ccc; color: #000; }
 
 .paso { display: none; }
 .paso.activo { display: block; }
 
-.footer-links {
-  text-align: center;
-  margin-top: 15px;
-}
 .footer-links a {
-  color: #e91e63;
+  color: var(--rosa);
   text-decoration: none;
 }
 .footer-links a:hover {

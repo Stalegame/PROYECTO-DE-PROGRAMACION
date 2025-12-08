@@ -1,40 +1,18 @@
-/* ===== Reset ===== */
-* { margin:0; padding:0; box-sizing:border-box; }
+/* Estilos específicos para página 404 */
+/* Variables locales ya definidas en main.css */
 
-/* ===== Tema ===== */
-:root{
-  --rosa:#E91E63;
-  --rosa-osc:#AD1457;          
-  --bg-grad-start:#ffebee;
-  --bg-grad-mid:#fce4ec;
-  --bg-grad-end:#f8bbd0;
-  --text:#333;
-  --sub:#555;
-  --amarillo:#FFC107;
-  --amarillo-osc:#FF9800;
-  --focus: 0 0 0 3px rgba(233,30,99,.18), 0 6px 18px rgba(233,30,99,.25);
+/* Contenido de 404 */
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* ===== Layout general ===== */
-body{
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  min-height:100vh;
-  color:var(--text);
-  background: linear-gradient(135deg, var(--bg-grad-start) 0%, var(--bg-grad-mid) 50%, var(--bg-grad-end) 100%);
-  display:flex; flex-direction:column; align-items:center;
+/* Logo específico */
+.logo-container { 
+  max-width: 200px;
+  margin: 0 auto;
 }
-
-/* ===== Header ===== */
-header{
-  width:100%;
-  background: linear-gradient(135deg, var(--rosa) 0%, var(--rosa-osc) 100%);
-  padding:20px 0;
-  box-shadow: 0 2px 10px rgba(0,0,0,.15);
-}
-.logo-container{ max-width:200px; margin:0 auto; }
-.logo-container img{ width:100%; height:auto; display:block; }
-
-/* ===== Contenido ===== */
 .content{
   flex:1;
   width:100%;
@@ -46,45 +24,18 @@ header{
   font-size: clamp(80px, 16vw, 160px);
   line-height:.9;
   font-weight:900;
-  color:var(--rosa);
+  color: var(--rosa);
   text-shadow: 0 6px 15px rgba(233,30,99,.30);
   letter-spacing:2px;
   margin-bottom:8px;
 }
 .title{
   font-size: clamp(22px, 3.5vw, 28px);
-  color:var(--sub);
+  color: var(--text-secondary);
   margin-bottom:10px;
 }
 .desc{
   font-size: clamp(16px, 2.8vw, 20px);
-  color:var(--sub);
+  color: var(--text-secondary);
   margin-bottom:32px;
-}
-
-/* ===== Botón/enlace volver ===== */
-.btn-volver{
-  display:inline-flex; align-items:center; gap:10px;
-  background: linear-gradient(135deg, var(--amarillo) 0%, var(--amarillo-osc) 100%);
-  color:#fff; font-size:18px; font-weight:700;
-  padding:14px 32px; border-radius:50px;
-  text-decoration:none; box-shadow:0 5px 15px rgba(0,0,0,.2);
-  transition: transform .2s ease, box-shadow .2s ease;
-}
-.btn-volver img{ width:22px; height:22px; display:block; }
-.btn-volver:hover{ transform: translateY(-3px); box-shadow:0 8px 18px rgba(0,0,0,.25); }
-.btn-volver:focus-visible{ outline:none; box-shadow: var(--focus); }
-
-/* ===== Footer ===== */
-footer{
-  width:100%;
-  background: #333;
-  color:#fff; text-align:center; padding:20px;
-  font-size:14px; box-shadow:0 -3px 10px rgba(0,0,0,.15);
-}
-footer p{ margin:5px 0; }
-
-/* ===== Motion safe ===== */
-@media (prefers-reduced-motion: reduce){
-  .btn-volver{ transition:none }
 }

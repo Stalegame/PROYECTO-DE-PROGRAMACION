@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Redirigir al login después de un breve delay
                 setTimeout(() => {
                     window.location.href = 'login_users.html';
-                }, 1500);
+                }, 1000);
             };
         }
         if (loginLink) loginLink.style.display = 'none';

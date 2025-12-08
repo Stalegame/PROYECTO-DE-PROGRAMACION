@@ -1,17 +1,4 @@
-/* Frontend/css/crear_user.css */
-
-/* Reset & base */
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-    font-family:'Poppins','Arial',sans-serif;
-    background:linear-gradient(135deg,#ffebee 0%,#fce4ec 50%,#f8bbd0 100%);
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    padding:20px;
-    position:relative;
-    color:#333;
-}
+/* Estilos para la página de creación de usuario */
 
 /* Botón volver */
 .btn-volver{
@@ -40,6 +27,15 @@ body{
     margin:40px auto 20px;
 }
 
+/* Logo más pequeño en login */
+.logo-container {
+    margin: 10px;
+}
+
+.logo-container .site-logo {
+    max-width: 180px;
+}
+
 /* Header con gradiente */
 header{
     background:linear-gradient(135deg,#e91e63 0%,#ad1457 100%);
@@ -47,8 +43,6 @@ header{
     box-shadow:0 5px 15px rgba(0,0,0,.1);text-align:center;
     margin-bottom:-10px;z-index:10;
 }
-.logo-container{max-width:220px;margin:0 auto;filter:drop-shadow(0 3px 5px rgba(0,0,0,.2))}
-.logo-container .wordmark{color:#fff;font-size:28px;font-weight:bold}
 
 /* Caja del formulario */
 .registro-box{

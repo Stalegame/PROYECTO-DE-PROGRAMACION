@@ -1,35 +1,14 @@
-/* ======== ANIMACIÓN Y BASE ======== */
-* { box-sizing: border-box; }
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  color: #333;
-  background: linear-gradient(-45deg, #f5f5f5, #ffe4e1, #f8bbd0, #fff9fa);
-  background-size: 400% 400%;
-  animation: gradientBG 20s ease infinite;
-}
+/* Estilos específicos para página de contacto */
+
+/* Override animación con valores específicos */
 @keyframes gradientBG {
   0% {background-position:0% 50%;}
   50% {background-position:100% 50%;}
   100% {background-position:0% 50%;}
 }
 
-/* ======== HEADER ======== */
-header {
-  background: linear-gradient(135deg, #E91E63 0%, #C2185B 100%);
-  padding: 20px 0;
-  text-align: center;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-.logo-container { max-width: 200px; margin: 0 auto; }
-.site-logo {
-  width: 100%;
-  height: auto;
-  display: block;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
-}
-
-/* ======== NAV ======== */
+/* Logo específico con max-width menor */
+/* ======== NAV específico ======== */
 .main-nav {
   display: flex; justify-content: center; gap: 30px;
   padding: 14px 16px; background: #fff;
@@ -40,9 +19,15 @@ header {
 .nav-pill {
   display: inline-block; padding: 10px 40px;
   border-radius: 9999px; text-decoration: none; font-weight: 600;
-  color: #E91E63; background: #fff; border: 2px solid #E91E63;
-  transition: all 0.3s ease;
+  color: var(--rosa); background: #fff; border: var(--border-rosa);
+  transition: var(--transition-normal);
 }
+.nav-pill:hover, .nav-pill:focus {
+  background: var(--rosa); color: #fff;
+  box-shadow: 0 4px 15px rgba(233,30,99,0.4);
+  outline: none;
+}
+.nav-pill.is-active { background: var(--rosa); color: #fff; }
 .nav-pill:hover, .nav-pill:focus {
   background: #E91E63; color: #fff;
   box-shadow: 0 4px 15px rgba(233,30,99,0.4);
@@ -66,19 +51,16 @@ header {
   box-shadow: 0 10px 25px rgba(233,30,99,0.15);
   transition: transform 0.3s, box-shadow 0.3s;
 }
-.formulario:hover, .info-contacto:hover {
-  transform: translateY(-7px);
-  box-shadow: 0 20px 40px rgba(233,30,99,0.25);
-}
+  
 .formulario h2, .info-contacto h2 {
-  color: #E91E63; text-align: center; margin-bottom: 30px;
+  color: var(--rosa); text-align: center; margin-bottom: 30px;
 }
 
 /* ======== INPUTS + ÍCONOS ======== */
 .input-container { position: relative; margin-bottom: 20px; }
 .input-container i {
   position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-  color: #E91E63; font-size: 16px; pointer-events: none;
+  color: var(--rosa); font-size: 16px; pointer-events: none;
 }
 input, textarea {
   width: 100%; max-width: 100%; display: block;
@@ -89,7 +71,7 @@ input, textarea {
 }
 textarea { resize: none; min-height: 120px; }
 input:focus, textarea:focus {
-  border-color: #E91E63; outline: none;
+  border-color: var(--rosa); outline: none;
   box-shadow:
     0 0 0 3px rgba(233, 30, 99, 0.12),
     0 6px 18px rgba(233, 30, 99, 0.25);
@@ -97,40 +79,36 @@ input:focus, textarea:focus {
 
 /* ======== BOTÓN ======== */
 button {
-  background: linear-gradient(135deg, #E91E63 0%, #C2185B 100%);
+  background: linear-gradient(135deg, var(--rosa) 0%, var(--rosaOsc) 100%);
   color: white; border: none; padding: 14px 25px; border-radius: 15px;
   cursor: pointer; font-size: 16px; font-weight: 600; width: 100%;
   margin-top: 10px; box-shadow: 0 6px 18px rgba(233,30,99,0.3);
-  transition: all 0.3s ease;
+  transition: var(--transition-normal);
 }
 button:hover {
   transform: translateY(-3px) scale(1.05);
-  background: linear-gradient(135deg, #C2185B 0%, #E91E63 100%);
+  background: linear-gradient(135deg, var(--rosaOsc) 0%, var(--rosa) 100%);
   box-shadow: 0 12px 28px rgba(233,30,99,0.4);
 }
 button:active { transform: scale(0.98); box-shadow: 0 4px 12px rgba(233,30,99,0.3); }
 
 /* ======== INFO CONTACTO / MAPA ======== */
-.info-contacto p { font-size: 15px; margin: 12px 0; text-align: center; color: #555; }
+.info-contacto p { font-size: 15px; margin: 12px 0; text-align: center; color: var(--text-secondary); }
 .mapa {
   margin-top: 20px; width: 100%; height: 300px;
   border-radius: 15px; overflow: hidden;
   box-shadow: 0 6px 18px rgba(0,0,0,0.1);
 }
 
-/* ======== FOOTER ======== */
+/* ======== FOOTER específico ======== */
 .footer {
-  background: #333; color: white; text-align: center;
+  background: var(--text); color: white; text-align: center;
   padding: 20px; margin-top: 50px; font-size: 14px;
   box-shadow: 0 -3px 10px rgba(0,0,0,0.15);
 }
 .footer p { margin: 0; }
 
 /* ======== ACCESIBILIDAD ======== */
-.sr-only {
-  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0,0,0,0); border: 0;
-}
 /* Contenedor y frame sin estilos inline (CSP safe) */
 .mapa {
   margin-top: 20px;
@@ -144,7 +122,7 @@ button:active { transform: scale(0.98); box-shadow: 0 4px 12px rgba(233,30,99,0.
 .map-frame {
   width: 100%;
   height: 100%;
-  border: 0;           /* reemplaza style="border:0" inline */
+  border: 0;
   display: block;
 }
 
