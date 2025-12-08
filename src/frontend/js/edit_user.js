@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const telRaw = usuario.phone || '';
     document.getElementById('telefono').value = String(telRaw).replace(/^\+569/, '').replace(/[^0-9]/g, '');
     document.getElementById('direccion').value = usuario.address || '';
-  }, 1000);
+  }, 300);
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();

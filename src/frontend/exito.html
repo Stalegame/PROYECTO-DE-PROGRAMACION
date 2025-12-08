@@ -6,8 +6,15 @@
     <title>Compra Confirmada - FRUNA</title>
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/exito.css">
+    <link rel="stylesheet" href="css/page_loader.css">
 </head>
 <body>
+    <!-- Loader Pages -->
+    <div id="loader-fruna" aria-hidden="false" class="active">
+        <div class="lf-backdrop"></div>
+        <div class="lf-stage"></div>
+    </div>
+
     <div class="exito-container">
         <div class="exito-card">
             <div class="exito-icon" id="icon">✓</div>
@@ -48,6 +55,7 @@
         </div>
     </div>
 
-    <script src="js/exito.js"></script>
+    <script src="js/page_loader.js" defer></script>
+    <script src="js/exito.js" defer></script>
 </body>
 </html>

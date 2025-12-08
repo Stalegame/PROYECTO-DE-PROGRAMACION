@@ -25,7 +25,7 @@ module.exports = {
   async getAll() {
     return prisma.product.findMany({
       include: { category: true },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { name: 'asc' },
     });
   },
 

@@ -1,136 +1,128 @@
 /* Loader page */
 
 (function() {
-  // Nombres de archivo
-  const IMG_FILES = [
-    'caramelo.png',
-    'corazon.png',
-    'paleta.png',
-    'chocolate.png',
-    'menta.png',
-    'baston.png'
-  ];
+  'use strict';
 
-  // Construye rutas RELATIVAS AL DOCUMENTO (funciona en / y subcarpetas)
-  const IMG_PATHS = IMG_FILES.map(name =>
-    new URL('img/dulces/' + name, document.baseURI).href
-  );
+  // Configuración
+  const CONFIG = {
+    IMG_FILES: ['caramelo.png', 'corazon.png', 'paleta.png', 'chocolate.png', 'menta.png', 'baston.png'],
+    CANDY_COUNT: 25,
+    SAFETY_TIMEOUT: 12000,
+    MIN_VISIBLE_TIME: 400,
+    FIRST_WAVE_COUNT: 8,
+    MAX_DELAY: 150,
+    PADDING: 16,
+    CANDY_WIDTH: 56,
+    RESIZE_DEBOUNCE: 150,
+    CHECK_INTERVAL: 100
+  };
 
+  // Elementos DOM
   const loader = document.getElementById('loader-fruna');
   if (!loader) return;
+  
   const stage = loader.querySelector('.lf-stage');
+  if (!stage) return;
 
-  // Cantidad concurrente de dulces.
-  const CANDY_COUNT = 25;
+  // Estado
+  let safetyTimer = null;
+  let resizeTimer = null;
+  let inflight = 0;
+  let stageWidth = 0;
 
-  // Crea los elementos candy
-  function createCandies() {
-    // Usa varios métodos y cae a viewport si todo da 0
-    const w = stage.clientWidth || stage.offsetWidth || Math.floor(window.innerWidth * 0.9);
-    const h = stage.clientHeight || stage.offsetHeight || Math.floor(window.innerHeight * 0.6);
+  // Construir rutas de imágenes
+  const IMG_PATHS = CONFIG.IMG_FILES.map(name => 
+    new URL(`img/dulces/${name}`, document.baseURI).href
+  );
 
-    const candies = [];
+  // Crear un dulce optimizado
+  function createCandy(index, width) {
+    const el = document.createElement('img');
+    el.className = 'lf-candy';
+    el.src = IMG_PATHS[index % IMG_PATHS.length];
+    el.alt = '';
+    el.setAttribute('aria-hidden', 'true');
 
-    for (let i = 0; i < CANDY_COUNT; i++) {
-        const el = document.createElement('img');
-        el.className = 'lf-candy';
-        el.src = IMG_PATHS[i % IMG_PATHS.length];
+    const isFirstWave = index < CONFIG.FIRST_WAVE_COUNT;
+    const x = CONFIG.PADDING + Math.random() * (width - CONFIG.PADDING * 2 - CONFIG.CANDY_WIDTH);
+    const r = Math.random() * 180 - 90;
+    const delay = isFirstWave ? 0 : Math.random() * CONFIG.MAX_DELAY;
+    const dur = 600 + Math.random() * 400;
+    const drift = Math.random() * 80 - 40;
 
-        // Oleada rápida para cargas cortas
-        const FAST_MAX_DELAY = 150;
-        const isFirstWave = i < 8;
+    el.style.cssText = `
+      --x: ${x}px;
+      --r: ${r}deg;
+      --delay: ${delay}ms;
+      --dur: ${dur}ms;
+      --drift: ${drift}px;
+    `;
 
-        // X aleatoria respetando bordes (16px a w-72 aprox)
-        const x = Math.max(16, Math.min(w - 72, Math.round(Math.random() * w)));
-        const r = Math.round(Math.random() * 180 - 90);
-        const delay = isFirstWave ? 0 : Math.round(Math.random() * FAST_MAX_DELAY);
-        const dur   = 600 + Math.round(Math.random() * 400);
+    return el;
+  }
 
-        // Pequeño “drift” horizontal para que no caigan en línea (±40px)
-        const drift = Math.round(Math.random() * 80 - 20);
+  // Inicializar dulces usando DocumentFragment
+  function initCandies() {
+    stageWidth = stage.clientWidth || window.innerWidth;
+    const fragment = document.createDocumentFragment();
 
-        el.style.setProperty('--x', x + 'px');
-        el.style.setProperty('--r', r + 'deg');
-        el.style.setProperty('--delay', delay + 'ms');
-        el.style.setProperty('--dur', dur + 'ms');
-        el.style.setProperty('--drift', drift + 'px');
-
-        candies.push(el);
+    for (let i = 0; i < CONFIG.CANDY_COUNT; i++) {
+      fragment.appendChild(createCandy(i, stageWidth));
     }
-    return candies;
-  }
 
-  // Mostrar loader (activo)
-  function showLoader() {
-    const loader = document.getElementById('loader-fruna');
-    const stage  = loader.querySelector('.lf-stage');
-
-    // 1) Mostrar primero para que tenga ancho/alto reales
-    loader.classList.remove('hidden');
-    loader.classList.add('active');
-
-    // 2) Forzar reflow (asegura medidas)
-    stage.getBoundingClientRect();
-
-    // 3) Crear dulces ya con medidas correctas
     stage.innerHTML = '';
-    createCandies().forEach(c => stage.appendChild(c));
+    stage.appendChild(fragment);
 
-    // 4) Timer de seguridad
+    // Timer de seguridad
     clearTimeout(safetyTimer);
-    safetyTimer = setTimeout(() => finishLoader(true), 12000);
+    safetyTimer = setTimeout(() => finishLoader(true), CONFIG.SAFETY_TIMEOUT);
   }
 
-  // Terminar: desvanecer
+  // Terminar loader con fade-out
   function finishLoader(fromSafety = false) {
     if (!loader.classList.contains('active')) return;
 
-    // hacemos fade-out
+    clearTimeout(safetyTimer);
+    clearTimeout(resizeTimer);
+    
+    loader.classList.add('done');
+    
     setTimeout(() => {
-      loader.classList.add('done');
-      // Remover del DOM tras fade (limpio)
-      setTimeout(() => {
-        loader.classList.remove('active', 'finishing', 'done');
-        loader.classList.add('hidden');
-        stage.innerHTML = '';
-      }, 220);
-    }, 320);
+      loader.classList.remove('active', 'done');
+      loader.classList.add('hidden');
+      loader.setAttribute('aria-hidden', 'true');
+      stage.innerHTML = '';
+      
+      // Cleanup listeners
+      window.removeEventListener('keydown', handleEscape);
+      window.removeEventListener('resize', handleResize);
+    }, 200);
   }
 
-  // Cerrar con tecla ESC
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && loader.classList.contains('active')) finishLoader();
-  });
+  // Cerrar con ESC
+  function handleEscape(e) {
+    if (e.key === 'Escape' && loader.classList.contains('active')) {
+      finishLoader();
+    }
+  }
 
-  // Recalcular en resize (para pantalla de carga adaptable)
-  window.addEventListener('resize', () => {
+  // Resize optimizado con debounce
+  function handleResize() {
     if (!loader.classList.contains('active')) return;
-    // Reasignar posiciones aleatorias de dulces
-    const els = stage.querySelectorAll('.lf-candy');
-    els.forEach(el => {
-      const x = Math.max(16, Math.min(stage.clientWidth - 72, Math.round(Math.random() * stage.clientWidth)));
-      el.style.setProperty('--x', x + 'px');
-    });
-  });
-
-  // INTEGRACIÓN
-  // 1) Mostrar loader cuanto antes (inicio de carga de la página)
-  // Nota: este script debe estar en <head> con "defer" o al final de <body>.
-  let safetyTimer = null;
-  showLoader();
-
-  // 2) Cuando el DOM está listo, cerramos (o espera a tus datos si necesitas)
-  // Si tu app hace fetch/axios, usa el contador de solicitudes para decidir.
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      finishWhenNetworkIdle();
-    });
-  } else {
-    finishWhenNetworkIdle();
+    
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      const w = stage.clientWidth;
+      const maxX = w - CONFIG.PADDING * 2 - CONFIG.CANDY_WIDTH;
+      
+      stage.querySelectorAll('.lf-candy').forEach(el => {
+        const x = CONFIG.PADDING + Math.random() * maxX;
+        el.style.setProperty('--x', `${x}px`);
+      });
+    }, CONFIG.RESIZE_DEBOUNCE);
   }
 
-  // Opción “contador de solicitudes” simple
-  let inflight = 0;
+  // Interceptar fetch para contador de red
   const origFetch = window.fetch;
   window.fetch = function(...args) {
     inflight++;
@@ -139,14 +131,40 @@
     });
   };
 
+  // Esperar a que la red esté idle
   function finishWhenNetworkIdle() {
-    const MIN_VISIBLE_TIME = 300;
     const startTime = performance.now();
+    
     const check = () => {
       const elapsed = performance.now() - startTime;
-      if (inflight === 0 && elapsed >= MIN_VISIBLE_TIME) finishLoader();
-      else setTimeout(check, 100);
+      
+      if (inflight === 0 && elapsed >= CONFIG.MIN_VISIBLE_TIME) {
+        finishLoader();
+      } else if (elapsed < CONFIG.SAFETY_TIMEOUT) {
+        setTimeout(check, CONFIG.CHECK_INTERVAL);
+      }
     };
+    
     setTimeout(check, 120);
+  }
+
+  // Event listeners
+  window.addEventListener('keydown', handleEscape, { passive: true });
+  window.addEventListener('resize', handleResize, { passive: true });
+
+  // Cleanup al cerrar página
+  window.addEventListener('beforeunload', () => {
+    clearTimeout(safetyTimer);
+    clearTimeout(resizeTimer);
+  }, { once: true });
+
+  // INICIAR - El loader ya está visible en el HTML con class="active"
+  initCandies();
+
+  // Esperar DOM + red idle
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', finishWhenNetworkIdle, { once: true });
+  } else {
+    finishWhenNetworkIdle();
   }
 })();

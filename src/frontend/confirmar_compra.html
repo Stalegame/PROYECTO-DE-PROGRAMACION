@@ -4,9 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Confirmar Pedido - FRUNA</title>
+  <link rel="icon" href="./img/logo fruna.png" type="image/png">
   <link rel="stylesheet" href="css/confirmar_compra.css" />
+  <link rel="stylesheet" href="css/page_loader.css" />
 </head>
 <body>
+  <!-- Loader Pages -->
+  <div id="loader-fruna" aria-hidden="false" class="active">
+    <div class="lf-backdrop"></div>
+    <div class="lf-stage"></div>
+  </div>
+
   <div class="container">
     <h1>Confirmar Pedido</h1>
 
@@ -90,6 +98,7 @@
     </div>
   </div>
 
-  <script src="js/confirmar_compra.js"></script>
+  <script src="js/page_loader.js" defer></script>
+  <script src="js/confirmar_compra.js" defer></script>
 </body>
 </html>

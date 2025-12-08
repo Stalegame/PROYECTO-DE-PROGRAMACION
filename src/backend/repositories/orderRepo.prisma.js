@@ -29,7 +29,7 @@ module.exports = {
             createdAt: true,
             client: { select: { name: true } }
         },
-        orderBy: { createdAt: 'asc' },
+        orderBy: { createdAt: 'desc' },
     });
   },
 
@@ -48,7 +48,7 @@ module.exports = {
     });
   },
 
-  // Obtener ultimas 4 ordenes
+  // Obtener ultimas 3 ordenes
   async getLastOrders() {
     return prisma.order.findMany({
         take: 3,
@@ -60,7 +60,7 @@ module.exports = {
             createdAt: true,
             client: { select: { name: true } }
         },
-        orderBy: { createdAt: 'asc'}
+        orderBy: { createdAt: 'desc' },
     });
   },
 
@@ -90,7 +90,8 @@ module.exports = {
     return prisma.order.create({
       data: {
         clientId: input.clientId,
-        totalAmount: input.totalAmount
+        totalAmount: input.totalAmount,
+        status: input.status || 'PENDING',
       }
     });
   },
