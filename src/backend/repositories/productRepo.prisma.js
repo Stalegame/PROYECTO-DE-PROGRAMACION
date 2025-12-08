@@ -48,6 +48,17 @@ module.exports = {
     });
   },
 
+  // Obtener productos destacados (famosos)
+  async getFamous() {
+    return prisma.product.findMany({
+      where: {
+        famous: true
+      },
+      include: { category: true },
+      orderBy: { name: 'asc' },
+    });
+  },
+
   // Crear producto
   async save(input) {
     return prisma.product.create({
@@ -58,6 +69,7 @@ module.exports = {
         description: input.description ?? null,
         image: input.image ?? null,
         categoryId: String(input.categoryId),
+        famous: Boolean(input.famous) || false,
       }
     });
   },
@@ -72,6 +84,7 @@ module.exports = {
     if (changes.description !== undefined)  data.description = changes.description ?? null;
     if (changes.image !== undefined)        data.image = changes.image ?? null;
     if (changes.categoryId !== undefined)   data.categoryId = String(changes.categoryId);
+    if (changes.famous !== undefined)       data.famous = Boolean(changes.famous);
 
     return prisma.product.update({
       where: { id },

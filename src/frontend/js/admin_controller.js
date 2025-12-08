@@ -123,6 +123,7 @@ async function loadResume() {
   await loadPreparingOrders(dataTotal.data.preparingOrders);
   await loadLowStock(dataTotal.data.lowStockProducts);
   await loadCreatedThisMonth(dataTotal.data.createdThisMonth);
+  await loadFamousProducts(dataTotal.data.famousProducts);
 }
 
 async function loadResumeOrders(data) {
@@ -185,6 +186,33 @@ async function loadCreatedThisMonth(data) {
   if (!tbody) return;
   
   tbody.innerHTML = data;
+}
+
+async function loadFamousProducts(data) {
+  const tbody = document.getElementById('products-popular-tbody');
+  if (!tbody) return;
+
+  tbody.innerHTML = '<tr><td colspan="4">Cargando productos famosos...</td></tr>';
+
+  try {
+    const items = Array.isArray(data) ? data : [];
+
+    if (!items.length) {
+      tbody.innerHTML = '<tr><td colspan="4">No hay productos famosos registrados.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = items.map(p => `
+      <tr>
+        <td>${escapeHTML(p.id)}</td>
+        <td>${escapeHTML(p.name)}</td>
+        <td>${escapeHTML(p.category.name)}</td>
+        <td>${escapeHTML(p.stock)}</td>
+      </tr>`).join('');
+
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="4">Error: ${e.message}</td></tr>`;
+  }
 }
 
 
@@ -340,12 +368,31 @@ async function openProductModalForEditById(id) {
   }
 }
 
+// Eliminar orden
+async function deleteOrder(id) {
+  try {
+    await apiFetchJSON(`/api/admin/orders/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    alert(`Pedido ${id} eliminado correctamente`);
+    await loadOrders();
+  } catch (e) {
+    alert(`No se pudo eliminar: ${e.message}`);
+  }
+}
+
 // ===================== MODAL PRODUCTOS =====================
 function np_clear() {
   ['np-name', 'np-price', 'np-stock', 'np-category', 'np-description', 'np-image'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
+  
+  // Limpiar checkbox por separado
+  const famousCheckbox = document.getElementById('np-famous');
+  if (famousCheckbox) famousCheckbox.checked = false;
+  
   const err = document.getElementById('np-error');
   if (err) { err.style.display = 'none'; err.textContent = ''; }
 }
@@ -374,6 +421,11 @@ function openProductModalForEdit(p) {
   setVal('np-price', p.price);
   setVal('np-stock', p.stock);
   setVal('np-category', p.category.name);
+  
+  // Asignar checkbox por separado
+  const famousCheckbox = document.getElementById('np-famous');
+  if (famousCheckbox) famousCheckbox.checked = Boolean(p.famous);
+  
   setVal('np-description', p.description);
   setVal('np-image', p.image);
 
@@ -389,6 +441,7 @@ async function np_save() {
   const priceRaw = document.getElementById('np-price')?.value;
   const stockRaw = document.getElementById('np-stock')?.value;
   const category = document.getElementById('np-category')?.value.trim();
+  const famous = document.getElementById('np-famous')?.checked || false;
   const description = document.getElementById('np-description')?.value.trim();
   const image = document.getElementById('np-image')?.value.trim();
   const err = document.getElementById('np-error');
@@ -398,15 +451,15 @@ async function np_save() {
 
   const problems = [];
   if (!name) problems.push('El nombre es obligatorio');
-  if (!(Number.isInteger(price) && price >= 1 && price <= 1_000_000)) problems.push('El precio debe ser un entero entre 1 y 1.000.000');
-  if (!(Number.isInteger(stock) && stock >= 0 && stock <= 1_000_000)) problems.push('El stock debe ser un entero entre 0 y 1.000.000');
+  if (!(Number.isInteger(price) && price >= 1 && price <= 10_000_000)) problems.push('El precio debe ser un entero entre 1 y 10.000.000');
+  if (!(Number.isInteger(stock) && stock >= 1 && stock <= 1_000_000)) problems.push('El stock debe ser un entero entre 1 y 1.000.000');
 
   if (problems.length) {
     if (err) { err.textContent = '• ' + problems.map(escapeHTML).join('\n• '); err.style.display = 'block'; }
     return;
   }
 
-  const payload = { name, price, stock, category, description, image };
+  const payload = { name, price, stock, category, famous, description, image };
 
   try {
     if (currentEditId) {
@@ -454,7 +507,7 @@ async function loadOrders() {
         <td>${escapeHTML(o.totalAmount)}</td>
         <td>${escapeHTML(o.status)}</td>
         <td>
-          <button class="btn-delete"  data-action="del" data-id="${escapeHTML(o.id)}">Eliminar</button>
+          <button class="btn-delete"  data-action="del-orders" data-id="${escapeHTML(o.id)}">Eliminar</button>
         </td>
       </tr>`).join('');
 
@@ -567,6 +620,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } else if (action === 'edit') {
       openProductModalForEditById(id);
+    }
+
+    if (action === 'del-orders') {
+      if (confirm(`¿Eliminar pedido ${id}?`)) {
+        deleteOrder(id);
+      }
     }
   });
 

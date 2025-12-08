@@ -18,6 +18,7 @@ router.get('/dashboard', async (_req, res) => {
     dataTotal.sumOfDay = await ordersDAO.getSumOfDay();
     dataTotal.lowStockProducts = await productosDAO.getLowStock();
     dataTotal.createdThisMonth = await clientesDAO.getCreatedThisMonth();
+    dataTotal.famousProducts = await productosDAO.getFamous();
 
     res.status(200).json({
       success: true,
@@ -64,6 +65,32 @@ router.get('/orders', async (_req, res) => {
     res.status(500).json({
       success: false,
       error: 'Error obteniendo pedidos'
+    });
+  }
+});
+
+// Eliminar pedido
+router.delete('/orders/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const eliminado = await ordersDAO.delete(id);
+
+    if (!eliminado) {
+      return res.status(404).json({
+        success: false,
+        error: 'No se encontró este pedido'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Pedido eliminado correctamente'
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: 'Error eliminando pedido'
     });
   }
 });
@@ -174,7 +201,7 @@ router.post('/products', async (req, res) => {
     let categoryRecord = await categoriaDAO.getByName(category);
 
     if (!categoryRecord) {
-      categoryRecord = await categoriaDAO.save(category);
+      categoryRecord = await categoriaDAO.save({ name: category });
     }
 
     const nuevo = await productosDAO.save({

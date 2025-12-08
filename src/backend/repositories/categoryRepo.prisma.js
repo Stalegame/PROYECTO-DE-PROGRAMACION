@@ -45,7 +45,7 @@ module.exports = {
   async save(input) {
     return prisma.category.create({
       data: {
-        name: String(input.name).trim(),
+        name: input.name.trim(),
       }
     });
   },

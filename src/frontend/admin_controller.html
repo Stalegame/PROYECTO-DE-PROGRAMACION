@@ -46,13 +46,13 @@
                     <div class="stat-card">
                         <h3>VENTAS HOY</h3>
                         <div class="number" id="ventas-hoy">0</div>
-                        <div class="trend">Valor total en Ventas</div>
+                        <div class="trend">Valor en ventas diarias</div>
                     </div>
                     
                     <div class="stat-card">
                         <h3>PEDIDOS ACTIVOS</h3>
                         <div class="number" id="pedidos-activos">0</div>
-                        <div class="trend negative">Pedidos pendientes de entrega</div>
+                        <div class="trend negative">Pedidos en preparación</div>
                     </div>
                     
                     <div class="stat-card">
@@ -70,7 +70,7 @@
                 
                 <div class="table-section">
                     <div class="table-header">
-                        <h2>Últimos Pedidos Recientes</h2>
+                        <h2>Últimos Pedidos</h2>
                     </div>
                     
                     <table>
@@ -97,9 +97,9 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Producto</th>
+                                <th>ID Producto</th>
+                                <th>Nombre</th>
                                 <th>Categoría</th>
-                                <th>Ventas</th>
                                 <th>Stock</th>
                             </tr>
                         </thead>
@@ -159,6 +159,10 @@
                         <div class="form-group">
                             <label for="np-category">Categoría</label>
                             <input type="text" id="np-category" placeholder="Alfajores">
+                        </div>
+                        <div class="form-group">
+                            <label for="np-famous">Destacado</label>
+                            <input type="checkbox" id="np-famous">
                         </div>
                         <div class="form-group">
                             <label for="np-description">Descripción</label>
