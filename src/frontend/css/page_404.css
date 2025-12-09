@@ -1,48 +1,201 @@
 /* Estilos específicos para página 404 */
-/* Variables locales ya definidas en main.css */
 
-/* Contenido de 404 */
+/* Variables Globales */
+:root {
+  /* Colores principales */
+  --rosa: #E91E63;
+  --rosaOsc: #C2185B;
+  
+  /* Colores complementarios */
+  --amarillo: #FFC107;
+  --amarillo-hover: #FFD54F;
+  
+  /* Textos */
+  --text: #333;
+  --text-secondary: #555;
+  
+  /* Efectos */
+  --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.15);
+  --transition-normal: all 0.3s ease;
+}
+
+/* Reset CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body y Backgrounds */
 body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  color: var(--text);
+  background: linear-gradient(-45deg, #f5f5f5, #ffe4e1, #f8bbd0, #fff9fa);
+  background-size: 400% 400%;
+  animation: gradientBG 20s ease infinite;
+  margin: 0;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Header Global */
+header {
+  background: linear-gradient(135deg, var(--rosa) 0%, var(--rosaOsc) 100%);
+  padding: 20px 0;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  width: 100%;
 }
 
 /* Logo específico */
 .logo-container { 
-  max-width: 200px;
-  margin: 0 auto;
-}
-.content{
-  flex:1;
-  width:100%;
-  max-width:900px;
-  margin:50px 16px 40px;
-  text-align:center;
-}
-.code{
-  font-size: clamp(80px, 16vw, 160px);
-  line-height:.9;
-  font-weight:900;
-  color: var(--rosa);
-  text-shadow: 0 6px 15px rgba(233,30,99,.30);
-  letter-spacing:2px;
-  margin-bottom:8px;
-}
-.title{
-  font-size: clamp(22px, 3.5vw, 28px);
-  color: var(--text-secondary);
-  margin-bottom:10px;
-}
-.desc{
-  font-size: clamp(16px, 2.8vw, 20px);
-  color: var(--text-secondary);
-  margin-bottom:32px;
+  margin: 10px auto;
+  text-align: center;
+  max-width: 250px;
 }
 
-/* Responsive*/
-@media (max-width: 480px) {
-  .code{
+.logo-container img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Contenido principal */
+.content {
+  flex: 1;
+  width: 100%;
+  max-width: 900px;
+  margin: 50px auto 40px;
+  padding: 0 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.code {
+  font-size: clamp(80px, 16vw, 160px);
+  line-height: 0.9;
+  font-weight: 900;
+  color: var(--rosa);
+  text-shadow: 0 6px 15px rgba(233, 30, 99, 0.30);
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.title {
+  font-size: clamp(24px, 4vw, 32px);
+  color: var(--text);
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.desc {
+  font-size: clamp(16px, 2.8vw, 20px);
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+  line-height: 1.5;
+}
+
+/* Botón Volver */
+.btn-volver {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--amarillo);
+  color: var(--text);
+  font-size: clamp(18px, 3vw, 22px);
+  font-weight: bold;
+  padding: 14px 32px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  text-decoration: none;
+  margin-top: 20px;
+}
+
+.btn-volver:hover {
+  background: var(--amarillo-hover);
+  text-decoration: none;
+  transform: scale(1.05);
+}
+
+.btn-volver:active {
+  transform: translateY(0);
+}
+
+.btn-volver img {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+/* Footer */
+footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: auto;
+  width: 100%;
+}
+
+footer p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .content {
+    margin: 30px auto 30px;
+  }
+  
+  .code {
     font-size: clamp(60px, 20vw, 120px);
+  }
+  
+  .btn-volver {
+    font-size: 18px;
+    padding: 12px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 0 15px;
+  }
+  
+  .code {
+    margin-bottom: 15px;
+  }
+  
+  .title {
+    margin-bottom: 10px;
+  }
+  
+  .desc {
+    margin-bottom: 30px;
+  }
+  
+  .btn-volver img {
+    width: 18px;
+    height: 18px;
   }
 }

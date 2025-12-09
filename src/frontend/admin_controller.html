@@ -6,9 +6,16 @@
     <title>Panel Administración - Fruna Chile</title>
     <link rel="icon" href="./img/logo_fruna.png" type="image/png">
     <link rel="stylesheet" href="css/admin_controller.css">
+    <link rel="stylesheet" href="css/page_loader.css">
 </head>
 
 <body>
+    <!-- Loader Pages -->
+    <div id="loader-fruna" aria-hidden="false" class="active">
+        <div class="lf-backdrop"></div>
+        <div class="lf-stage"></div>
+    </div>
+
     <div class="container">
         <div class="sidebar">
             <div class="logo-container">
@@ -250,6 +257,7 @@
         </div>
     </div>
 
-    <script src="/js/admin_controller.js"></script>
+    <script src="js/page_loader.js" defer></script>
+    <script src="js/admin_controller.js" defer></script>
 </body>
 </html>

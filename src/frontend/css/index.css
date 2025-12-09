@@ -2,9 +2,7 @@
 
 /* Variables locales ya están en main.css */
 
-/* CATEGORÍAS */
 /* Logo específico con max-width menor */
-/* ======== NAV específico ======== */
 .main-nav {
   display: flex; justify-content: center; gap: 30px;
   padding: 14px 16px; background: #fff;
