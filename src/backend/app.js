@@ -55,7 +55,7 @@ const apiLimiter = rateLimit({
 });
 const strictLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
+  max: 15,
   message: { error: 'Demasiados intentos fallidos. Espera 15 minutos.' }
 });
 app.use('/api/', apiLimiter);

@@ -14,7 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loading) loading.style.display = 'block';
 
     const fd = new FormData(form);
+    console.log('Formulario datos:', ...fd.entries());
     const body = new URLSearchParams(fd);
+    console.log('Cuerpo URLSearchParams:', body.toString());
 
     try {
       const res = await fetch('/api/clients/register', {
@@ -23,8 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         body
       });
 
-      let data = {};
-      try { data = await res.json(); } catch {}
+      let data = await res.json();
 
       if (!res.ok || data.success === false) {
         let msg ='No se pudo registrar. Revisa tus datos.';

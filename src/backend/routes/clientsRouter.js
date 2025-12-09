@@ -45,7 +45,7 @@ const validateLogin = [
 ];
 
 const validateRegister = [
-  body('nombre')
+  body('name')
     .trim()
     .notEmpty().withMessage('Tienes que poner tu nombre').bail()
     .isLength({ min: 2, max: 60 }).withMessage('Tu nombre debe tener entre 2 y 60 letras').bail()
@@ -75,12 +75,12 @@ const validateRegister = [
       return tiposDeCaracteres >= 2;
     }).withMessage('Tu contraseña debe combinar al menos 2 de estos: mayúsculas, minúsculas, números o símbolos'),
 
-  body('telefono')
+  body('phone')
     .trim()
     .notEmpty().withMessage('Tienes que poner tu teléfono').bail()
     .matches(/^\d{8}$/).withMessage('Tu teléfono debe tener exactamente 8 números'),
 
-  body('direccion')
+  body('address')
     .customSanitizer(v => typeof v === 'string' ? v.trim() : v)
     .optional({ nullable: true, checkFalsy: true }) // la dirección es opcional
     .isLength({ min: 5, max: 120 }).withMessage('Tu dirección debe tener entre 5 y 120 caracteres')
@@ -156,7 +156,7 @@ router.post('/login', validateLogin, handleValidationErrors, async (req, res) =>
 router.post('/register', validateRegister, handleValidationErrors, async (req, res) => {
   try {
     // Tomamos solo los campos que nos interesan (por seguridad y para evitar basura)
-    const input = pickAllowedFields(req.body, ['nombre', 'email', 'telefono', 'password', 'direccion']);
+    const input = pickAllowedFields(req.body, ['name', 'email', 'phone', 'password', 'address']);
     
     // Guardamos el nuevo cliente en nuestra base de datos
     const cliente = await clientesDAO.save(input);

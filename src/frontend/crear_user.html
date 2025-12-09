@@ -38,27 +38,27 @@
       <form id="form-registro" action="/api/clients/register" method="POST">
         <div class="form-group">
           <i class="fas fa-user"></i>
-          <input type="text" id="nombre" name="nombre" placeholder="Nombre completo" required />
+          <input type="text" id="name" name="name" placeholder="Nombre completo" required maxlength="40"/>
         </div>
 
         <div class="form-group">
           <i class="fas fa-envelope"></i>
-          <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" required />
+          <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" required maxlength="40"/>
         </div>
 
         <div class="form-group">
           <i class="fas fa-lock"></i>
-          <input type="password" id="password" name="password" placeholder="Crea una contraseña" required />
+          <input type="password" id="password" name="password" placeholder="Crea una contraseña" required maxlength="24"/>
         </div>
 
         <div class="form-group">
           <i class="fas fa-phone"></i>
-          <input type="tel" id="telefono" name="telefono" placeholder="Ej: 12345678" pattern="\d{8}" inputmode="numeric" title="El teléfono debe tener solo numeros y tener exactamente 8 dígitos" />
+          <input type="tel" id="phone" name="phone" placeholder="Ej: 12345678" pattern="\d{8}" inputmode="numeric" title="El teléfono debe tener solo numeros y tener exactamente 8 dígitos" maxlength="8"/>
         </div>
 
         <div class="form-group">
           <i class="fas fa-location-dot"></i>
-          <textarea id="direccion" name="direccion" placeholder="Ingresa tu dirección"></textarea>
+          <textarea id="address" name="address" placeholder="Ingresa tu dirección" maxlength="50"></textarea>
         </div>
 
         <button type="submit" class="btn-registrar">
