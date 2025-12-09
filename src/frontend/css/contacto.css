@@ -130,4 +130,5 @@ button:active { transform: scale(0.98); box-shadow: 0 4px 12px rgba(233,30,99,0.
 @media (max-width: 900px){
   .main-nav { gap: 16px; }
   .nav-pill { padding: 10px 24px; }
+  .contenido { margin: 30px auto; padding: 0 10px; gap: 20px; }
 }

@@ -237,3 +237,10 @@
     opacity: 1;
     pointer-events: all;
 }
+
+/* Responsive */
+@media (max-width: 400px) {
+    .sidebar {
+        width: 100%;
+    }
+}

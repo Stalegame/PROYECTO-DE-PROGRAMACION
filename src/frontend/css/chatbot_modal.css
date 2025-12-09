@@ -267,6 +267,11 @@
     .chat-input-area button {
         padding: 10px 16px;
     }
+
+    .message p {
+        max-width: 90%;
+        font-size: 0.9em;
+    }
 }
 
 /* Z-index prioritario */

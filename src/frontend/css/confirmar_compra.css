@@ -104,7 +104,96 @@ h1, h2 {
 .paso { display: none; }
 .paso.activo { display: block; }
 
+/* Resumen de compra */
+#resumen-compra {
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+#resumen-compra h3 {
+  color: var(--rosaOsc);
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+#resumen-compra h4 {
+  color: var(--rosaOsc);
+  margin: 15px 0 10px 0;
+  font-size: 1.1rem;
+}
+
+#resumen-compra p {
+  margin: 8px 0;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+#resumen-compra p strong {
+  color: var(--rosaOsc);
+  min-width: 110px;
+  display: inline-block;
+}
+
+#resumen-compra hr {
+  border: none;
+  border-top: 2px solid var(--rosaAlt);
+  margin: 15px 0;
+  opacity: 0.5;
+  box-shadow: var(--shadow-sm);
+}
+
+#resumen-compra ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+#resumen-compra ul li {
+  background: #fff;
+  padding: 10px 15px;
+  margin: 6px 0;
+  border-radius: 6px;
+  border-left: var(--border-rosa);
+  border-bottom: var(--border-rosa);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: var(--transition-fast);
+}
+
+#resumen-compra ul li:hover {
+  transform: translateX(2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Acciones (botones de navegación) */
+.acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  justify-content: space-between;
+}
+
+.acciones .btn {
+  flex: 1;
+  margin-top: 0;
+}
+
+.acciones .btn.secundario {
+  background: var(--grisSuave);
+  color: var(--text);
+  border: 2px solid #ddd;
+}
+
+.acciones .btn.secundario:hover {
+  background: #e0e0e0;
+  border-color: #ccc;
+}
+
 .footer-links a {
+  font-size: medium;
   color: var(--rosa);
   text-decoration: none;
 }
@@ -114,3 +203,17 @@ h1, h2 {
 .progreso-fill.paso-1 { width: 33%; }
 .progreso-fill.paso-2 { width: 66%; }
 .progreso-fill.paso-3 { width: 100%; }
+
+/* Estilos responsivos */
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+  .producto {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .acciones {
+    flex-direction: column;
+  }
+}

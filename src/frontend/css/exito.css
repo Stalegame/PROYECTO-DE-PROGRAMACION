@@ -135,4 +135,17 @@
     background: #d0d0d0;
 }
 
-/* Mensajes heredados de main.css */
+/* Responsive */
+@media (max-width: 600px) {
+    .exito-card {
+        padding: 30px 20px;
+    }
+
+    .exito-card h1 {
+        font-size: 24px;
+    }
+
+    .exito-icon {
+        font-size: 60px;
+    }
+}

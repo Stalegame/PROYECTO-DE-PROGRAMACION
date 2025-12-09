@@ -39,3 +39,10 @@ body {
   color: var(--text-secondary);
   margin-bottom:32px;
 }
+
+/* Responsive*/
+@media (max-width: 480px) {
+  .code{
+    font-size: clamp(60px, 20vw, 120px);
+  }
+}

@@ -114,8 +114,23 @@ header{
 
 /* Responsive */
 @media (max-width:600px){
-    .btn-volver{left:15px;top:15px;font-size:13px;padding:8px 12px;position:absolute}
-    .contenedor-principal{margin-top:60px}
-    header{padding:15px}
-    .registro-box{padding:30px 20px}
+    .btn-volver {
+        left:15px;
+        top:15px;
+        font-size:13px;
+        padding:8px 12px;
+        position:absolute;
+    }
+
+    .contenedor-principal {
+        margin-top:60px;
+    }
+
+    header {
+        padding:15px;
+    }
+
+    .registro-box{
+        padding:30px 20px;
+    }
 }

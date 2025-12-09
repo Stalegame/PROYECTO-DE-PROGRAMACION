@@ -334,3 +334,14 @@ table th {
 .confirm-modal .modal-actions {
     justify-content: center;
 }
+
+/* Responsive */
+@media (max-width: 600px) {
+    table {
+        font-size: 14px;
+    }
+
+    .modal {
+        width: 90vw;
+    }
+}

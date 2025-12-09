@@ -43,14 +43,14 @@
     <section id="paso-entrega" class="paso">
       <h2>Información de Entrega</h2>
       <form id="form-entrega" class="formulario-entrega">
-        <div class="campo">
+        <div class="form-group">
           <label for="direccion">Dirección:</label>
-          <input type="text" id="direccion" required placeholder="Ej: Av. Siempre Viva 123" />
+          <input type="text" id="direccion" required placeholder="Ej: Av. Siempre Viva 123" maxlength="80"/>
         </div>
-        <div class="campo">
+        <div class="form-group">
           <label for="region">Región:</label>
           <select id="region" required>
-            <option value="">Seleccione su región</option>
+            <option value="">Seleccione su región...</option>
             <option>Arica y Parinacota</option>
             <option>Tarapacá</option>
             <option>Antofagasta</option>
@@ -69,13 +69,13 @@
             <option>Magallanes</option>
           </select>
         </div>
-        <div class="campo">
+        <div class="form-group">
           <label for="comuna">Comuna:</label>
-          <input type="text" id="comuna" required placeholder="Ej: Santiago Centro" />
+          <input type="text" id="comuna" required placeholder="Ej: Santiago Centro" maxlength="50"/>
         </div>
-        <div class="campo">
+        <div class="form-group">
           <label for="comentarios">Comentarios (opcional):</label>
-          <textarea id="comentarios" rows="3" placeholder="Ej: entregar en portería..."></textarea>
+          <textarea id="comentarios" rows="3" placeholder="Ej: entregar en portería..." maxlength="200"></textarea>
         </div>
       </form>
       <div class="acciones">
@@ -91,7 +91,7 @@
       <div class="acciones">
         <button id="btn-volver2" class="btn secundario">← Volver</button>
       </div>
-      <button id="btn-confirmar" class="btn-confirmar">Confirmar Compra</button>
+      <button id="btn-confirmar" class="btn">Confirmar Compra</button>
     </section>
 
     <div class="footer-links">

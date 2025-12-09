@@ -279,6 +279,22 @@ header {
 .form-group textarea {
     resize: vertical;
     min-height: 86px;
+
+}
+
+.form-group select {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 15px 10px;
+    font-size: 16px;
+    background: transparent;
+    color: var(--text);
+    width: 100%;
+    appearance: none;
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 8px 10px;
 }
 
 /* Inputs sin form-group */
@@ -286,6 +302,7 @@ input,
 textarea,
 select {
     font-family: inherit;
+    font-size: 16px;
 }
 
 input:focus,

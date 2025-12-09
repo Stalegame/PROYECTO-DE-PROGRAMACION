@@ -1,24 +1,6 @@
 /* Estilos específicos para página de productos */
 /* Variables ya definidas en main.css */
 
-/* Overlay oscuro detrás del carrito */
-.sidebar-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.3);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  z-index: 9998;
-  opacity: 0;
-  pointer-events: none;
-  transition: var(--transition-normal);
-}
-.sidebar.active ~ .sidebar-overlay {
-  opacity: 1;
-  pointer-events: all;
-}
-
 /* Notificación */
 .notif{
   position:fixed; top:20px; right:20px; background:var(--amarillo); color:#333;
@@ -28,7 +10,7 @@
 }
 .notif.show{ opacity:1; transform:translateY(0) }
 
-/* ====== CATÁLOGO ====== */
+/* CATÁLOGO */
 .contenedor{
   display:flex; max-width:1200px; margin:20px auto; gap:20px; padding:0 16px
 }
@@ -88,7 +70,7 @@
 }
 .btn-comprar:hover{ background:var(--rosaOsc) }
 
-/* ====== FICHA DE PRODUCTO (one_product.html) — opcional ====== */
+/* FICHA DE PRODUCTO (one_product.html) */
 .product-page{
   max-width:1200px; margin:20px auto; padding:0 16px;
   display:grid; grid-template-columns:1fr 1.2fr; gap:28px
@@ -136,7 +118,56 @@
   font-size: 20px;
 }
 
-/* ====== RESPONSIVE ====== */
+
+/* Estados de carga y error */
+.loading, .empty, .error {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.error {
+  color: #d32f2f;
+  background: #ffebee;
+  border-radius: 8px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 20px 0;
+}
+
+.pag-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #eee;
+  cursor: pointer;
+}
+
+.pag-btn.active {
+  background: #ff006e;
+  color: white;
+}
+
+.pag-btn:disabled {
+  background: #ddd;
+  cursor: not-allowed;
+}
+
+/* RESPONSIVE */
 @media (max-width: 900px){
   .contenedor{ flex-direction:column }
   .filtros{ width:auto }
@@ -227,52 +258,4 @@
   .filtros li {
     margin: 8px 0;
   }
-}
-
-/* Estados de carga y error */
-.loading, .empty, .error {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 40px 20px;
-  font-size: 1.1rem;
-  color: #666;
-}
-
-.error {
-  color: #d32f2f;
-  background: #ffebee;
-  border-radius: 8px;
-}
-
-.search-input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-  margin: 20px 0;
-}
-
-.pag-btn {
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  background: #eee;
-  cursor: pointer;
-}
-
-.pag-btn.active {
-  background: #ff006e;
-  color: white;
-}
-
-.pag-btn:disabled {
-  background: #ddd;
-  cursor: not-allowed;
 }
