@@ -65,6 +65,9 @@ body {
     background-size: 400% 400%;
     animation: gradientBG 20s ease infinite;
     margin: 0;
+    overflow-x: hidden;
+    max-width: 100%;
+    width: 100%;
 }
 
 @keyframes gradientBG {
@@ -79,6 +82,8 @@ header {
     padding: 20px 0;
     box-shadow: var(--shadow-md);
     text-align: center;
+    width: 100%;
+    max-width: 100%;
 }
 
 .header-inner {
@@ -90,6 +95,7 @@ header {
     gap: 16px;
     min-height: 72px;
     padding: 0 16px;
+    width: 100%;
 }
 
 /* Logo */
@@ -303,6 +309,7 @@ textarea,
 select {
     font-family: inherit;
     font-size: 16px;
+    max-width: 100%;
 }
 
 input:focus,
@@ -321,18 +328,23 @@ select:focus {
     border-top: 1px solid rgba(0, 0, 0, 0.06);
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 .nav-pill {
     display: inline-block;
-    padding: 10px 40px;
+    padding: 10px clamp(20px, 5vw, 40px);
     border-radius: 9999px;
     text-decoration: none;
     font-weight: 600;
+    font-size: clamp(14px, 2.5vw, 16px);
     color: var(--rosa);
     background: #fff;
     border: var(--border-rosa);
     transition: var(--transition-normal);
+    white-space: nowrap;
 }
 
 .nav-pill:hover,
@@ -353,9 +365,13 @@ select:focus {
     background-color: var(--amarillo);
     color: var(--text);
     text-align: center;
-    padding: 15px;
+    padding: 15px 10px;
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: clamp(0.9em, 3vw, 1.2em);
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    word-wrap: break-word;
 }
 
 /* Contenedor Principal (Formularios) */
@@ -368,6 +384,7 @@ select:focus {
     width: 100%;
     max-width: 560px;
     margin: 40px auto 20px;
+    padding: 0 16px;
 }
 
 /* Caja de formulario estilo tarjeta */
@@ -549,17 +566,15 @@ select:focus {
     text-decoration: underline;
 }
 
-/* Footer General */
-.footer,
+/* FOOTER */
 footer {
-    width: 100%;
-    background: var(--text);
+    background-color: #333;
     color: white;
     text-align: center;
     padding: 20px;
-    margin-top: 50px;
-    font-size: 14px;
-    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.15);
+    margin-top: 30px;
+    width: 100%;
+    max-width: 100%;
 }
 
 .footer p,
@@ -621,6 +636,30 @@ footer p {
     
     .sidebar {
         width: 100%;
+    }
+    
+    .main-nav {
+        gap: 8px;
+        padding: 12px 10px;
+    }
+    
+    .nav-pill {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 414px) {
+    .main-nav {
+        gap: 6px;
+        padding: 10px 8px;
+        flex-wrap: wrap;
+    }
+    
+    .nav-pill {
+        padding: 7px 12px;
+        font-size: 13px;
+        flex: 0 1 auto;
     }
 }
 

@@ -25,6 +25,7 @@
     width:100%;
     max-width:560px;
     margin:40px auto 20px;
+    padding: 0 16px;
 }
 
 /* Logo más pequeño en login */

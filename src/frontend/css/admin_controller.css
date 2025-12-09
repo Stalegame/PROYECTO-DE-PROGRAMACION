@@ -11,15 +11,20 @@
 body {
     background-color: #f5f5f5;
     color: #333;
+    overflow-x: hidden;
+    max-width: 100%;
 }
 
 .container {
     display: flex;
     min-height: 100vh;
+    width: 100%;
+    max-width: 100%;
 }
 
 .sidebar {
     width: 250px;
+    max-width: 100%;
     background-color: #E91E63;
     color: white;
     padding: 20px 0;
@@ -31,6 +36,7 @@ body {
     margin: 10px auto;
     text-align: center;
     max-width: 180px;
+    width: 100%;
 }
 
 .site-logo {
@@ -67,6 +73,9 @@ body {
 .main-content {
     flex: 1;
     padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 .header {
@@ -120,6 +129,8 @@ body {
     padding: 20px;
     margin-bottom: 30px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow-x: auto;
+    max-width: 100%;
 }
 
 .table-header {

@@ -3,10 +3,13 @@
 body {
   padding: 20px;
   color: var(--text);
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 .container {
   max-width: 650px;
+  width: 100%;
   margin: auto;
   background: #fff;
   padding: 25px;

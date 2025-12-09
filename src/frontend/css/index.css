@@ -11,11 +11,20 @@
   border-top: 1px solid rgba(0,0,0,0.06);
   border-bottom: 1px solid rgba(0,0,0,0.06);
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
 }
 .nav-pill {
-  display: inline-block; padding: 10px 40px;
-  border-radius: 9999px; text-decoration: none; font-weight: 600;
-  color: var(--rosa); background: #fff; border: var(--border-rosa);
+  display: inline-block; 
+  padding: 10px clamp(20px, 5vw, 40px);
+  border-radius: 9999px; 
+  text-decoration: none; 
+  font-weight: 600;
+  font-size: clamp(14px, 2.5vw, 16px);
+  color: var(--rosa); 
+  background: #fff; 
+  border: var(--border-rosa);
   transition: var(--transition-normal);
 }
 .nav-pill:hover, .nav-pill:focus {
@@ -35,6 +44,7 @@
     padding: 30px 20px;
     max-width: 1200px;
     margin: 0 auto;
+    width: 100%;
 }
 .categorias h2 {
     margin-bottom: 30px;
@@ -46,12 +56,15 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    width: 100%;
+    max-width: 100%;
 }
 .categoria {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 150px;
+    max-width: 100%;
     margin: 10px;
     text-align: center;
     transition: transform 0.3s;
@@ -61,6 +74,7 @@
 }
 .categoria img {
     width: 100px;
+    max-width: 100%;
     height: 100px;
     object-fit: cover;
     border-radius: 50%;
@@ -90,6 +104,7 @@
     text-align: center;
     max-width: 1200px;
     margin: 0 auto;
+    width: 100%;
 }
 .destacados h2 {
     margin-bottom: 30px;
@@ -98,7 +113,7 @@
 }
 .productos-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr));
     gap: 20px;
     justify-items: center;
 }
@@ -110,9 +125,11 @@
     transition: transform 0.3s;
     width: 100%;
     max-width: 250px;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: hidden;
 }
 .producto:hover { transform: translateY(-5px); }
 .producto img {

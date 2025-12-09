@@ -4,11 +4,14 @@ body {
     display: flex;
     flex-direction: column;
     padding: 20px;
+    overflow-x: hidden;
+    max-width: 100%;
 }
 
 /* Ajuste contenedor para max-width menor */
 .contenedor-principal {
     max-width: 500px;
+    width: 100%;
 }
 
 /* Header específico con borde redondeado superior */

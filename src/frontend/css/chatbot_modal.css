@@ -32,7 +32,9 @@
     bottom: 100px;
     right: 30px;
     width: 380px;
+    max-width: calc(100vw - 60px);
     height: 500px;
+    max-height: calc(100vh - 150px);
     background: white;
     border-radius: 15px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);

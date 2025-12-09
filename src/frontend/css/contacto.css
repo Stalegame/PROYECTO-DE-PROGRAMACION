@@ -8,6 +8,16 @@
 }
 
 /* Logo específico con max-width menor */
+header {
+  width: 100%;
+  max-width: 100%;
+}
+
+.logo-container {
+  width: 100%;
+  max-width: 250px;
+}
+
 /* ======== NAV específico ======== */
 .main-nav {
   display: flex; justify-content: center; gap: 30px;
@@ -15,12 +25,22 @@
   border-top: 1px solid rgba(0,0,0,0.06);
   border-bottom: 1px solid rgba(0,0,0,0.06);
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
 }
 .nav-pill {
-  display: inline-block; padding: 10px 40px;
-  border-radius: 9999px; text-decoration: none; font-weight: 600;
-  color: var(--rosa); background: #fff; border: var(--border-rosa);
+  display: inline-block; 
+  padding: 10px clamp(20px, 5vw, 40px);
+  border-radius: 9999px; 
+  text-decoration: none; 
+  font-weight: 600;
+  font-size: clamp(14px, 2.5vw, 16px);
+  color: var(--rosa); 
+  background: #fff; 
+  border: var(--border-rosa);
   transition: var(--transition-normal);
+  white-space: nowrap;
 }
 .nav-pill:hover, .nav-pill:focus {
   background: var(--rosa); color: #fff;
@@ -38,6 +58,7 @@
 /* ======== CONTENIDO ======== */
 .contenido {
   max-width: 1000px;
+  width: 100%;
   margin: 50px auto;
   padding: 0 20px;
   display: flex; flex-wrap: wrap; gap: 30px;
@@ -46,8 +67,13 @@
 
 /* ======== TARJETAS ======== */
 .formulario, .info-contacto {
-  flex: 1; min-width: 320px; max-width: 500px;
-  background: #fff; padding: 40px 30px; border-radius: 25px;
+  flex: 1; 
+  min-width: min(280px, 100%);
+  max-width: 500px;
+  width: 100%;
+  background: #fff; 
+  padding: 40px 30px; 
+  border-radius: 25px;
   box-shadow: 0 10px 25px rgba(233,30,99,0.15);
   transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -100,14 +126,6 @@ button:active { transform: scale(0.98); box-shadow: 0 4px 12px rgba(233,30,99,0.
   box-shadow: 0 6px 18px rgba(0,0,0,0.1);
 }
 
-/* ======== FOOTER específico ======== */
-.footer {
-  background: var(--text); color: white; text-align: center;
-  padding: 20px; margin-top: 50px; font-size: 14px;
-  box-shadow: 0 -3px 10px rgba(0,0,0,0.15);
-}
-.footer p { margin: 0; }
-
 /* ======== ACCESIBILIDAD ======== */
 /* Contenedor y frame sin estilos inline (CSP safe) */
 .mapa {
@@ -131,4 +149,47 @@ button:active { transform: scale(0.98); box-shadow: 0 4px 12px rgba(233,30,99,0.
   .main-nav { gap: 16px; }
   .nav-pill { padding: 10px 24px; }
   .contenido { margin: 30px auto; padding: 0 10px; gap: 20px; }
+}
+
+@media (max-width: 600px){
+  .contenido { 
+    margin: 20px auto; 
+    padding: 0 12px; 
+    gap: 15px; 
+  }
+  .formulario, .info-contacto {
+    padding: 30px 20px;
+    border-radius: 15px;
+    min-width: 0;
+    width: 100%;
+  }
+  .main-nav {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .nav-pill {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+  input, textarea {
+    font-size: 14px;
+    padding: 12px 12px 12px 40px;
+  }
+  button {
+    padding: 12px 20px;
+    font-size: 15px;
+  }
+  .mapa {
+    height: 250px;
+  }
+}
+
+@media (max-width: 414px){
+  .formulario, .info-contacto {
+    padding: 25px 16px;
+    min-width: 0;
+  }
+  .contenido {
+    padding: 0 8px;
+  }
 }
