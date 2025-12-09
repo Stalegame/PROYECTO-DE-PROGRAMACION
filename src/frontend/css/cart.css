@@ -1,0 +1,239 @@
+/* Hoja de estilos para el carrito */
+
+/* Sidebar Carrito */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 360px;
+    height: 100%;
+    background: var(--bg);
+    border-right: 4px solid var(--rosa);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 6px 0 20px rgba(0, 0, 0, 0.25);
+    transition: left 0.4s ease, opacity 0.4s ease;
+    z-index: 9999;
+    font-family: 'Poppins', sans-serif;
+    opacity: 0;
+}
+
+.sidebar.active {
+    left: 0;
+    opacity: 1;
+    animation: sidebarSlide 0.4s ease forwards;
+}
+
+@keyframes sidebarSlide {
+    from {
+        transform: translateX(-40px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, var(--rosa), var(--rosa-osc));
+    padding: 16px 18px;
+    border-bottom: 3px solid var(--amarillo);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.titulo-carrito {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.cerrar-sidebar {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.cerrar-sidebar:hover {
+    transform: scale(1.2);
+    color: var(--amarillo);
+}
+
+.carrito-items {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px 12px;
+}
+
+.carrito-items::-webkit-scrollbar {
+    width: 6px;
+}
+
+.carrito-items::-webkit-scrollbar-thumb {
+    background: var(--amarillo);
+    border-radius: 4px;
+}
+
+.carrito-items::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Botón Carrito */
+.btn-shop-bag {
+    justify-self: start;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    padding: 6px 8px;
+    border-radius: 10px;
+    color: #fff;
+    transition: var(--transition-normal);
+}
+
+.icono-btn2 {
+    width: 80px;
+    height: 80px;
+    display: block;
+}
+
+.contador-carrito {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--amarillo);
+    color: var(--text);
+    font-weight: 700;
+    font-size: 15px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Items del carrito - estilos específicos */
+.carrito-item {
+    background: #fff;
+    padding: 14px 16px;
+    border-radius: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    border-left: 5px solid var(--rosa);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    animation: fadeSlide 0.4s ease forwards;
+    opacity: 0;
+    transform: translateX(-20px);
+}
+@keyframes fadeSlide {
+    to { opacity: 1; transform: translateX(0); }
+}
+.item-img {
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid var(--amarillo);
+    flex-shrink: 0;
+}
+.item-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.item-nombre { font-size: 15px; font-weight: bold; color: var(--text); }
+.item-detalle { font-size: 14px; color: var(--text-muted); }
+
+/* Controles de cantidad */
+.item-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+}
+.cantidad-btn {
+    background-color: var(--amarillo);
+    border: none;
+    color: var(--text);
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition-normal);
+}
+.cantidad-btn:hover { background-color: var(--amarillo-osc); transform: scale(1.1); }
+.cantidad-texto { font-weight: bold; min-width: 20px; text-align: center; color: var(--text); }
+
+/* Botón eliminar */
+.btn-eliminar {
+    background: none;
+    border: 2px solid var(--amarillo);
+    color: var(--rosa);
+    border-radius: 50%;
+    padding: 6px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: var(--transition-normal);
+}
+.btn-eliminar:hover { background: var(--amarillo); color: var(--text); }
+
+/* Total y botón comprar */
+.carrito-total {
+    padding: 16px;
+    text-align: center;
+    border-top: 2px dashed var(--amarillo);
+    background: var(--bg);
+    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.15);
+}
+.carrito-total p {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0;
+    color: var(--rosa);
+}
+.btn-buy-bag {
+    background: linear-gradient(135deg, var(--rosa) 0%, var(--rosa-osc) 100%);
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    padding: 14px 28px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    transition: var(--transition-normal);
+}
+.btn-buy-bag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+
+/* Overlay oscuro detrás del carrito */
+.sidebar-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 9998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.sidebar.active ~ .sidebar-overlay {
+    opacity: 1;
+    pointer-events: all;
+}

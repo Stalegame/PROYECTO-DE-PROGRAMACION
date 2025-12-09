@@ -108,45 +108,6 @@ header {
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
-/* Botón Carrito */
-.btn-shop-bag {
-    justify-self: start;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    position: relative;
-    padding: 6px 8px;
-    border-radius: 10px;
-    color: #fff;
-    transition: var(--transition-normal);
-}
-
-.icono-btn2 {
-    width: 80px;
-    height: 80px;
-    display: block;
-}
-
-.contador-carrito {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: var(--amarillo);
-    color: var(--text);
-    font-weight: 700;
-    font-size: 15px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow-sm);
-}
-
 /* Auth Box */
 #authBox {
     justify-self: end;
@@ -435,49 +396,6 @@ select:focus {
     font-size: 15px;
 }
 
-/* Footer Links */
-.footer-links,
-.login-links {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: var(--border-light);
-    font-size: 14px;
-}
-
-.footer-links a,
-.login-links a {
-    color: var(--rosa);
-    text-decoration: none;
-    transition: var(--transition-fast);
-}
-
-.footer-links a:hover,
-.login-links a:hover {
-    color: var(--rosaOsc);
-    text-decoration: underline;
-}
-
-/* Footer General */
-.footer,
-footer {
-    width: 100%;
-    background: var(--text);
-    color: white;
-    text-align: center;
-    padding: 20px;
-    margin-top: 50px;
-    font-size: 14px;
-    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.15);
-}
-
-.footer p,
-footer p {
-    margin: 5px 0;
-}
-
 /* Loading Animation */
 .loading {
     display: inline-block;
@@ -555,94 +473,6 @@ footer p {
     100% { transform: rotate(360deg); }
 }
 
-/* Sidebar Carrito */
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: -100%;
-    width: 360px;
-    height: 100%;
-    background: var(--bg);
-    border-right: 4px solid var(--rosa);
-    display: flex;
-    flex-direction: column;
-    box-shadow: 6px 0 20px rgba(0, 0, 0, 0.25);
-    transition: left 0.4s ease, opacity 0.4s ease;
-    z-index: 9999;
-    font-family: 'Poppins', sans-serif;
-    opacity: 0;
-}
-
-.sidebar.active {
-    left: 0;
-    opacity: 1;
-    animation: sidebarSlide 0.4s ease forwards;
-}
-
-@keyframes sidebarSlide {
-    from {
-        transform: translateX(-40px);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-.sidebar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(135deg, var(--rosa), var(--rosa-osc));
-    padding: 16px 18px;
-    border-bottom: 3px solid var(--amarillo);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.titulo-carrito {
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.cerrar-sidebar {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 22px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: var(--transition-fast);
-}
-
-.cerrar-sidebar:hover {
-    transform: scale(1.2);
-    color: var(--amarillo);
-}
-
-.carrito-items {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    padding: 16px 12px;
-}
-
-.carrito-items::-webkit-scrollbar {
-    width: 6px;
-}
-
-.carrito-items::-webkit-scrollbar-thumb {
-    background: var(--amarillo);
-    border-radius: 4px;
-}
-
-.carrito-items::-webkit-scrollbar-track {
-    background: transparent;
-}
-
 /* ========== MENSAJES ========== */
 .mensaje-vacio {
     text-align: center;
@@ -675,6 +505,49 @@ footer p {
     margin-top: 20px;
     color: var(--text);
     font-size: 13px;
+}
+
+/* Footer Links */
+.footer-links,
+.login-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: var(--border-light);
+    font-size: 14px;
+}
+
+.footer-links a,
+.login-links a {
+    color: var(--rosa);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+.footer-links a:hover,
+.login-links a:hover {
+    color: var(--rosaOsc);
+    text-decoration: underline;
+}
+
+/* Footer General */
+.footer,
+footer {
+    width: 100%;
+    background: var(--text);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 50px;
+    font-size: 14px;
+    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.footer p,
+footer p {
+    margin: 5px 0;
 }
 
 /* Utilidades */
