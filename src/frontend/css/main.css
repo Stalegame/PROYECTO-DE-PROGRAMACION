@@ -568,11 +568,12 @@ select:focus {
 
 /* FOOTER */
 footer {
+    display: block;
     background-color: #333;
     color: white;
     text-align: center;
     padding: 20px;
-    margin-top: 30px;
+    margin-top: auto;
     width: 100%;
     max-width: 100%;
 }

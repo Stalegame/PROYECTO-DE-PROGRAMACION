@@ -43,6 +43,32 @@ router.get('/famous', async (_req, res) => {
   }
 });
 
+// GET /api/products/search?q= - Buscar productos por nombre o categoría
+router.get('/search', async (req, res) => {
+  const query = req.query.q;
+  if (!query) {
+    return res.status(400).json({ 
+      success: false, 
+      error: 'Falta el parámetro de búsqueda "q"' 
+    });
+  }
+
+  try {
+    const productos = await productosDAO.search(query);
+    res.status(200).json({ 
+      success: true,
+      count: productos.length, 
+      data: productos,
+      message: `Encontrados ${productos.length} productos que coinciden con la búsqueda` 
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Error al buscar productos',
+    });
+  }
+});
+
 // GET /api/products/:id - Ver un producto específico
 router.get('/:id', async (req, res) => {
   try {

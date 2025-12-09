@@ -59,6 +59,21 @@ module.exports = {
     });
   },
 
+  // Buscar productos por nombre o categoría
+  async search(query) {
+    const q = String(query || '').toLowerCase();
+    return prisma.product.findMany({
+      where: {
+        OR: [
+          { name: { contains: q, mode: 'insensitive' } },
+          { category: { name: { contains: q, mode: 'insensitive' } } }
+        ]
+      },
+      include: { category: true },
+      orderBy: { name: 'asc' },
+    });
+  },
+
   // Crear producto
   async save(input) {
     return prisma.product.create({

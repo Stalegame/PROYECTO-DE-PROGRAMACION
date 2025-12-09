@@ -12,7 +12,7 @@
 
 /* CATÁLOGO */
 .contenedor{
-  display:flex; max-width:1200px; margin:20px auto; gap:20px; padding:0 16px; flex: 1;
+  display:flex; max-width:1200px; margin:20px auto; gap:20px; padding:0 16px; flex: 1 0 auto;
 }
 
 /* Filtros */
@@ -27,6 +27,29 @@
 .filtros li{ margin:12px 0 }
 .filtros a{ color:#333; text-decoration:none; font-weight:700 }
 .filtros a:hover{ color:var(--rosa) }
+
+/* Buscador */
+#search-form {
+  padding-top: 20px;
+  display: flex;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+#search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+#search-input:focus {
+  outline: none;
+  border-color: var(--rosa);
+  box-shadow: 0 0 5px rgba(255, 0, 110, 0.5);
+}
 
 /* Productos */
 .productos{ flex:1 }

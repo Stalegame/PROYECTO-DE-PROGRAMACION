@@ -24,28 +24,45 @@ document.addEventListener('DOMContentLoaded', () => {
     return `/img/products/${encodeURIComponent(v)}`;
   };
 
-  async function loadProducts() {
+  async function allProducts() {
+    const res = await fetch('/api/products');
+    const payload = await res.json();
+    if (!res.ok || payload.success === false) {
+      throw new Error(payload.error || `No se pudo obtener la lista de productos (HTTP ${res.status})`);
+    }
+    const items = Array.isArray(payload.data) ? payload.data : (Array.isArray(payload) ? payload : []);
+
+    if (!items.length) {
+      grid.innerHTML = '<div class="empty">No hay productos disponibles.</div>';
+      return;
+    }
+
+    loadProducts(items);
+  }
+
+  async function searchProducts(search) {
+    const res = await fetch(`/api/products/search?q=${encodeURIComponent(String(search))}`);
+    const payload = await res.json();
+    if (!res.ok || payload.success === false) {
+      throw new Error(payload.error || `No se pudo buscar productos (HTTP ${res.status})`);
+    }
+    const items = Array.isArray(payload.data) ? payload.data : (Array.isArray(payload) ? payload : []);
+
+    if (!items.length) {
+      grid.innerHTML = '<div class="empty">No se encontraron productos que coincidan con la búsqueda.</div>';
+      return;
+    }
+    loadProducts(items);
+  }
+
+  async function loadProducts(items) {
     try {
-      const res = await fetch('/api/products');
-      const payload = await res.json().catch(() => ({}));
-      if (!res.ok || payload.success === false) {
-        throw new Error(payload.error || `No se pudo obtener la lista de productos (HTTP ${res.status})`);
-      }
-
-      const items = Array.isArray(payload.data) ? payload.data
-                  : (Array.isArray(payload) ? payload : []);
-
-      if (!items.length) {
-        grid.innerHTML = '<div class="empty">No hay productos disponibles.</div>';
-        return;
-      }
-
       grid.innerHTML = items.map((p) => {
         const id    = p.id ?? p._id ?? '';
         const name  = p.name ?? p.nombre ?? 'Producto';
         const price = p.price ?? p.precio;
         const img   = resolveImage(p.image ?? p.imagen);
-        const stock = p.stock; // si no manejas stock, asume alto
+        const stock = p.stock;
 
         return `
           <article class="producto">
@@ -80,5 +97,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  loadProducts();
+  allProducts();
+
+  // Búsqueda de productos con debouncing (500ms)
+  const searchForm = document.getElementById('search-form');
+  const searchInput = document.getElementById('search-input');
+  
+  if (searchForm && searchInput) {
+    let debounceTimer;
+    
+    // Búsqueda en tiempo real con debouncing
+    searchInput.addEventListener('input', (e) => {
+      clearTimeout(debounceTimer);
+      const query = String(e.target.value || '').trim();
+      
+      debounceTimer = setTimeout(() => {
+        if (query) {
+          grid.innerHTML = '<div class="loading">Buscando productos…</div>';
+          searchProducts(query);
+        } else {
+          grid.innerHTML = '<div class="loading">Cargando productos…</div>';
+          allProducts();
+        }
+      }, 500);
+    });
+  }
 });
