@@ -1,17 +1,28 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Cargar y pintar productos
   const grid = document.getElementById('products-grid');
+  const pagination = document.getElementById('pagination');
   if (!grid) return;
 
   grid.innerHTML = '<div class="loading">Cargando productos…</div>';
 
   const escapeHTML = (s) =>
-    String(s ?? '').replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));
+    String(s ?? '').replace(/[&<>"']/g, (m) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      '\'': '&#39;'
+    }[m]));
 
   const fmtCLP = (n) => {
     if (n == null || isNaN(n)) return '';
     try {
-      return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(n);
+      return new Intl.NumberFormat('es-CL', {
+        style: 'currency',
+        currency: 'CLP',
+        maximumFractionDigits: 0
+      }).format(n);
     } catch {
       return `$${Number(n).toLocaleString('es-CL')}`;
     }
@@ -24,38 +35,45 @@ document.addEventListener('DOMContentLoaded', () => {
     return `/img/products/${encodeURIComponent(v)}`;
   };
 
-  async function allProducts() {
-    const res = await fetch('/api/products');
-    const payload = await res.json();
-    if (!res.ok || payload.success === false) {
-      throw new Error(payload.error || `No se pudo obtener la lista de productos (HTTP ${res.status})`);
-    }
-    const items = Array.isArray(payload.data) ? payload.data : (Array.isArray(payload) ? payload : []);
+  let PRODUCTS_CACHE = [];  
+  let currentPage = 1;
+  const ITEMS_PER_PAGE = 2;
 
-    if (!items.length) {
-      grid.innerHTML = '<div class="empty">No hay productos disponibles.</div>';
-      return;
-    }
+  function renderPagination(totalItems) {
+    if (!pagination) return;
 
-    loadProducts(items);
+    pagination.innerHTML = "";
+
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+    if (totalPages <= 1) return; // no mostrar paginación si solo hay 1 página
+
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement("button");
+      btn.textContent = i;
+      btn.className = "pag-btn";
+      if (i === currentPage) btn.classList.add("active");
+
+      btn.addEventListener("click", () => {
+        currentPage = i;
+        paintPage();
+      });
+
+      pagination.appendChild(btn);
+    }
   }
 
-  async function searchProducts(search) {
-    const res = await fetch(`/api/products/search?q=${encodeURIComponent(String(search))}`);
-    const payload = await res.json();
-    if (!res.ok || payload.success === false) {
-      throw new Error(payload.error || `No se pudo buscar productos (HTTP ${res.status})`);
-    }
-    const items = Array.isArray(payload.data) ? payload.data : (Array.isArray(payload) ? payload : []);
+  function paintPage() {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    const end = start + ITEMS_PER_PAGE;
 
-    if (!items.length) {
-      grid.innerHTML = '<div class="empty">No se encontraron productos que coincidan con la búsqueda.</div>';
-      return;
-    }
-    loadProducts(items);
+    const pageItems = PRODUCTS_CACHE.slice(start, end);
+
+    renderProducts(pageItems);
+    renderPagination(PRODUCTS_CACHE.length);
   }
 
-  async function loadProducts(items) {
+  function renderProducts(items) {
     try {
       grid.innerHTML = items.map((p) => {
         const id    = p.id ?? p._id ?? '';
@@ -97,20 +115,65 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function loadProducts(items) {
+    PRODUCTS_CACHE = items;
+    currentPage = 1;   
+    paintPage();  
+  }
+
+  async function allProducts() {
+    const res = await fetch('/api/products');
+    const payload = await res.json();
+
+    if (!res.ok || payload.success === false) {
+      throw new Error(payload.error || `No se pudo obtener la lista de productos (HTTP ${res.status})`);
+    }
+
+    const items = Array.isArray(payload.data)
+      ? payload.data
+      : (Array.isArray(payload) ? payload : []);
+
+    if (!items.length) {
+      grid.innerHTML = '<div class="empty">No hay productos disponibles.</div>';
+      return;
+    }
+
+    loadProducts(items);
+  }
+
+  async function searchProducts(search) {
+    const res = await fetch(`/api/products/search?q=${encodeURIComponent(String(search))}`);
+    const payload = await res.json();
+
+    if (!res.ok || payload.success === false) {
+      throw new Error(payload.error || `No se pudo buscar productos (HTTP ${res.status})`);
+    }
+
+    const items = Array.isArray(payload.data)
+      ? payload.data
+      : (Array.isArray(payload) ? payload : []);
+
+    if (!items.length) {
+      grid.innerHTML = '<div class="empty">No se encontraron productos que coincidan con la búsqueda.</div>';
+      pagination.innerHTML = "";
+      return;
+    }
+
+    loadProducts(items);
+  }
+
   allProducts();
 
-  // Búsqueda de productos con debouncing (500ms)
   const searchForm = document.getElementById('search-form');
   const searchInput = document.getElementById('search-input');
-  
+
   if (searchForm && searchInput) {
     let debounceTimer;
-    
-    // Búsqueda en tiempo real con debouncing
+
     searchInput.addEventListener('input', (e) => {
       clearTimeout(debounceTimer);
       const query = String(e.target.value || '').trim();
-      
+
       debounceTimer = setTimeout(() => {
         if (query) {
           grid.innerHTML = '<div class="loading">Buscando productos…</div>';

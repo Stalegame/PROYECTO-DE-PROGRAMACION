@@ -123,6 +123,7 @@
 
 .btn-primary:hover {
     background: #5568d3;
+    box-shadow: #5568d3; 
 }
 
 .btn-secondary {
