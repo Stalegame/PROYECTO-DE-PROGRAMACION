@@ -12,7 +12,12 @@
 
 /* CATÁLOGO */
 .contenedor{
-  display:flex; max-width:1200px; margin:20px auto; gap:20px; padding:0 16px; flex: 1 0 auto;
+  display:flex;
+  max-width:1600px;
+  margin:20px auto;
+  gap:20px;
+  padding:0 16px;
+  flex: 1;
 }
 
 /* Filtros */

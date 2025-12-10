@@ -162,10 +162,21 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProducts(items);
   }
 
-  allProducts();
-
+  // Verificar si hay un parámetro de categoría en la URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const categoria = urlParams.get('categoria');
+  
   const searchForm = document.getElementById('search-form');
   const searchInput = document.getElementById('search-input');
+  
+  // Si hay una categoría en la URL, cargarla en el buscador y buscar
+  if (categoria && searchInput) {
+    searchInput.value = categoria;
+    grid.innerHTML = '<div class="loading">Buscando productos…</div>';
+    searchProducts(categoria);
+  } else {
+    allProducts();
+  }
 
   if (searchForm && searchInput) {
     let debounceTimer;

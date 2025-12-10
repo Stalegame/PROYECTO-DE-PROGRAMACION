@@ -10,7 +10,7 @@ body {
 
 /* Ajuste contenedor para max-width menor */
 .contenedor-principal {
-    max-width: 500px;
+    max-width: 700px;
     width: 100%;
 }
 
@@ -23,10 +23,8 @@ header {
 }
 
 /* Elementos específicos del header */
-.logo {
-    font-size: 2em;
-    font-weight: 700;
-    color: white;
+.logo-container {
+    max-width: 180px;
     margin-bottom: 5px;
 }
 
@@ -193,6 +191,11 @@ header {
 
 /* Responsive específico */
 @media (max-width: 600px) {
+    .logo-container {
+        max-width: 150px;
+        margin-bottom: 5px;
+    }
+
     .footer-links {
         flex-direction: column;
         gap: 10px;

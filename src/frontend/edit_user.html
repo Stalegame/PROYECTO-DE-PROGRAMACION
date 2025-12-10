@@ -26,8 +26,9 @@
 
   <div class="contenedor-principal">
     <header>
-      <div class="logo">FRUNA</div>
-      <div class="tagline">La dulcería de Chile</div>
+      <div class="logo-container">
+        <img src="./img/logo_fruna.png" alt="FRUNA Chile" class="site-logo">
+      </div>
     </header>
 
     <div class="user-profile">
@@ -37,17 +38,17 @@
       <form id="profile-form" style="display: none;">
         <div class="form-group">
           <i class="fas fa-envelope"></i>
-          <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" disabled />
+          <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" maxlength="40" required/>
         </div>
 
         <div class="form-group">
           <i class="fas fa-user"></i>
-          <input type="text" id="nombre" name="nombre" placeholder="Nombre completo" maxlength="35" />
+          <input type="text" id="nombre" name="nombre" placeholder="Nombre completo" maxlength="35" required/>
         </div>
 
         <div class="form-group">
           <i class="fas fa-phone"></i>
-          <input type="tel" id="telefono" name="telefono" placeholder="8 dígitos" pattern="\d{8}" />
+          <input type="tel" id="telefono" name="telefono" placeholder="8 dígitos" pattern="\d{8}"/>
         </div>
 
         <div class="form-group">

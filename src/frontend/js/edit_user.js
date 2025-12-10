@@ -64,7 +64,7 @@ async function desactivarCuenta(id, password) {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const form = document.getElementById("profile-form");
   const loading = document.getElementById("loading");
 
@@ -96,36 +96,41 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Carga de datos de usuario
-  setTimeout(async () => {
-    loading.style.display = "none";
-    form.style.display = "block";
-    document.getElementById('danger-zone').style.display = "block";
+  loading.style.display = "none";
+  form.style.display = "block";
+  document.getElementById('danger-zone').style.display = "block";
 
-    const usuario = await getById(user.id);
-    if (!usuario) {
-      alert('No se pudieron cargar los datos del usuario.');
-      return;
-    }
+  const usuario = await getById(user.id);
+  if (!usuario) {
+    alert('No se pudieron cargar los datos del usuario.');
+    return;
+  }
 
-    document.getElementById('email').value = usuario.email || '';
-    document.getElementById('nombre').value = usuario.name || '';
-    // Mostrar sin prefijo +569 si existe
-    const telRaw = usuario.phone || '';
-    document.getElementById('telefono').value = String(telRaw).replace(/^\+569/, '').replace(/[^0-9]/g, '');
-    document.getElementById('direccion').value = usuario.address || '';
-  }, 300);
+  document.getElementById('email').value = usuario.email || '';
+  document.getElementById('nombre').value = usuario.name || '';
+  // Mostrar sin prefijo +569 si existe
+  const telRaw = usuario.phone || '';
+  document.getElementById('telefono').value = String(telRaw).replace(/^\+569/, '').replace(/[^0-9]/g, '');
+  document.getElementById('direccion').value = usuario.address || '';
 
   // Guardar cambios de perfil
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const changes = {};
+    changes.email = document.getElementById('email').value.trim();
     changes.name = document.getElementById('nombre').value.trim();
     changes.phone = document.getElementById('telefono').value.trim();
     changes.address = document.getElementById('direccion').value.trim();
 
+    if (usuario.email == changes.email) changes.email = undefined;
+    if (usuario.name == changes.name) changes.name = undefined;
+    if (usuario.phone == changes.phone) changes.phone = undefined;
+    if (usuario.address == changes.address) changes.address = undefined;
+
     try {
       const res = await editUser(user.id, changes);
       // Si el backend devuelve el usuario actualizado, actualizar UI y localStorage
+      document.getElementById('email').value = res.data.email || '';
       document.getElementById('nombre').value = res.data.name || '';
       const tel = res.data.phone || '';
       document.getElementById('telefono').value = String(tel).replace(/^\+569/, '').replace(/[^0-9]/g, '');
@@ -150,8 +155,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 3000);
     } catch (error) {
       const successMsg = document.getElementById('form-success');
-      successMsg.textContent = '❌ Error al guardar los cambios';
+      if (error.status == 409) successMsg.textContent = '❌ Correo ya existente. Por favor elige otro';
+      else if (error.status == 404) successMsg.textContent = '❌ Usuario no encontrado';
+      else successMsg.textContent = '❌ Error al guardar los cambios';
       successMsg.style.display = 'block';
+      // Ocultar mensaje después de 3 segundos
+      setTimeout(() => {
+        successMsg.style.display = "none";
+      }, 3000);
     }
   });
 

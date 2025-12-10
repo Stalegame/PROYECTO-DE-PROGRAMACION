@@ -57,6 +57,10 @@
     width: 100%;
     max-width: 100%;
 }
+.categorias-container a {
+    text-decoration: none;
+    color: inherit;
+}
 .categoria {
     display: flex;
     flex-direction: column;

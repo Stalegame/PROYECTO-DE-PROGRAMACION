@@ -293,10 +293,13 @@ router.put('/:id', auth, async (req, res) => {
     const id = req.params.id;
     const target = await clientesDAO.getById(id);
     if (!target) return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
+    const email = req.body.email;
+    const emailReady = await clientesDAO.getByEmail(email);
+    if (emailReady) return res.status(409).json({ success: false, error: 'Email ya existente.'})
     const name = req.body.name;
     const phone = req.body.phone;
     const address = req.body.address;
-    const actualizado = await clientesDAO.update(id, { name, phone, address });
+    const actualizado = await clientesDAO.update(id, { name, email, phone, address });
     
     return res.status(200).json({ success: true, data: actualizado });
   } catch (err) {
