@@ -121,7 +121,10 @@
                 <div class="table-section">
                     <div class="table-header">
                         <h2>Gestión de Productos</h2>
-                        <button class="btn btn-primary" id="btnNewProduct">+ Nuevo Producto</button>
+                        <div class="header-actions">
+                            <input type="text" id="search-products" class="search-input" placeholder="Buscar productos...">
+                            <button class="btn btn-primary" id="btnNewProduct">+ Nuevo Producto</button>
+                        </div>
                     </div>
                     
                     <table>
@@ -139,6 +142,7 @@
                             <!-- aquí se inyectan filas -->
                         </tbody>
                     </table>
+                    <div id="pagination-products" class="pagination"></div>
                 </div>
             </div>
 
@@ -193,6 +197,7 @@
                 <div class="table-section">
                     <div class="table-header">
                         <h2>Gestión de Pedidos</h2>
+                        <input type="text" id="search-orders" class="search-input" placeholder="Buscar pedidos...">
                     </div>
                     
                     <table>
@@ -210,6 +215,7 @@
                             <!-- aquí se inyectan filas -->
                         </tbody>
                     </table>
+                    <div id="pagination-orders" class="pagination"></div>
                 </div>
             </div>
             
@@ -217,6 +223,7 @@
                 <div class="table-section">
                     <div class="table-header">
                         <h2>Gestión de Clientes</h2>
+                        <input type="text" id="search-customers" class="search-input" placeholder="Buscar clientes...">
                     </div>
 
                     <table>
@@ -235,6 +242,7 @@
                             <!-- aquí se inyectan filas -->
                         </tbody>
                     </table>
+                    <div id="pagination-customers" class="pagination"></div>
                 </div>
             </div>
         </div>

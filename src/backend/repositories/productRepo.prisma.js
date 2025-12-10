@@ -37,6 +37,14 @@ module.exports = {
     });
   },
 
+  // Obtener producto por nombre
+  async getByName(name) {
+    return prisma.product.findUnique({
+      where: { name },
+      include: { category: true },
+    });
+  },
+
   // Obtener Número de productos con stock < o = a 15 
   async getLowStock() {
     return prisma.product.count({

@@ -216,6 +216,47 @@ async function loadFamousProducts(data) {
 }
 
 
+// ===================== PAGINACIÓN Y BÚSQUEDA =====================
+const ITEMS_PER_PAGE = 12;
+let productsCache = [];
+let ordersCache = [];
+let clientsCache = [];
+let filteredProducts = [];
+let filteredOrders = [];
+let filteredClients = [];
+let currentProductsPage = 1;
+let currentOrdersPage = 1;
+let currentClientsPage = 1;
+
+function renderPagination(totalItems, currentPage, paginationId, onPageChange) {
+  const paginationEl = document.getElementById(paginationId);
+  if (!paginationEl) return;
+
+  paginationEl.innerHTML = "";
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+  if (totalPages <= 1) return;
+
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    btn.className = "pag-btn";
+    if (i === currentPage) btn.classList.add("active");
+
+    btn.addEventListener("click", () => {
+      onPageChange(i);
+    });
+
+    paginationEl.appendChild(btn);
+  }
+}
+
+function paginateItems(items, page) {
+  const start = (page - 1) * ITEMS_PER_PAGE;
+  const end = start + ITEMS_PER_PAGE;
+  return items.slice(start, end);
+}
+
 // ===================== GESTIÓN DE CLIENTES =====================
 async function loadClients() {
   const tbody = document.getElementById('clients-tbody');
@@ -226,13 +267,37 @@ async function loadClients() {
   try {
     const data = await apiFetchJSON('/api/admin/users');
     const items = Array.isArray(data.data) ? data.data : [];
+    clientsCache = items;
 
     if (!items.length) {
       tbody.innerHTML = '<tr><td colspan="7">No hay clientes registrados.</td></tr>';
+      document.getElementById('pagination-customers').innerHTML = '';
       return;
     }
 
-    tbody.innerHTML = items.map(u => {
+    currentClientsPage = 1;
+    renderClientsPage();
+
+  } catch (e) {
+    console.error('Error cargando clientes:', e);
+    tbody.innerHTML = `<tr><td colspan="7">Error al cargar clientes: ${e.message}</td></tr>`;
+  }
+}
+
+function renderClientsPage() {
+  const tbody = document.getElementById('clients-tbody');
+  if (!tbody) return;
+
+  const dataToUse = filteredClients.length > 0 || document.getElementById('search-customers')?.value.trim() ? filteredClients : clientsCache;
+  const pageItems = paginateItems(dataToUse, currentClientsPage);
+
+  if (!pageItems.length) {
+    tbody.innerHTML = '<tr><td colspan="7">No se encontraron clientes.</td></tr>';
+    document.getElementById('pagination-customers').innerHTML = '';
+    return;
+  }
+
+  tbody.innerHTML = pageItems.map(u => {
       const isSuspended = u.active === false;
       const statusClass = isSuspended ? 'suspended' : 'active';
       const statusText = isSuspended ? 'Suspendido' : 'Activo';
@@ -256,14 +321,13 @@ async function loadClients() {
                 </button>`
         }
             </div>
-          </td>
         </tr>`;
     }).join('');
 
-  } catch (e) {
-    console.error('Error cargando clientes:', e);
-    tbody.innerHTML = `<tr><td colspan="7">Error al cargar clientes: ${e.message}</td></tr>`;
-  }
+  renderPagination(dataToUse.length, currentClientsPage, 'pagination-customers', (page) => {
+    currentClientsPage = page;
+    renderClientsPage();
+  });
 }
 
 // Manejar acciones de clientes
@@ -319,13 +383,36 @@ async function loadProducts() {
   try {
     const data = await apiFetchJSON('/api/products');
     const items = Array.isArray(data.data) ? data.data : [];
+    productsCache = items;
 
     if (!items.length) {
       tbody.innerHTML = '<tr><td colspan="6">No hay productos.</td></tr>';
+      document.getElementById('pagination-products').innerHTML = '';
       return;
     }
 
-    tbody.innerHTML = items.map(p => `
+    currentProductsPage = 1;
+    renderProductsPage();
+
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="6">Error: ${e.message}</td></tr>`;
+  }
+}
+
+function renderProductsPage() {
+  const tbody = document.getElementById('products-tbody');
+  if (!tbody) return;
+
+  const dataToUse = filteredProducts.length > 0 || document.getElementById('search-products')?.value.trim() ? filteredProducts : productsCache;
+  const pageItems = paginateItems(dataToUse, currentProductsPage);
+
+  if (!pageItems.length) {
+    tbody.innerHTML = '<tr><td colspan="6">No se encontraron productos.</td></tr>';
+    document.getElementById('pagination-products').innerHTML = '';
+    return;
+  }
+
+  tbody.innerHTML = pageItems.map(p => `
       <tr>
         <td>${escapeHTML(p.id)}</td>
         <td>${escapeHTML(p.name)}</td>
@@ -338,9 +425,10 @@ async function loadProducts() {
         </td>
       </tr>`).join('');
 
-  } catch (e) {
-    tbody.innerHTML = `<tr><td colspan="6">Error: ${e.message}</td></tr>`;
-  }
+  renderPagination(dataToUse.length, currentProductsPage, 'pagination-products', (page) => {
+    currentProductsPage = page;
+    renderProductsPage();
+  });
 }
 
 // Eliminar producto
@@ -468,12 +556,14 @@ async function np_save() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
+      alert('✅ Producto editado con éxito');
     } else {
       await apiFetchJSON('/api/admin/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
+      alert('✅ Producto creado con éxito');
     }
 
     np_close();
@@ -493,13 +583,36 @@ async function loadOrders() {
   try {
     const data = await apiFetchJSON('/api/admin/orders');
     const items = Array.isArray(data.data) ? data.data : [];
+    ordersCache = items;
 
     if (!items.length) {
       tbody.innerHTML = '<tr><td colspan="6">No hay pedidos registrados.</td></tr>';
+      document.getElementById('pagination-orders').innerHTML = '';
       return;
     }
 
-    tbody.innerHTML = items.map(o => `
+    currentOrdersPage = 1;
+    renderOrdersPage();
+
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="6">Error: ${e.message}</td></tr>`;
+  }
+}
+
+function renderOrdersPage() {
+  const tbody = document.getElementById('orders-tbody');
+  if (!tbody) return;
+
+  const dataToUse = filteredOrders.length > 0 || document.getElementById('search-orders')?.value.trim() ? filteredOrders : ordersCache;
+  const pageItems = paginateItems(dataToUse, currentOrdersPage);
+
+  if (!pageItems.length) {
+    tbody.innerHTML = '<tr><td colspan="6">No se encontraron pedidos.</td></tr>';
+    document.getElementById('pagination-orders').innerHTML = '';
+    return;
+  }
+
+  tbody.innerHTML = pageItems.map(o => `
       <tr>
         <td>${escapeHTML(o.id)}</td>
         <td>${escapeHTML(o.client.name)}</td>
@@ -507,13 +620,14 @@ async function loadOrders() {
         <td>${escapeHTML(o.totalAmount)}</td>
         <td>${escapeHTML(o.status)}</td>
         <td>
-          <button class="btn-delete"  data-action="del-orders" data-id="${escapeHTML(o.id)}">Eliminar</button>
+          <button class="btn-delete" data-action="del-orders" data-id="${escapeHTML(o.id)}">Eliminar</button>
         </td>
       </tr>`).join('');
 
-  } catch (e) {
-    tbody.innerHTML = `<tr><td colspan="6">Error: ${e.message}</td></tr>`;
-  }
+  renderPagination(dataToUse.length, currentOrdersPage, 'pagination-orders', (page) => {
+    currentOrdersPage = page;
+    renderOrdersPage();
+  });
 }
 
 
@@ -543,12 +657,91 @@ function closeConfirmModal() {
   document.getElementById('modalConfirmAction')?.classList.remove('show');
 }
 
+// ===================== BÚSQUEDA =====================
+function setupSearch() {
+  // Búsqueda de productos
+  const searchProducts = document.getElementById('search-products');
+  if (searchProducts) {
+    let debounceTimer;
+    searchProducts.addEventListener('input', (e) => {
+      clearTimeout(debounceTimer);
+      const query = String(e.target.value || '').trim().toLowerCase();
+      
+      debounceTimer = setTimeout(() => {
+        if (query) {
+          filteredProducts = productsCache.filter(p => 
+            (p.name || '').toLowerCase().includes(query) ||
+            (p.category.name || '').toLowerCase().includes(query) ||
+            String(p.id || '').includes(query)
+          );
+        } else {
+          filteredProducts = [];
+        }
+        currentProductsPage = 1;
+        renderProductsPage();
+      }, 300);
+    });
+  }
+
+  // Búsqueda de pedidos
+  const searchOrders = document.getElementById('search-orders');
+  if (searchOrders) {
+    let debounceTimer;
+    searchOrders.addEventListener('input', (e) => {
+      clearTimeout(debounceTimer);
+      const query = String(e.target.value || '').trim().toLowerCase();
+      
+      debounceTimer = setTimeout(() => {
+        if (query) {
+          filteredOrders = ordersCache.filter(o => 
+            String(o.id || '').includes(query) ||
+            (o.client.name || '').toLowerCase().includes(query) ||
+            (o.status || '').toLowerCase().includes(query)
+          );
+        } else {
+          filteredOrders = [];
+        }
+        currentOrdersPage = 1;
+        renderOrdersPage();
+      }, 300);
+    });
+  }
+
+  // Búsqueda de clientes
+  const searchCustomers = document.getElementById('search-customers');
+  if (searchCustomers) {
+    let debounceTimer;
+    searchCustomers.addEventListener('input', (e) => {
+      clearTimeout(debounceTimer);
+      const query = String(e.target.value || '').trim().toLowerCase();
+      
+      debounceTimer = setTimeout(() => {
+        if (query) {
+          filteredClients = clientsCache.filter(c => 
+            (c.name || '').toLowerCase().includes(query) ||
+            (c.email || '').toLowerCase().includes(query) ||
+            (c.phone || '').toLowerCase().includes(query) ||
+            String(c.id || '').includes(query)
+          );
+        } else {
+          filteredClients = [];
+        }
+        currentClientsPage = 1;
+        renderClientsPage();
+      }, 300);
+    });
+  }
+}
+
 // ===================== INICIALIZACIÓN =====================
 document.addEventListener('DOMContentLoaded', () => {
   //console.log('Admin Controller iniciado');
 
   // Actualizar fecha
   updateDate();
+
+  // Configurar búsquedas
+  setupSearch();
 
   // Configurar navegación del sidebar
   const sidebar = document.querySelector('.sidebar');

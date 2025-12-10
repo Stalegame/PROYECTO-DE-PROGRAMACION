@@ -197,6 +197,15 @@ router.post('/products', async (req, res) => {
       });
     }
 
+    // Nombre ya existente
+    const existente = await productosDAO.getByName(name);
+    if (existente) {
+      return res.status(400).json({
+        success: false,
+        error: 'Ya existe un producto con este nombre'
+      });
+    }
+
     // Buscar o crear categoría
     let categoryRecord = await categoriaDAO.getByName(category);
 
@@ -244,6 +253,17 @@ router.put('/products/:id', async (req, res) => {
 
       cambios.categoryId = categoryRecord.id;
       delete cambios.category;
+    }
+
+    // Nombre ya existente en otro producto
+    if (cambios.name) {
+      const existente = await productosDAO.getByName(cambios.name);
+      if (existente && String(existente.id) !== String(id)) {
+        return res.status(400).json({
+          success: false,
+          error: 'Ya existe otro producto con este nombre'
+        });
+      }
     }
 
     const actualizado = await productosDAO.update(id, cambios);
