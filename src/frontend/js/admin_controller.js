@@ -217,7 +217,7 @@ async function loadFamousProducts(data) {
 
 
 // ===================== PAGINACIÓN Y BÚSQUEDA =====================
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 10;
 let productsCache = [];
 let ordersCache = [];
 let clientsCache = [];
