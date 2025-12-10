@@ -185,4 +185,20 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 500);
     });
   }
+
+  // Manejar clicks en filtros de categorías
+  const filterLinks = document.querySelectorAll('.filtros a[data-cat]');
+  filterLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const category = e.currentTarget.getAttribute('data-cat');
+      if (searchInput && category) {
+        searchInput.value = category;
+        // Disparar el evento input para que se ejecute la búsqueda
+        searchInput.dispatchEvent(new Event('input'));
+        // Scroll hacia el buscador para que el usuario vea el cambio
+        searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  });
 });
