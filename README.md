@@ -64,13 +64,13 @@ Luego, comprobar que todo funciona correctamente.
 ## 👥 Integrantes y Roles
 
 - **🧑‍💻 Thomas Aranguiz** – [@Stalegame](https://github.com/Stalegame)  
-  *Líder Técnico → Backend*
+  *Líder Técnico → Backend → Frontend and QA & Documentación*
 
 - **🎨 Patricio Muñoz** – [@patriciomunozzz](https://github.com/patriciomunozzz)  
-  *Frontend → Líder Técnico*
+  *Frontend → Líder Técnico → Backend*
 
 - **⚙️ Angela Muñoz** – [@MeruAngel](https://github.com/MeruAngel)  
-  *Backend → QA & Documentación*
+  *Backend → QA & Documentación → Frontend and QA & Documentación*
 
 ---
 
