@@ -178,6 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
     allProducts();
   }
 
+  // Manejar búsqueda desde el formulario
   if (searchForm && searchInput) {
     let debounceTimer;
 
@@ -212,4 +213,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Manejar "enter" en el input de búsqueda
+  if (searchInput) {
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const query = String(searchInput.value || '').trim();
+        if (query) {
+          grid.innerHTML = '<div class="loading">Buscando productos…</div>';
+          searchProducts(query);
+        } else {
+          grid.innerHTML = '<div class="loading">Cargando productos…</div>';
+          allProducts();
+        }
+      }
+    });
+  }
 });
