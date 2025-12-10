@@ -7,7 +7,7 @@ Esta guía explica cómo preparar el entorno y levantar el backend de **Fruna** 
 
 Debes tener un archivo .env en la raíz del proyecto con las variables necesarias.
 
-Las cuales estan indicadas en .env.example :
+Las cuales están indicadas en .env.example :
 
 ```bash
 PORT=3000
@@ -16,7 +16,18 @@ JWT_EXPIRES=2h
 DATABASE_URL=postgresql://USER:PASSWORD@localhost:5432/fruna?schema=public
 PERSISTENCE=postgres
 NODE_ENV=development
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+PAYPAL_CLIENT_ID=your_paypal_client_id_here
+PAYPAL_SECRET=your_paypal_secret_here
+PAYPAL_API=https://api-m.sandbox.paypal.com
+FRONTEND_ORIGIN=http://localhost:3000,http://localhost:8080
 ```
+
+**Notas importantes:**
+- Reemplaza `USER` y `PASSWORD` con tus credenciales de PostgreSQL
+- Obtén `OPENROUTER_API_KEY` en https://openrouter.ai/
+- Obtén credenciales de PayPal en https://developer.paypal.com/ (usa Sandbox para desarrollo)
+- `PAYPAL_API` debe ser la URL de Sandbox en desarrollo y Production en producción
 
 Una vez configurado se puede iniciar la instalación.
 

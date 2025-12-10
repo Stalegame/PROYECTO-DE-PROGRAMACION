@@ -28,12 +28,49 @@
 # ⚙️ Requisitos No Funcionales
 
 1. **Rendimiento de consultas:** Las consultas al catálogo de productos deben ejecutarse en menos de 2 segundos bajo carga promedio de usuarios.  
-2. **Seguridad de contraseñas:** Las contraseñas deben almacenarse encriptadas utilizando algoritmos seguros (ej: bcrypt o Argon2).  
-3. **Comunicación segura:** Toda comunicación entre el cliente y el servidor debe realizarse a través de HTTPS con certificados válidos.  
+2. **Seguridad de contraseñas:** Las contraseñas deben almacenarse encriptadas utilizando algoritmos seguros (bcrypt con factor 10).  
+3. **Comunicación segura:** En producción, toda comunicación entre el cliente y el servidor debe realizarse a través de HTTPS con certificados válidos. En desarrollo se usa HTTP.  
 4. **Usabilidad y accesibilidad:** La interfaz debe ser intuitiva y accesible.  
-5. **Arquitectura escalable:** El backend debe implementarse bajo una arquitectura en capas que facilite la migración entre diferentes motores de base de datos (ej: SQLite, PostgreSQL).  
-6. **Calidad del código:** El código debe seguir estándares de legibilidad y buenas prácticas de desarrollo.  
-7. **Almacenamiento:** El sistema debe garantizar suficiente capacidad de almacenamiento como minimo 4GB de memoria
-8. **Disponibilidad del sistema:** El sistema debe garantizar una disponibilidad mínima del 99.5%. 
+5. **Arquitectura escalable:** El backend debe implementarse bajo una arquitectura en capas que facilite la migración entre diferentes motores de base de datos mediante PersistenceFactory (JSON, PostgreSQL).  
+6. **Calidad del código:** El código debe seguir estándares de legibilidad y buenas prácticas de desarrollo, validado con ESLint.  
+7. **Almacenamiento:** El sistema debe garantizar suficiente capacidad de almacenamiento como mínimo 4GB de memoria.  
+8. **Disponibilidad del sistema:** El sistema debe garantizar una disponibilidad mínima del 99.5%.  
+9. **APIs Externas:** El sistema debe integrar al menos una API externa funcional (✅ Implementado: OpenRouter/DeepSeek para chatbot y PayPal para pagos).  
+10. **Testing:** El sistema debe incluir pruebas automatizadas para endpoints críticos (✅ Implementado con Jest y Supertest).
+
+---
+
+## 🌐 Requisitos de Integración Externa
+
+### ✅ APIs Implementadas
+
+1. **Chatbot con Inteligencia Artificial**  
+   - **API:** OpenRouter (modelo DeepSeek v3.1)  
+   - **Función:** Responder consultas de usuarios sobre productos, stock, categorías y precios  
+   - **Ubicación:** `/api/chat`  
+   - **Estado:** ✅ Completamente funcional
+
+2. **Sistema de Pagos**  
+   - **API:** PayPal (Sandbox/Production)  
+   - **Función:** Procesar pagos reales con conversión CLP → USD  
+   - **Endpoints:** `/api/orders/create`, `/api/orders/capture`  
+   - **Estado:** ✅ Completamente funcional
+
+### ⏳ APIs Planificadas
+
+3. **Información Nutricional**  
+   - **API:** USDA FoodData Central  
+   - **Función:** Proporcionar información nutricional de productos  
+   - **Estado:** ⏳ Planificado para futuras versiones
+
+4. **Métodos de Pago Locales (Chile)**  
+   - **APIs:** Flow CL, Webpay Plus (Transbank)  
+   - **Función:** Alternativas de pago locales  
+   - **Estado:** ⏳ Planificado para futuras versiones
+
+5. **Notificaciones**  
+   - **APIs:** EmailJS, Twilio  
+   - **Función:** Notificaciones por correo y SMS  
+   - **Estado:** ⏳ Planificado para futuras versiones
 
 ---

@@ -226,6 +226,109 @@ Obtener un producto específico.
 
 ---
 
+## 🛍️ Órdenes (`/api/orders`)
+
+### POST `/api/orders/create`
+Crear una orden de compra y generar pago con PayPal.
+
+**Headers**: `Authorization: Bearer {token}`
+
+**Body**:
+```json
+{
+  "items": [
+    {
+      "productId": "prod123",
+      "name": "Alfajor Clásico",
+      "quantity": 2,
+      "price": 1290,
+      "image": "alfajores.png"
+    }
+  ],
+  "total": 2580,
+  "direccion": "Av. Providencia 1234",
+  "region": "Metropolitana",
+  "comuna": "Providencia",
+  "comentarios": "Entregar en portería"
+}
+```
+
+**Respuesta exitosa (200)**:
+```json
+{
+  "success": true,
+  "orderId": "8A123456789",
+  "approvalLink": "https://www.sandbox.paypal.com/checkoutnow?token=..."
+}
+```
+
+**Errores**:
+- `400`: Items vacío o total inválido
+- `500`: Error creando orden en PayPal
+
+**Nota:** El total en CLP se convierte automáticamente a USD para PayPal.
+
+---
+
+### POST `/api/orders/capture`
+Capturar y confirmar el pago realizado en PayPal.
+
+**Headers**: `Authorization: Bearer {token}`
+
+**Body**:
+```json
+{
+  "orderId": "8A123456789"
+}
+```
+
+**Respuesta exitosa (200)**:
+```json
+{
+  "success": true,
+  "message": "Pago completado",
+  "order": {
+    "id": "order_db_id",
+    "clientId": "user123",
+    "totalAmount": 2580,
+    "status": "PENDING",
+    "createdAt": "2025-12-10T..."
+  }
+}
+```
+
+**Errores**:
+- `400`: orderId requerido
+- `500`: Error capturando pago
+
+---
+
+### GET `/api/orders/:orderId`
+Obtener detalles de una orden específica.
+
+**Headers**: `Authorization: Bearer {token}`
+
+**Respuesta exitosa (200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "order_db_id",
+    "clientId": "user123",
+    "totalAmount": 2580,
+    "status": "COMPLETED",
+    "createdAt": "2025-12-10T...",
+    "updatedAt": "2025-12-10T..."
+  }
+}
+```
+
+**Errores**:
+- `403`: No autorizado para ver esta orden
+- `404`: Orden no encontrada
+
+---
+
 ## 🛒 Carrito (`/api/cart`)
 
 ### GET `/api/cart/:userId`
@@ -505,9 +608,64 @@ Eliminar producto.
 
 ---
 
-## 🌐 APIs Externas (Planificadas)
+## 🌐 APIs Externas
 
-### A) Información Nutricional - USDA FoodData Central
+### A) Chatbot con IA - OpenRouter (DeepSeek)
+
+**✅ IMPLEMENTADO**
+
+**Base URL**: `https://openrouter.ai/api/v1`
+**Autenticación**: Bearer Token (OPENROUTER_API_KEY)
+**Modelo**: `deepseek/deepseek-chat-v3.1:free`
+
+**Endpoint**:
+- `POST /chat/completions` - Enviar consulta al modelo de IA
+
+**Configuración en `.env`**:
+```env
+OPENROUTER_API_KEY=tu_api_key_aqui
+```
+
+**Uso interno**: El chatbot del sistema (`/api/chat`) utiliza esta API para responder consultas generales cuando no encuentra información específica en la base de datos.
+
+**Características**:
+- Respuestas contextualizadas sobre productos
+- Consultas de stock y disponibilidad
+- Búsqueda por categorías y precios
+- Interacción natural con usuarios
+
+---
+
+### B) Pagos - PayPal
+
+**✅ IMPLEMENTADO**
+
+**Docs**: https://developer.paypal.com/docs/api/overview/
+**Base URL Sandbox**: `https://api-m.sandbox.paypal.com`
+**Base URL Production**: `https://api-m.paypal.com`
+
+**Endpoints utilizados**:
+- `POST /v1/oauth2/token` - Obtener token de acceso
+- `POST /v2/checkout/orders` - Crear orden de pago
+- `POST /v2/checkout/orders/{id}/capture` - Capturar pago aprobado
+
+**Configuración en `.env`**:
+```env
+PAYPAL_CLIENT_ID=tu_client_id
+PAYPAL_SECRET=tu_secret
+PAYPAL_API=https://api-m.sandbox.paypal.com
+```
+
+**Notas**:
+- El sistema convierte automáticamente CLP a USD (tasa: 1000 CLP ≈ 1 USD)
+- Usa PayPal Sandbox en desarrollo
+- Limpia automáticamente el carrito tras compra exitosa
+
+---
+
+### C) Información Nutricional - USDA FoodData Central
+
+**⏳ PLANIFICADO - NO IMPLEMENTADO**
 
 **Base URL**: `https://api.nal.usda.gov/fdc`
 **Autenticación**: API Key (query param)
@@ -518,9 +676,11 @@ Eliminar producto.
 
 ---
 
-### B) Pagos (Chile)
+### D) Pagos Adicionales (Chile)
 
-#### B.1 - Flow CL
+**⏳ PLANIFICADO - NO IMPLEMENTADO**
+
+#### D.1 - Flow CL
 **Docs**: https://www.flow.cl/documentacion/api.html
 **Base URL**: `https://www.flow.cl/api`
 
@@ -528,7 +688,7 @@ Eliminar producto.
 - `POST /payment/create` - Crear pago
 - `GET /payment/getStatus` - Consultar estado
 
-#### B.2 - Webpay Plus (Transbank)
+#### D.2 - Webpay Plus (Transbank)
 **Docs**: https://www.transbankdevelopers.cl/referencia/webpay
 **Base URL**: `https://webpay3gint.transbank.cl` (sandbox)
 
@@ -539,13 +699,15 @@ Eliminar producto.
 
 ---
 
-### C) Notificaciones
+### E) Notificaciones
 
-#### C.1 - EmailJS
+**⏳ PLANIFICADO - NO IMPLEMENTADO**
+
+#### E.1 - EmailJS
 **Sitio**: https://www.emailjs.com/
 **Uso**: Envío de correos desde frontend sin backend
 
-#### C.2 - Twilio (SMS/WhatsApp)
+#### E.2 - Twilio (SMS/WhatsApp)
 **Sitio**: https://www.twilio.com/
 **Endpoint**: `POST /2010-04-01/Accounts/{AccountSid}/Messages.json`
 

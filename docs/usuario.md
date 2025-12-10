@@ -52,9 +52,22 @@ El usuario podrá iniciar sesión inmediatamente después.
 
 ## 4.1 Catálogo de productos
 El usuario puede:
-- Navegar por categorías.
-- Ver detalles del producto.
-- Filtrar y buscar productos.
+- Navegar por categorías (Alfajores, Chocolates, Snacks, etc.).
+- Ver detalles del producto (nombre, precio, descripción, stock).
+- Filtrar y buscar productos por nombre o categoría.
+- Ver productos destacados en la página principal.
+
+### Búsqueda de productos
+El sistema incluye una funcionalidad de búsqueda que permite:
+- Buscar por nombre del producto
+- Filtrar por categoría
+- Ver resultados en tiempo real
+
+### Productos destacados
+Los productos marcados como "destacados" (famous) aparecen:
+- En la página principal
+- Con indicador visual especial
+- Priorizados en las búsquedas
 
 ## 4.2 Carrito de compras
 1. Presionar **Agregar al carrito** en el producto deseado.  
@@ -62,11 +75,22 @@ El usuario puede:
 3. Editar cantidades o eliminar productos.
 
 ## 4.3 Realizar pedido
-El proceso es:
-1. Revisar carrito.
-2. Confirmar compra.
-3. Realizar el pago según los métodos disponibles.
-4. Recibir confirmación del pedido.
+El proceso de compra incluye:
+1. Revisar carrito con todos los productos seleccionados.
+2. Ingresar o confirmar datos de envío (dirección, región, comuna).
+3. Agregar comentarios adicionales (opcional).
+4. **Procesar pago con PayPal:**
+   - El sistema convierte automáticamente el total de CLP a USD
+   - Se redirige a PayPal Sandbox (desarrollo) o Production (producción)
+   - El usuario aprueba el pago en la plataforma de PayPal
+   - Al confirmar, regresa al sitio y se captura el pago
+5. Recibir confirmación del pedido con número de orden.
+6. El carrito se vacía automáticamente tras compra exitosa.
+
+**Nota sobre pagos:**
+- En desarrollo se usa PayPal Sandbox (dinero ficticio)
+- Los pagos se procesan en USD con conversión automática
+- Tasa aproximada: 1000 CLP ≈ 1 USD
 
 ## 4.4 Historial de pedidos
 Permite ver:
@@ -77,9 +101,21 @@ Permite ver:
 
 ## 4.5 Perfil del usuario
 Incluye:
-- Datos personales.
+- Datos personales (nombre, email, teléfono, dirección).
 - Cambiar contraseña.
 - Actualizar correo u otra información.
+- Desactivar cuenta (requiere confirmar contraseña).
+
+## 4.6 Chatbot con Inteligencia Artificial
+El sistema incluye un chatbot interactivo que permite:
+- **Consultar stock de productos:** "¿Cuál es el stock del Alfajor Clásico?"
+- **Verificar disponibilidad:** "¿Está disponible el Chocolate Fruna?"
+- **Listar por categoría:** "Muéstrame productos de la categoría Alfajores"
+- **Buscar por precio:** "Productos entre 1000 y 3000 pesos"
+- **Búsqueda general:** "Quiero comprar chocolates"
+- **Consultas generales:** El chatbot usa IA (DeepSeek) para responder otras preguntas
+
+**Acceso:** Disponible en todas las páginas mediante botón flotante.
 
 ---
 
@@ -89,8 +125,11 @@ El administrador accede al panel mediante la sección **“Administración”** 
 
 ## 5.1 Dashboard administrativo
 Presenta:
-- Resumen general del sistema.
+- Resumen general del sistema (ventas del día, productos con bajo stock).
+- Órdenes pendientes de preparación.
+- Clientes registrados este mes.
 - Vista rápida de actividades recientes.
+- Productos destacados.
 
 ## 5.2 Gestión de productos
 Permite:
@@ -102,26 +141,34 @@ Permite:
 ## 5.3 Gestión de clientes
 Incluye:
 - Listado de todos los clientes registrados.
-- Información básica del cliente.
-- Opciones para editar o desactivar cuentas.
+- Información básica del cliente (nombre, email, teléfono, rol, estado).
+- **Suspender usuarios:** Desactivar cuenta temporalmente (active = false).
+- **Reactivar usuarios:** Volver a activar cuenta suspendida (active = true).
+- **Eliminar usuarios:** Borrar permanentemente del sistema.
+- **Protección:** El administrador no puede suspender su propia cuenta.
 
 ## 5.4 Gestión de pedidos
 El administrador puede:
-- Ver todos los pedidos realizados.
-- Revisar detalles del pedido.
-- Cambiar estado del pedido (pendiente, pagado, enviado, etc. si corresponde).
+- Ver todas las órdenes realizadas en el sistema.
+- Revisar detalles del pedido (cliente, monto, fecha).
+- Ver estado del pedido (PENDING, PREPARING, COMPLETED, CANCELLED).
+- Eliminar órdenes del sistema.
+- Filtrar órdenes por estado o fecha.
 
 ---
 
 # 6. Flujos importantes
 
 ## 6.1 Flujo de compra (Usuario)
-1. Navega por catálogo.  
+1. Navega por catálogo o usa búsqueda/chatbot.  
 2. Agrega productos al carrito.  
-3. Revisa carrito.  
-4. Confirma compra.  
-5. Realiza pago.  
-6. Recibe confirmación.  
+3. Revisa carrito y cantidades.  
+4. Ingresa datos de envío (dirección, región, comuna).  
+5. Confirma compra y es redirigido a PayPal.  
+6. Aprueba pago en PayPal Sandbox.  
+7. Regresa al sitio y el sistema captura el pago.  
+8. Recibe confirmación con número de orden.  
+9. Carrito se vacía automáticamente.  
 
 ## 6.2 Flujo para añadir un producto (Administrador)
 1. Entrar al panel.  
@@ -130,11 +177,19 @@ El administrador puede:
 4. Completar formulario.  
 5. Guardar.  
 
-## 6.3 Flujo para gestionar un pedido
-1. Abrir módulo **Pedidos**.  
-2. Seleccionar pedido específico.  
-3. Revisar detalle.  
-4. Actualizar estado si es necesario.  
+## 6.3 Flujo para gestionar un pedido (Administrador)
+1. Abrir módulo **Pedidos** en el panel administrativo.  
+2. Ver lista completa de órdenes con filtros.  
+3. Seleccionar pedido específico para ver detalles.  
+4. Revisar información (cliente, monto, estado, fecha).  
+5. Opcionalmente eliminar orden si es necesario.
+
+## 6.4 Flujo para suspender/reactivar usuario (Administrador)
+1. Acceder a **Gestión de usuarios**.  
+2. Buscar usuario en la lista.  
+3. Seleccionar opción **Suspender** o **Reactivar**.  
+4. Confirmar acción.  
+5. El usuario suspendido no podrá iniciar sesión hasta ser reactivado.  
 
 ---
 
@@ -164,6 +219,21 @@ Desde la sección **Perfil**.
 
 **¿El administrador puede ver mis pedidos?**  
 Sí, para gestionar procesos internos del sistema.
+
+**¿Qué métodos de pago están disponibles?**  
+Actualmente el sistema usa PayPal (Sandbox en desarrollo). En producción se procesa con PayPal real.
+
+**¿Puedo usar el chatbot sin cuenta?**  
+Sí, el chatbot está disponible para todos los visitantes del sitio.
+
+**¿Cómo funciona la conversión de moneda en PayPal?**  
+El sistema convierte automáticamente de CLP a USD usando una tasa aproximada (1000 CLP ≈ 1 USD).
+
+**¿Qué pasa si mi cuenta es suspendida?**  
+No podrás iniciar sesión hasta que un administrador reactive tu cuenta.
+
+**¿Puedo eliminar mi propia cuenta?**  
+Sí, desde tu perfil puedes desactivar tu cuenta (requiere confirmar contraseña). Para eliminarla permanentemente, contacta a un administrador.
 
 ---
 
