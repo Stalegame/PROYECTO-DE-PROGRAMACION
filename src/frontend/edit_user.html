@@ -63,6 +63,54 @@
         </button>
       </form>
 
+      <!-- Sección de desactivar cuenta -->
+      <div class="danger-zone" id="danger-zone" style="display: none;">
+        <h2><i class="fas fa-exclamation-triangle"></i> Zona de Peligro</h2>
+        <p class="warning-text">Una vez desactivada, no podrás iniciar sesión hasta que un administrador reactive tu cuenta.</p>
+        
+        <button type="button" class="btn-danger" id="btn-mostrar-desactivar">
+          <i class="fas fa-user-slash"></i> Desactivar Mi Cuenta
+        </button>
+
+        <!-- Formulario de confirmación (oculto inicialmente) -->
+        <form id="form-desactivar" style="display: none;">
+          <div class="confirm-box">
+            <p class="confirm-title">⚠️ Confirma que deseas desactivar tu cuenta</p>
+            
+            <div class="form-group">
+              <i class="fas fa-lock"></i>
+              <input 
+                type="password" 
+                id="password-confirm-1" 
+                placeholder="Ingresa tu contraseña" 
+                required 
+              />
+            </div>
+
+            <div class="form-group">
+              <i class="fas fa-lock"></i>
+              <input 
+                type="password" 
+                id="password-confirm-2" 
+                placeholder="Confirma tu contraseña" 
+                required 
+              />
+            </div>
+
+            <div class="message error" id="deactivate-error" style="display: none;"></div>
+
+            <div class="button-group">
+              <button type="button" class="btn-cancelar" id="btn-cancelar-desactivar">
+                <i class="fas fa-times"></i> Cancelar
+              </button>
+              <button type="submit" class="btn-confirmar-danger">
+                <i class="fas fa-check"></i> Confirmar Desactivación
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
       <div class="footer-links">
         <a href="productos.html"><i class="fas fa-store"></i> Volver al Catálogo</a>
       </div>

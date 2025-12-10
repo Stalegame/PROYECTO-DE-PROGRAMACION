@@ -50,6 +50,20 @@ async function editUser(id, changes) {
   }
 }
 
+async function desactivarCuenta(id, password) {
+  try {
+    const body = await apiFetchJSON(`/api/clients/${encodeURIComponent(id)}/desactivar`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    });
+    return body;
+  } catch (error) {
+    console.error('desactivarCuenta error', error);
+    throw error;
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("profile-form");
   const loading = document.getElementById("loading");
@@ -85,6 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setTimeout(async () => {
     loading.style.display = "none";
     form.style.display = "block";
+    document.getElementById('danger-zone').style.display = "block";
 
     const usuario = await getById(user.id);
     if (!usuario) {
@@ -100,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('direccion').value = usuario.address || '';
   }, 300);
 
+  // Guardar cambios de perfil
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const changes = {};
@@ -137,5 +153,85 @@ document.addEventListener("DOMContentLoaded", () => {
       successMsg.textContent = '❌ Error al guardar los cambios';
       successMsg.style.display = 'block';
     }
-  })
+  });
+
+  // ====== FUNCIONALIDAD DE DESACTIVAR CUENTA ======
+  const btnMostrarDesactivar = document.getElementById('btn-mostrar-desactivar');
+  const formDesactivar = document.getElementById('form-desactivar');
+  const btnCancelar = document.getElementById('btn-cancelar-desactivar');
+  const deactivateError = document.getElementById('deactivate-error');
+
+  // Mostrar formulario de confirmación
+  btnMostrarDesactivar.addEventListener('click', () => {
+    formDesactivar.style.display = 'block';
+    btnMostrarDesactivar.style.display = 'none';
+    deactivateError.style.display = 'none';
+    document.getElementById('password-confirm-1').value = '';
+    document.getElementById('password-confirm-2').value = '';
+  });
+
+  // Cancelar desactivación
+  btnCancelar.addEventListener('click', () => {
+    formDesactivar.style.display = 'none';
+    btnMostrarDesactivar.style.display = 'flex';
+    deactivateError.style.display = 'none';
+    document.getElementById('password-confirm-1').value = '';
+    document.getElementById('password-confirm-2').value = '';
+  });
+
+  // Confirmar desactivación
+  formDesactivar.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const pass1 = document.getElementById('password-confirm-1').value;
+    const pass2 = document.getElementById('password-confirm-2').value;
+
+    // Validar que las contraseñas coincidan
+    if (pass1 !== pass2) {
+      deactivateError.textContent = '❌ Las contraseñas no coinciden';
+      deactivateError.style.display = 'block';
+      return;
+    }
+
+    // Validar que no esté vacía
+    if (!pass1 || pass1.trim().length < 8) {
+      deactivateError.textContent = '❌ La contraseña debe tener al menos 8 caracteres';
+      deactivateError.style.display = 'block';
+      return;
+    }
+
+    // Confirmar con el usuario
+    const confirmar = confirm(
+      '⚠️ ÚLTIMA ADVERTENCIA\n\n' +
+      'Estás a punto de desactivar tu cuenta.\n' +
+      'No podrás iniciar sesión hasta que un administrador la reactive.\n\n' +
+      '¿Estás completamente seguro?'
+    );
+
+    if (!confirmar) return;
+
+    try {
+      // Llamar al backend para desactivar
+      await desactivarCuenta(user.id, pass1);
+
+      // Limpiar localStorage
+      localStorage.removeItem('fruna_token');
+      localStorage.removeItem('fruna_user');
+
+      // Mostrar mensaje y redirigir
+      alert('✅ Tu cuenta ha sido desactivada exitosamente.\n\nSerás redirigido a la página de inicio.');
+      window.location.href = '/index.html';
+
+    } catch (error) {
+      const mensaje = error.message || 'Error al desactivar la cuenta';
+      deactivateError.textContent = `❌ ${mensaje}`;
+      deactivateError.style.display = 'block';
+      
+      // Si es error de contraseña incorrecta, limpiar campos
+      if (mensaje.toLowerCase().includes('contraseña')) {
+        document.getElementById('password-confirm-1').value = '';
+        document.getElementById('password-confirm-2').value = '';
+      }
+    }
+  });
 });

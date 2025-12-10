@@ -118,12 +118,13 @@
 
 .btn-primary {
     background: #667eea;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
     color: white;
 }
 
 .btn-primary:hover {
     background: #5568d3;
-    box-shadow: #5568d3; 
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
 .btn-secondary {
