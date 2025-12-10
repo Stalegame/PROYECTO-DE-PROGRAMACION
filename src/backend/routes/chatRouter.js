@@ -8,11 +8,16 @@ const {
   listarProductosPorPrecio,
   buscarProductos
 } = require("../db/dbFunctions");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 router.post("/", async (req, res) => {
   try {
     const { message } = req.body;
     const lowerMsg = message.toLowerCase();
+    
+    // Obtener contexto de la base de datos
+    let contextoDB = "";
 
     // --- CONSULTAS DE STOCK ---
     if (/stock/i.test(lowerMsg)) {
@@ -79,16 +84,55 @@ router.post("/", async (req, res) => {
       }
     }
 
-    // --- BUSQUEDA GENERAL POR NOMBRE O DESCRIPCIÓN ---
-    if (/quiero|busco|tiene/i.test(lowerMsg)) {
-      const productos = await buscarProductos(message);
-      if (productos.length > 0) {
-        const nombres = productos.map(p => p.name).join(", ");
-        return res.json({ reply: `Encontré los siguientes productos: ${nombres}` });
+    // --- BÚSQUEDA INTELIGENTE DE PRODUCTOS ---
+    // Detectar si menciona productos, categorías, precios, etc.
+    const mencionaProductos = /producto|bebida|jugo|gaseosa|galleta|chocolate|snack|dulce|salado|fruna/i.test(lowerMsg);
+    const mencionaCategoria = /categor[ií]a|tipo|clase/i.test(lowerMsg);
+    const mencionaPrecio = /precio|cuesta|valor|cuánto|barato|caro|\$|pesos/i.test(lowerMsg);
+    const mencionaStock = /stock|disponible|hay|tiene|quedan|unidades/i.test(lowerMsg);
+    
+    // Si la consulta es sobre productos, construir contexto
+    if (mencionaProductos || mencionaCategoria || mencionaPrecio || mencionaStock) {
+      // Buscar productos relevantes
+      let productosRelevantes = await buscarProductos(message);
+      
+      // Si no encuentra con búsqueda, intentar por palabras clave
+      if (productosRelevantes.length === 0) {
+        // Extraer palabras clave (más de 3 letras)
+        const palabras = message.match(/\b\w{3,}\b/gi) || [];
+        for (const palabra of palabras) {
+          const resultados = await buscarProductos(palabra);
+          productosRelevantes.push(...resultados);
+        }
+        // Eliminar duplicados
+        productosRelevantes = [...new Map(productosRelevantes.map(p => [p.id, p])).values()];
       }
+      
+      // Si aún no hay resultados, traer productos populares o todos
+      if (productosRelevantes.length === 0) {
+        productosRelevantes = await prisma.product.findMany({
+          take: 10,
+          include: { category: true },
+          orderBy: { stock: 'desc' }
+        });
+      }
+      
+      // Limitar a 15 productos para no saturar el contexto
+      productosRelevantes = productosRelevantes.slice(0, 15);
+      
+      // Construir contexto estructurado
+      contextoDB = `BASE DE DATOS DE PRODUCTOS FRUNA:\n\n`;
+      productosRelevantes.forEach(p => {
+        contextoDB += `- ${p.name}\n`;
+        contextoDB += `  Precio: $${p.price}\n`;
+        contextoDB += `  Stock: ${p.stock} unidades\n`;
+        contextoDB += `  Categoría: ${p.category?.name || 'Sin categoría'}\n`;
+        if (p.description) contextoDB += `  Descripción: ${p.description}\n`;
+        contextoDB += `\n`;
+      });
     }
 
-    // --- CONSULTA AL MODELO EXTERNO ---
+    // --- CONSULTA AL MODELO EXTERNO CON CONTEXTO ---
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -96,20 +140,51 @@ router.post("/", async (req, res) => {
         "Content-Type": "application/json; charset=utf-8",
       },
       body: JSON.stringify({
-        model: "deepseek/deepseek-chat-v3.1:free",
+        model: "tngtech/deepseek-r1t2-chimera:free",
         messages: [
-          { role: "system", content: "Eres FrunaBot. Usa solo la información proporcionada de la base de datos, no inventes datos." },
+          { 
+            role: "system", 
+            content: `Eres FrunaBot, asistente virtual de la tienda Fruna.
+
+            REGLAS IMPORTANTES:
+            1. SOLO usa información de la base de datos proporcionada
+            2. NUNCA inventes productos, precios o información
+            3. Si no tienes datos, di "No tengo esa información en este momento"
+            4. Sé amable, breve y útil
+            5. Si preguntan por un producto que no está en la BD, di que no lo encuentras
+
+            ${contextoDB || "No hay contexto de productos para esta consulta."}` 
+          },
           { role: "user", content: message }
         ],
       }),
-    });
-
-    // timeout de 30 segundos
+    });    // timeout de 30 segundos
     const timeout = new Promise((_, reject) =>
       setTimeout(() => reject(new Error("Tiempo de espera agotado al contactar el modelo.")), 30000)
     );
 
     const data = await Promise.race([response.json(), timeout]);
+    
+    // Manejo de errores de OpenRouter
+    if (data.error) {
+      console.error("Error de OpenRouter:", data.error);
+      
+      // Mensajes específicos según el error
+      if (data.error.code === 429) {
+        return res.json({ 
+          reply: "El chatbot está temporalmente sobrecargado. Por favor intenta de nuevo en unos segundos." 
+        });
+      } else if (data.error.code === 401) {
+        return res.json({ 
+          reply: "Error de configuración del chatbot. Por favor contacta al administrador." 
+        });
+      } else {
+        return res.json({ 
+          reply: `Error: ${data.error.message}. Por favor intenta nuevamente.` 
+        });
+      }
+    }
+    
     let reply = data.choices?.[0]?.message?.content || "No se obtuvo respuesta del modelo.";
 
     // Limpiar tokens especiales del modelo si aparecen
@@ -124,4 +199,3 @@ router.post("/", async (req, res) => {
 });
 
 module.exports = router;
-
