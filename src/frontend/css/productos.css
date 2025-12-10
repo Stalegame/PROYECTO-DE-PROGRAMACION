@@ -17,7 +17,10 @@
   margin:20px auto;
   gap:20px;
   padding:0 16px;
-  flex: 1;
+}
+
+.contenedor:not(#search-form){
+  min-height: calc(100vh - 400px);
 }
 
 /* Filtros */
@@ -35,13 +38,14 @@
 
 /* Buscador */
 #search-form {
-  padding-top: 20px;
   display: flex;
-  margin: 0 auto;
+  max-width: 1600px;
+  margin: 20px auto 0;
   justify-content: center;
   align-items: center;
   gap: 8px;
-  margin-bottom: 20px;
+  padding: 0 16px;
+  min-height: auto;
 }
 #search-input {
   width: 100%;
@@ -101,7 +105,8 @@
 /* FICHA DE PRODUCTO (one_product.html) */
 .product-page{
   max-width:1200px; margin:20px auto; padding:0 16px;
-  display:grid; grid-template-columns:1fr 1.2fr; gap:28px
+  display:grid; grid-template-columns:1fr 1.2fr; gap:28px;
+  min-height: calc(100vh - 400px);
 }
 .product-media-large{
   background:#fff; border:1px solid #eee; border-radius:12px; padding:16px;
@@ -146,7 +151,6 @@
   font-size: 20px;
 }
 
-
 /* Estados de carga y error */
 .loading, .empty, .error {
   grid-column: 1 / -1;
@@ -170,24 +174,38 @@
   font-size: 1rem;
 }
 
+/* Estilos para paginación */
 .pagination {
   display: flex;
   justify-content: center;
-  gap: 6px;
-  margin: 20px 0;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  flex-wrap: wrap;
 }
 
 .pag-btn {
+  background-color: white;
+  border: 2px solid #E91E63;
+  color: #E91E63;
   padding: 8px 14px;
-  border: none;
   border-radius: 6px;
-  background: #eee;
   cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  min-width: 40px;
+}
+
+.pag-btn:hover {
+  background-color: #fce4ec;
+  transform: translateY(-2px);
 }
 
 .pag-btn.active {
-  background: #ff006e;
+  background-color: #E91E63;
   color: white;
+  box-shadow: 0 2px 8px rgba(233, 30, 99, 0.3);
 }
 
 .pag-btn:disabled {

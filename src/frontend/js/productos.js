@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let PRODUCTS_CACHE = [];  
   let currentPage = 1;
-  const ITEMS_PER_PAGE = 2;
+  const ITEMS_PER_PAGE = 10;
 
   function renderPagination(totalItems) {
     if (!pagination) return;

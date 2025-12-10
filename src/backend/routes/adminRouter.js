@@ -248,7 +248,7 @@ router.put('/products/:id', async (req, res) => {
       let categoryRecord = await categoriaDAO.getByName(cambios.category);
 
       if (!categoryRecord) {
-        categoryRecord = await categoriaDAO.save(cambios.category);
+        categoryRecord = await categoriaDAO.save({ name: cambios.category });
       }
 
       cambios.categoryId = categoryRecord.id;

@@ -91,7 +91,8 @@ async function main() {
       stock: 15,
       categoryId: 'cmils0rgj0000uirk24jfq2j3',
       description: 'Helado de agua sabor cereza y piña.',
-      image: 'palo_palito.png'
+      image: 'palo_palito.png',
+      famous: true
     },
     {
       id: 'cj2xk74by0005s0ezectp82jt',
@@ -100,7 +101,8 @@ async function main() {
       stock: 10,
       categoryId: 'cmils0rgj0001uirk24jfq2j4',
       description: 'Refresca tus momentos con el sabor clásico de Cola Cola.',
-      image: 'cola_cola_fruna.jpg'
+      image: 'cola_cola_fruna.png',
+      famous: true
     },
     {
       id: 'cj2xk7s6y0006s0ezeou7fcwn',
@@ -109,7 +111,18 @@ async function main() {
       stock: 20,
       categoryId: 'cmils0rgj0002uirk24jfq2j5',
       description: 'Snack crocante de maní.',
-      image: 'Sufle_Chanfle_Mani.jpg'
+      image: 'sufle_chanfle_mani.png',
+      famous: false
+    },
+    {
+      id: 'cmj0gt2vy100ebw1wyh4h23w3',
+      name: 'Serrano Frutal 2Lt',
+      price: 2490,
+      stock: 25,
+      categoryId: 'cmils0rgj0001uirk24jfq2j4',
+      description: 'Bebida sabor frutal de 2 litros.',
+      image: 'serrano_frutal_2l.png',
+      famous: false
     }
   ];
 
